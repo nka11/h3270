@@ -1,6 +1,16 @@
-<%@ page import="java.util.*,org.h3270.web.*,org.h3270.render.*" %>
+<%@ page import="java.util.*" %>
 
-<script>
+<jsp:useBean id="sessionState" scope="session" class="org.h3270.web.SessionState" />
+
+<html>
+<head>
+<title>Preferences</title>
+
+<style>
+td { font-family:freesans,arial,helvetica; }
+</style>
+
+<script type="text/javascript">
   function doApply() {
     opener.document.control.colorscheme.value
       = document.prefs.colorscheme.options
@@ -22,12 +32,8 @@
     window.close();
   }
 </script>
+</head>
 
-<style>
-td { font-family:freesans,arial,helvetica; }
-</style>
-
-<html>
 <body>
   <form name=prefs action="" method=POST>
   <table cellspacing="4" style="font-size:10pt;">
@@ -36,32 +42,21 @@ td { font-family:freesans,arial,helvetica; }
       <td>
         <select name=colorscheme style="min-width:12em;">
           <%
-             SessionState s = 
-               (SessionState)session.getAttribute("sessionState");
-             List colorSchemes = s.configuration.getColorSchemes();
-             ColorScheme acs = s.configuration.getActiveColorScheme();
-             for (Iterator i = colorSchemes.iterator(); i.hasNext();) {
-               ColorScheme cs = (ColorScheme)i.next();
-               if (cs == acs)
-                 out.print ("<option selected>");
-               else
-                 out.print ("<option>");
-               out.print (cs.getName() + "</option>\n");
-             }
-           %>
+ 			Iterator i = sessionState.getColorschemeSelectOptions();
+ 			while(i.hasNext()) { %>
+ 				<%= i.next() %>
+ 	      <% } %>	
         </select>
       </td>
     </tr>
     <tr>
       <td>Font:</td>
       <td>
-        <% String currentFont = s.configuration.getFontName(); %>
         <select name=font style="min-width:12em;">
-          <option <%= currentFont.equals("courier") ? "selected" : "" %> value="courier">Courier</option>
-          <option <%= currentFont.equals("freemono") ? "selected" : "" %> value="freemono">Free Mono</option>
-		  <option <%= currentFont.equals("terminal") ? "selected" : "" %> value="terminal">Terminal</option>
-		  <option <%= currentFont.equals("couriernew") ? "selected" : "" %> value="couriernew">Courier New</option>
-		  <option <%= currentFont.equals("monospace") ? "selected" : "" %> value="monospace">Monospace</option>
+        <% i = sessionState.getFontSelectOptions();
+           while(i.hasNext()) { %>
+				<%= i.next() %>          
+		<% } %>
         </select>
     </tr>
 <!--    <tr>
@@ -93,7 +88,7 @@ td { font-family:freesans,arial,helvetica; }
     <tr>
       <td colspan=2>
         <input type=checkbox name=render value="render"
-        <% if (s.useRenderers)
+        <% if (sessionState.isUseRenderers())
              out.print (" checked ");
         %>
         > Use Regex Rendering Engine
@@ -101,9 +96,9 @@ td { font-family:freesans,arial,helvetica; }
     </tr>
     <tr>
       <td colspan=3 align=right  style="padding-top:1em;">
-        <input type=button name=prefs-ok value=OK
+        <input type=button id="prefs-ok" name=prefs-ok value=OK
                onClick="doSubmit();">
-        <input type=button name=prefs-apply value=Apply
+        <input type=button id="prefs-apply" name=prefs-apply value=Apply
                onClick="doApply();">
         <input type=submit name=prefs-cancel value=Cancel 
                onClick="window.close();">

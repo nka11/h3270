@@ -10,6 +10,14 @@ public class RegexTest extends TestCase {
     super(name);
   }
 
+  public void setUp() {
+    if (getName().endsWith("jdk")) {
+      Pattern.useJRegex(false);
+    } else if (getName().endsWith("jregex")) {
+      Pattern.useJRegex(true);
+    } 
+  }
+
   public void test_find_1() {
     Pattern p = Pattern.compile ("abc");
     Matcher m = p.matcher("abc abc abc");

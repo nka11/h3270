@@ -1,7 +1,7 @@
 package org.h3270.host;
 
 /*
- * Copyright (C) 2003 it-frameworksolutions
+ * Copyright (C) 2003, 2004 it-frameworksolutions
  *
  * This file is part of h3270.
  *
@@ -217,7 +217,7 @@ public class S3270Screen extends AbstractScreen {
                               
   public static void main (String[] args) throws IOException {
     BufferedReader in = new BufferedReader 
-                          (new FileReader ("src/org/h3270/test/screen6.dump"));
+                          (new FileReader ("src/org/h3270/test/screen8.dump"));
     List lines = new ArrayList();
     while (true) {
       String line = in.readLine();

@@ -1,7 +1,7 @@
 package org.h3270.test;
 
 /*
- * Copyright (C) 2003 it-frameworksolutions
+ * Copyright (C) 2003, 2004 it-frameworksolutions
  *
  * This file is part of h3270.
  *
@@ -84,13 +84,12 @@ public class S3270ScreenTest extends TestCase {
 
   private void screenTest (String filename) {
     Screen s = createScreenFromDump (filename + ".dump");
-    String result   = new TextRenderer().render (s);
-    //try {
-    //  PrintWriter out = new PrintWriter (new FileWriter (filename + ".out"));
-    //  out.print (result);
-    //  out.close();
-    //} catch (Exception e) {
-    //}
+    String result   = new TextRenderer(true, false).render (s);
+    try {
+      PrintWriter out = new PrintWriter (new FileWriter (filename + ".out"));
+      out.print (result);
+      out.close();
+    } catch (Exception e) {}
     String expected = readTextScreen (filename + ".txt");
     assertEquals (expected, result);
   }
@@ -111,8 +110,12 @@ public class S3270ScreenTest extends TestCase {
     screenTest ("src/org/h3270/test/screen6");
   }
 
-  public static void main (String[] args) {
-    junit.textui.TestRunner.run (S3270ScreenTest.class);
+  public void test_screen_7() {
+    screenTest ("src/org/h3270/test/screen7");
+  }
+
+  public void test_screen_8() {
+    screenTest ("src/org/h3270/test/screen8");
   }
 
 }

@@ -1,7 +1,7 @@
 package org.h3270.test;
 
 /*
- * Copyright (C) 2003 it-frameworksolutions
+ * Copyright (C) 2003, 2004 it-frameworksolutions
  *
  * This file is part of h3270.
  *
@@ -37,7 +37,7 @@ public class AllTest extends TestCase {
     
     TestSuite suite = new TestSuite ("All h3270 tests");
 
-    suite.addTestSuite (FileScreenTest.class);
+    //suite.addTestSuite (FileScreenTest.class);
     suite.addTestSuite (S3270ScreenTest.class);
     suite.addTestSuite (RegexTest.class);
     

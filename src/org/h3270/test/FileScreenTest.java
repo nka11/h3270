@@ -1,7 +1,7 @@
 package org.h3270.test;
 
 /*
- * Copyright (C) 2003 it-frameworksolutions
+ * Copyright (C) 2003, 2004 it-frameworksolutions
  *
  * This file is part of h3270.
  *

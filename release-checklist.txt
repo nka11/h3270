@@ -1,0 +1,35 @@
+
+  * increment version number
+  * update doc (News)
+  * generate ChangeLog / add release info
+  * copy into export area
+
+      cp -r -p ~/com/h3270 .
+
+  * within export area: 
+      
+      find . -name CVS -type d | xargs rm -rf
+      find . -name "*~" | xargs rm
+      find . -name ".?*" | xargs rm -rf
+      rm release-checklist.txt
+      rm src/org/h3270/test/*.dump
+      rm src/org/h3270/test/*.txt
+      rm src/org/h3270/test/*.png
+      rm webapp/WEB-INF/bin/*
+      rm -rf webapp/WEB-INF/bin-win
+      rm -rf webapp/WEB-INF/lib/*
+      rm -rf webapp/WEB-INF/classes/*
+
+  * final test in export area
+
+      ant all
+      cp ~/com/h3270/webapp/WEB-INF/bin/s3270 webapp/WEB-INF/bin
+
+      <test>
+      
+      ant clean
+      rm -rf webapp/WEB-INF/bin/*
+
+  * apply CVS tag from work area
+  * bundle & upload
+  * publish doc

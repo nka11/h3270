@@ -79,7 +79,7 @@ public class S3270 implements Terminal {
       cmd.append(" ");
       cmd.append(hostname);
 
-      logger.debug("Starting s3270: " + cmd.toString());
+      logger.info("Starting s3270: " + cmd.toString());
 
       s3270 = Runtime.getRuntime().exec(cmd.toString());
 

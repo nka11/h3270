@@ -120,9 +120,9 @@ public class S3270Screen extends AbstractScreen {
     width = 0;
     buffer = new char[height][];
     fields = new ArrayList();
-    fieldStartX = -1;
-    fieldStartY = -1;
-    fieldStartCode = 0x00;
+    fieldStartX = 0;
+    fieldStartY = 0;
+    fieldStartCode = (byte)0xe0;
     for (int y=0; y<height; y++) {
       char[] line = decode ((String)bufferData.get(y), y, fields);
       if (line.length > width) width = line.length;
@@ -155,9 +155,9 @@ public class S3270Screen extends AbstractScreen {
   private static final Pattern formattedCharPattern = 
     Pattern.compile ("SF\\((..)=(..)(,.*?)?\\)|[0-9a-fA-F]{2}");
 
-  private int  fieldStartX = -1;
-  private int  fieldStartY = -1;
-  private byte fieldStartCode = 0x00;
+  private int  fieldStartX = 0;
+  private int  fieldStartY = 0;
+  private byte fieldStartCode = (byte)0xe0;
 
   /**
    * Decodes a single line from the raw screen buffer dump.
@@ -186,9 +186,6 @@ public class S3270Screen extends AbstractScreen {
             fields.add (createField (fieldStartCode, 
                                      fieldStartX, fieldStartY,
                                      fieldEndX,   fieldEndY));
-            fieldStartX = -1;
-            fieldStartY = -1;
-            fieldStartCode = 0x00;
           }            
           fieldStartX = index + 1;
           fieldStartY = y;
@@ -200,7 +197,7 @@ public class S3270Screen extends AbstractScreen {
       index++;
     }
     // a field that begins in the last column
-    if (fieldStartX == index) {
+    if (fieldStartX == index && fieldStartY == y) {
       fieldStartX = 0;
       fieldStartY++;
     }  

@@ -80,7 +80,7 @@ public class InputField extends Field {
     }
   }
 
-  private static Pattern linePattern =
+  private static final Pattern LINE_PATTERN =
     Pattern.compile (".*\n", Pattern.MULTILINE);
 
   /**
@@ -93,7 +93,7 @@ public class InputField extends Field {
   public void setValue (int lineNumber, String newValue) {
     if (this.value == null) getValue();
     StringBuffer result = new StringBuffer();
-    Matcher m = linePattern.matcher (this.value);
+    Matcher m = LINE_PATTERN.matcher (this.value);
     for (int i=0; i < lineNumber; i++) {
       m.find();
       result.append (m.group(0));
@@ -111,7 +111,7 @@ public class InputField extends Field {
     }
   }
 
-  private static Pattern trimPattern = 
+  private static final Pattern TRIM_PATTERN = 
     Pattern.compile ("^[\\x00 _]*(.*?)[\\x00 _]*$", 0);
 
   /**
@@ -119,7 +119,7 @@ public class InputField extends Field {
    * and trailing ASCII NUL characters, blanks and underscores removed.
    */
   public static String trim (String value) {
-    Matcher m = trimPattern.matcher (value);
+    Matcher m = TRIM_PATTERN.matcher (value);
     if (m.matches()) 
       return m.group (1);
     else

@@ -134,16 +134,16 @@ public class RegexRenderer extends HtmlRenderer {
     }
   }
   
-  public static void main(String[] args) {
-    String path = "/home/spiegel/com/h3270/";
-    RegexRenderer r = new RegexRenderer
-      (path + "templates/dr-tpx.html");
-    Screen s = new S3270Screen(path + "dump/dr-1.edump");
-    if (r.canRender(s))
-      System.out.println(r.render(s));
-    else
-      System.out.println("no match");
-  }
+//  public static void main(String[] args) {
+//    String path = "/home/spiegel/com/h3270/";
+//    RegexRenderer r = new RegexRenderer
+//      (path + "templates/dr-tpx.html");
+//    Screen s = new S3270Screen(path + "dump/dr-1.edump");
+//    if (r.canRender(s))
+//      System.out.println(r.render(s));
+//    else
+//      System.out.println("no match");
+//  }
     
 
 }

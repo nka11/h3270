@@ -43,20 +43,32 @@
     <td class=content valign=top>
       <h1>Release Notes</h1>
       
+      <font color="#ff8c00"><b>h3270 version 1.2.2</b></font>
+      properly ignores extended attributes (which we don't support
+      yet).  Several other bugs have been fixed, the build process
+      has been streamlined, and the documentation has been updated.
+      
+      <p>
+      
       <font color="#ff8c00"><b>h3270 version 1.2.1</b></font> fixes a bug which made it impossible to use h3270 under some tomcat versions.
       
       <p>
       
-      <font color="#ff8c00"><b>h3270 version 1.2</b></font> is a maintenance release that
-      contains the following new features:
+      <font color="#ff8c00"><b>h3270 version 1.2</b></font> is a
+      maintenance release that contains the following new features:
       <ul>
-        <li>A new configuration mechanism. The definition of color schemes, fonts, etc. has
-        been moved to a XML configuration file (see <code>webapp/WEB-INF/h3270-config.xml</code>).
+        <li>A new configuration mechanism. The definition of color
+        schemes, fonts, etc. has been moved to a XML configuration
+        file (see <code>webapp/WEB-INF/h3270-config.xml</code>).
         
-        <li>The User Preferences (colorscheme, font, etc.) are now stored in a client-side cookie.
+        <li>The User Preferences (colorscheme, font, etc.) are now
+        stored in a client-side cookie.
 
-        <li>It's possible to customize the appearance of h3270. Uncomment the property <code>style</code> (see <code>h3270-config.xml</code>) for an example.
-    <li>h3270 now uses commons-logging as logging toolkit.
+        <li>It's possible to customize the appearance of
+        h3270. Uncomment the property <code>style</code>
+        (see <code>h3270-config.xml</code>) for an example.
+
+        <li>h3270 now uses commons-logging as logging toolkit.
       </ul>
       Apart from these Changes some minor bugs were fixed.
       <p>

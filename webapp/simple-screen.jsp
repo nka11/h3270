@@ -20,20 +20,18 @@
 
 <body>
 
-<table style="width:50em;">
+<table>
   <tr>
- 
- <td>
-    <%@ include file="common/h3270-screen.jsp" %>
- </td>   
+    <td style="width:50em;">
+      <%@ include file="common/h3270-screen.jsp" %>
+    </td>   
     
-    <td valign=top >   
-       	<% if (sessionState.isUseKeypad()) { %>    
-         	<jsp:include page="keys.html" flush="true"/>
-    		<% } %>
-     </td>
+    <% if (sessionState.isUseKeypad()) { %>    
+      <td valign=top >   
+        <jsp:include page="keys.html" flush="true"/>
+      </td>
+    <% } %>
   </tr>
-  
 </table>
 </body>
 </html>

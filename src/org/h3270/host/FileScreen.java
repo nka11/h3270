@@ -17,18 +17,19 @@ package org.h3270.host;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
 
 import java.util.*;
 import java.io.*;
+import java.net.URL;
 
 /**
  * Test implementation of the Screen interface.  It reads an ASCII dump
  * of a 3270 screen from a file.  In this file, input fields must be delimited
  * by '{' and '}'.
- * 
+ *
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
  * @version $Id$
  */
@@ -36,25 +37,27 @@ public class FileScreen extends AbstractScreen {
 
   public FileScreen (String filename) {
     try {
-      Reader in = new InputStreamReader (new FileInputStream (filename),
+        URL url = getClass().getResource(filename);
+
+        Reader in = new InputStreamReader (url.openStream(),
                                          "ISO-8859-1");
       width = 80;
       height = 24;
       buffer = new char[height][width];
       for (int y=0; y<height; y++)
         for (int x=0; x<width; x++)
-          buffer[y][x] = ' '; 
+          buffer[y][x] = ' ';
 
       for (int y=0; y<height; y++) {
         for (int x=0; x<=width; x++) {
           int ch = in.read();
-          if (ch == -1) 
+          if (ch == -1)
             return;
           else if (ch == '\n')
             break;
           else if (ch == '\r') {
-          	in.read(); // skip \n
-          	break;
+                in.read(); // skip \n
+                break;
           }
           else if (ch == '{')
             x = x + readField (x, y, in);
@@ -71,7 +74,7 @@ public class FileScreen extends AbstractScreen {
 
   /**
    * Reads a field from the file and inserts it into the internal
-   * data structures.  Returns the number of characters read. 
+   * data structures.  Returns the number of characters read.
    */
   private int readField (int x, int y, Reader in) throws IOException {
     buffer[y][x] = ' '; // replace the delimiter that our caller already read

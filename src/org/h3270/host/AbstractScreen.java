@@ -66,6 +66,30 @@ public abstract class AbstractScreen implements Screen {
     }
   }
 
+  public String substring (int startx, int starty, int endx, int endy) {
+    if (starty == endy) {
+      return this.substring (startx, endx, starty);
+    } else {
+      StringBuffer result = new StringBuffer();
+      result.append (this.substring (startx, width-1, starty));
+      result.append ('\n');
+      for (int y = starty+1; y < endy; y++) {
+        result.append (this.substring (y));
+        result.append ('\n');
+      }
+      result.append (this.substring (0, endx, endy));
+      return result.toString();
+    }
+  }
+    
+  public String substring (int startx, int endx, int y) {
+    return new String (buffer[y], startx, endx - startx + 1);
+  }  
+   
+  public String substring (int y) {
+    return new String (buffer[y]);    
+  }
+
   public List getFields() {
     return Collections.unmodifiableList (fields);
   }

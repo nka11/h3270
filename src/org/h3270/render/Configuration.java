@@ -21,91 +21,85 @@ package org.h3270.render;
  * MA 02111-1307 USA
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Represents the configuration of h3270 for a particular user session.
+ * Represents the various configuration options of h3270 which can be set for a
+ * particular user session.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
  * @version $Id$
  */
 public class Configuration {
 
-  private List        colorSchemes;
-  private ColorScheme activeColorScheme;
-  
-  private String fontName = "courier";
-  
-  public Configuration() {
-    colorSchemes = new ArrayList();
-    createDefaultColorSchemes();
-  }
+    private static final String DEFAULT_COLORSCHEME = "White Background";
 
-  public List getColorSchemes() {
-    return colorSchemes;   
-  }
+    private static final String DEFAULT_FONT = "courier";
 
-  public ColorScheme getActiveColorScheme() {
-    return activeColorScheme;
-  }
+    private static final boolean DEFAULT_USE_RENDERER = true;
 
-  public ColorScheme getColorScheme (String name) {
-    for (Iterator i = colorSchemes.iterator(); i.hasNext();) {
-      ColorScheme cs = (ColorScheme)i.next();
-      if (cs.getName().equals (name))
-        return cs;
+    private final List colorSchemes = new ArrayList();
+    
+    private final Map validFonts = new HashMap();
+
+    public Configuration() {
+        createDefaultColorSchemes();
+        createValidFonts();
     }
-    return null;
-  }
 
-  public void setActiveColorScheme (String name) {
-    ColorScheme cs = getColorScheme (name);
-    if (cs != null)
-      activeColorScheme = cs;
-  }
+    public boolean getDefaultUseRenderer() {
+        return DEFAULT_USE_RENDERER;
+    }
 
-  public String getFontName() {
-    return fontName;
-  }
-  
-  public void setFontName (String fontName) {
-    this.fontName = fontName;
-  }
-  
-  private void createDefaultColorSchemes() {
-    colorSchemes.add (new ColorScheme(
-      "White Background",
-      "black", "white",
-      "blue",  "white",
-      "white",   "white",
-      "green", "lightgrey",
-      "red",   "lightgrey",
-      "red",   "lightgrey"));
-    colorSchemes.add (new ColorScheme(
-      "Dark Background",
-      "cyan",  "black",
-      "white", "black",
-      "black", "black",
-      "lime",  "#282828",
-      "red",   "#282828",
-      "red",   "#282828"));
-    colorSchemes.add (new ColorScheme(
-      "Amber",
-      "orange", "black",
-      "white",  "black",
-      "black",  "black",
-      "white",  "#282828",
-      "red",    "#282828",
-      "orange", "#282828"));
-    colorSchemes.add (new ColorScheme(
-      "Black and White",
-      "black", "white",
-      "black", "white",
-      "white", "white",
-      "black", "lightgrey",
-      "black", "lightgrey",
-      "black", "lightgrey"));
-    setActiveColorScheme ("White Background");
-  }
-  
+    public String getDefaultFontname() {
+        return DEFAULT_FONT;
+    }
+
+    public String getDefaultColorscheme() {
+        return DEFAULT_COLORSCHEME;
+    }
+
+    public List getColorSchemes() {
+        return colorSchemes;
+    }
+
+    public ColorScheme getColorScheme(String name) {
+        for (Iterator i = colorSchemes.iterator(); i.hasNext();) {
+            ColorScheme cs = (ColorScheme) i.next();
+            if (cs.getName().equals(name))
+                return cs;
+        }
+        return null;
+    }
+    
+    public Map getValidFonts() {
+        return validFonts;
+    }
+
+    private void createValidFonts() {
+        validFonts.put("courier", "Courier");
+        validFonts.put("freemono", "Free Mono");
+        validFonts.put("terminal", "Terminal");
+        validFonts.put("couriernew", "Courier New");
+        validFonts.put("monospace", "Monospace");
+    }
+    
+    private void createDefaultColorSchemes() {
+        colorSchemes.add(new ColorScheme("White Background", "black", "white",
+                "blue", "white", "white", "white", "green", "lightgrey", "red",
+                "lightgrey", "red", "lightgrey"));
+        colorSchemes.add(new ColorScheme("Dark Background", "cyan", "black",
+                "white", "black", "black", "black", "lime", "#282828", "red",
+                "#282828", "red", "#282828"));
+        colorSchemes.add(new ColorScheme("Amber", "orange", "black", "white",
+                "black", "black", "black", "white", "#282828", "red",
+                "#282828", "orange", "#282828"));
+        colorSchemes.add(new ColorScheme("Black and White", "black", "white",
+                "black", "white", "white", "white", "black", "lightgrey",
+                "black", "lightgrey", "black", "lightgrey"));
+    }
 }

@@ -33,6 +33,8 @@ public abstract class AbstractScreen implements Screen {
   
   protected int width  = 0;
   protected int height = 0;
+  protected int cursorX = 0;
+  protected int cursorY = 0;
 
   protected boolean isFormatted = true;
 
@@ -82,6 +84,10 @@ public abstract class AbstractScreen implements Screen {
 
   public boolean isField(int x, int y) {
     return getFieldAt (x, y) != null;
+  }
+
+  public Field getFocusedField() {
+    return this.getFieldAt (cursorX, cursorY);
   }
 
   public boolean isFormatted() {

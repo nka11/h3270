@@ -46,11 +46,11 @@ public class S3270Screen extends AbstractScreen {
     isFormatted = true; 
   }
   
-  public S3270Screen (String filename) {
+  public S3270Screen (InputStream in) {
     try {
       BufferedReader input =
         new BufferedReader 
-          (new InputStreamReader(new FileInputStream(filename),
+          (new InputStreamReader(in,
                                  "ISO-8859-1"));
       List lines = new ArrayList();
       String status = null;

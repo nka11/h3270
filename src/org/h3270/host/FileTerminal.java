@@ -21,6 +21,8 @@ package org.h3270.host;
  * MA 02111-1307 USA
  */
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class FileTerminal implements Terminal {
@@ -28,9 +30,9 @@ public class FileTerminal implements Terminal {
   private String filename = null;
   private Screen screen = null;
 
-  public FileTerminal (String filename) {
-    this.filename = filename;
-    this.screen   = new S3270Screen (filename); 
+  public FileTerminal (URL url) throws IOException {
+    this.filename = url.toString();
+    this.screen   = new S3270Screen (url.openStream()); 
   }
 
   public void disconnect() {

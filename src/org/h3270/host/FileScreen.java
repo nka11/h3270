@@ -85,7 +85,7 @@ public class FileScreen extends AbstractScreen {
       else if (ch == '}') {
         buffer[y][index+1] = ' ';
         Field f = new Field (this, x+1, y, length, value.toString(),
-                             false, false);
+                             false, false, false);
         fields.add (f);
         return length + 1;
       } else {

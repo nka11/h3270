@@ -23,7 +23,7 @@
         
   <!--
       <s3270-options>
-        <language>german</language>
+        <charset>german</charset>
         <model>3</model>
       </s3270-options>
   -->

@@ -69,8 +69,9 @@ public class S3270 implements Terminal {
    * Represents the result of an s3270 command.
    */
   private class Result {
-    public List data;
-    public String status;
+    public final List data;
+    public final String status;
+    
     public Result (List data, String status) {
       this.data = data;
       this.status = status; 

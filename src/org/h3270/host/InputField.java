@@ -63,13 +63,17 @@ public class InputField extends Field {
   }
 
   /**
-   * Sets the value of this Field.
+   * Sets the value of this Field.  This method does not work for
+   * multiline fields; use setValue(int, String) instead.
    */
-  public void setValue (String newValue) { 
+  public void setValue (String newValue) {
+    if (this.isMultiline())
+      throw new RuntimeException ("use setValue(int, String) for multiline field");
     if (this.value == null) getValue();
     if (!newValue.equals (trim (this.value))) {
-      if (newValue.length() > getWidth())
-        this.value = newValue.substring (0, getWidth());
+      int width = endx - startx + 1;
+      if (newValue.length() > width)
+        this.value = newValue.substring (0, width);
       else
         this.value = newValue;
       changed = true;
@@ -90,7 +94,7 @@ public class InputField extends Field {
     if (this.value == null) getValue();
     StringBuffer result = new StringBuffer();
     Matcher m = linePattern.matcher (this.value);
-    for (int i=0; i < lineNumber-1; i++) {
+    for (int i=0; i < lineNumber; i++) {
       m.find();
       result.append (m.group(0));
     }

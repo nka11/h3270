@@ -48,7 +48,11 @@ public class S3270Impl implements S3270 {
       File s3270_binary = new File (path_to_s3270_binary, "s3270");
       s3270 = Runtime.getRuntime().exec 
                   (s3270_binary.toString()
-                 + " -model 3 " + hostname);
+                 + " -model 3 "
+                 // uncomment the following to support different charsets
+                 // (codepages) -- see s3270 docs for supported charsets
+                 // + " -charset german "
+                 + hostname);
       out = new PrintWriter (new OutputStreamWriter (s3270.getOutputStream(),
                                                      "ISO-8859-1"));
       in  = new BufferedReader (new InputStreamReader (s3270.getInputStream(),
@@ -163,7 +167,7 @@ public class S3270Impl implements S3270 {
    */
   public void updateScreen() {
     while (true) {
-      Result r = doCommand ("readbuffer ebcdic");
+      Result r = doCommand ("readbuffer ascii");
       if (r.data.size() > 0) {
         String firstLine = (String)r.data.get(0);
         if (firstLine.startsWith ("data: Keyboard locked"))
@@ -188,16 +192,9 @@ public class S3270Impl implements S3270 {
         doCommand ("movecursor (" + f.getY() + ", " + f.getX() + ")");
         doCommand ("eraseeof");
         String value = f.getValue();
-        try {
-          byte[] bytes = value.getBytes("cp273");
-          StringBuffer command = new StringBuffer("hexstring(");
-          for (int j=0; j<bytes.length; j++) {
-             command.append(Integer.toHexString(bytes[j] & 0xFF));
-          }
-          command.append(")");
-          doCommand (command.toString());
-        } catch (UnsupportedEncodingException ex) {
-          throw new RuntimeException("error: " + ex);
+        for (int j=0; j < value.length(); j++) {
+          char ch = value.charAt(j);
+          doCommand ("key (0x" + Integer.toHexString (ch) + ")");
         }
       }
     }     

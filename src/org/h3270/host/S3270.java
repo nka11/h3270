@@ -34,7 +34,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.h3270.render.TextRenderer;
+
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
@@ -60,7 +60,7 @@ public class S3270 implements Terminal {
         try {
             File s3270_binary = new File(path_to_s3270_binary, "s3270");
             s3270 = Runtime.getRuntime().exec(
-                    s3270_binary.toString() + " -model 3 "
+                    s3270_binary.toString() + " -model 2 "
                     // uncomment the following to support different charsets
                             // (codepages) -- see s3270 docs for supported
                             // charsets
@@ -222,8 +222,11 @@ public class S3270 implements Terminal {
                     char ch = value.charAt(j);
                     if (ch == '\n')
                         doCommand("newline");
-                    else
+                    else if(!Integer.toHexString(ch).equals("0")){
                         doCommand("key (0x" + Integer.toHexString(ch) + ")");
+                    } else if(f.isMultiline()){
+                        doCommand("newline");
+                    }
                 }
             }
         }
@@ -236,7 +239,8 @@ public class S3270 implements Terminal {
                 char newCh = data.charAt(index);
                 if (newCh != screen.charAt(x, y)) {
                     doCommand("movecursor (" + y + ", " + x + ")");
-                    doCommand("key (0x" + Integer.toHexString(newCh) + ")");
+                    if(!Integer.toHexString(newCh).equals("0"))
+                        doCommand("key (0x" + Integer.toHexString(newCh) + ")");
                 }
                 index++;
             }
@@ -280,12 +284,16 @@ public class S3270 implements Terminal {
     public void attn() {
         doCommand("attn");
     }
-
-    public static void main(String[] args) {
-        Terminal terminal = new S3270("locis.loc.gov", "/home/spiegel/bin");
-        terminal.updateScreen();
-        Screen s = terminal.getScreen();
-        System.out.println(new TextRenderer().render(s));
-    }
+    
+//    public static void main(String[] args) {
+//    	BasicConfigurator.configure();
+//        //Terminal terminal = new S3270("locis.loc.gov", "c:/home/shogun/bin");
+//    	Terminal terminal = new FileTerminal("h3270.dump");
+//        terminal.updateScreen();
+//        //terminal.dumpScreen("c:/temp/dump.txt");
+//        Screen s = terminal.getScreen();
+//        System.out.println(new HtmlRenderer().render(s));
+//        terminal.submitScreen();        
+//    }
 
 }

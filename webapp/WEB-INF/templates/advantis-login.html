@@ -1,0 +1,92 @@
+<!-- accept
+W E L C O M E   T O *
+ *
+ *
+ +====      ================           ================
+-->
+
+<!-- match
+ ([^ ]+) *
+ SYSTEM: ([^ ]+) +DATE: (../../..) *
+ TERMID: ([^ ]+) +TIME: (..:..:..) *
+.*?ACCOUNT\.\.\.(\{.*?\}) *USERID\.\.\.(\{.*?\}) *PASSWORD\.\.\.(\{.*?\}) *
+([^\n]+) 
+([^\n]+) 
+.*?(\{.*?\}) *(\{.*?\})
+-->
+
+<style>
+table { font-family: freesans, arial; }
+input { background-color: lightgrey; }
+.cicsfield { background-color: lightgrey;
+             border-style: inset;
+             font-size: 10pt;
+             font-family: sans; }
+          }
+</style>
+
+<table width=650>
+  <tr>
+    <td>
+      <table width=100%>
+        <tr>
+          <td align=left>
+            <table>
+              <tr><td colspan=2>#1</td></tr>
+              <tr><td><b>System:</b></td><td width=100%>#2</td></tr>
+              <tr><td><b>TermID:</b></td><td width=100%>#4</td></tr>
+              <tr><td colspan=2>
+                  <b>Customer Assistance:</b> Enter "NOTIFY" or call
+                  1-800-727-2222
+                  </td></tr>
+            </table>
+          </td>
+          <td align=left>
+            <table>
+              <tr><td><b>Date:</b></td><td>#3</td></tr>
+              <tr><td><b>Time:</b></td><td>#5</td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr><td><hr></td></tr>
+
+  <tr><td align=center><b>WELCOME TO</b></td></tr>
+  
+  <tr><td align=center><img src=images/att-logo.gif></td></tr>
+
+  <tr><td align=right>Provided by AT&T Global Network Services</td></tr>
+
+  <tr><td><hr></td></tr>
+
+  <tr><td align=center>
+    <table width=90%>
+      <tr>
+        <td>
+          <b>Account...</b>&nbsp;&nbsp;#6
+          &nbsp;&nbsp;&nbsp;
+          <b>UserID...</b>&nbsp;&nbsp;#7
+          &nbsp;&nbsp;&nbsp;
+          <b>Password...</b>&nbsp;&nbsp;#8
+        </td>
+      </tr>
+      <tr>
+        <td>
+          #9
+        </td>
+      </tr>
+      <tr>
+        <td >#10 <br></td>
+      <tr>
+      <tr>
+        <td >
+          ===&gt;&nbsp;&nbsp;#11
+          &nbsp;&nbsp;#12
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>

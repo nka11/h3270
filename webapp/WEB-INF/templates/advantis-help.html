@@ -1,0 +1,46 @@
+<!-- accept
+Network Access Logon Help
+-->
+
+<!-- match
+ ([^ ]+).*?Page +([0-9]+) *
+(?: +\n)+(.*?)
+ (F[0-9]=[^\n]+)
+(?: +\n)+ =+>(\{.*?\})
+-->
+
+<style>
+table { font-family: freesans, arial; }
+input { background-color: lightgrey; }
+.cicsfield { background-color: lightgrey;
+             border-style: inset;
+             font-size: 10pt;
+             font-family: sans; }
+          }
+</style>
+
+<table width=650 height=500>
+  <tr>
+    <td>
+      <table width=100%>
+        <tr>
+          <td width=10%>#1</td>
+          <td align=center><b>Network Access Logon Help</b></td>
+          <td width=10% align=right>Page #2</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:30px;padding-left:50px;padding-right:50px;"
+        valign=top>
+      #3{org.h3270.render.ParagraphFilter}
+    </td>
+  </tr>
+  <tr>
+    <td>#4</td>
+  </tr>
+  <tr>
+    <td>===> #5</td>
+  </tr>
+</table>

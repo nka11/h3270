@@ -1,0 +1,19 @@
+.cicsform { font-family:courier; font-size:10pt; }
+
+.cicsfield { font-family:courier; 
+             font-size:10pt; 
+             border-style:none; 
+             background:lightgrey; }
+
+.cicsdrop { font-family:courier; 
+            font-size:8pt; 
+            border-style:none;
+            border-width:0pt; 
+            background:lightgrey; }
+
+a:link.cicshelplink { color:#000000; text-decoration: none; }
+a:visited.cicshelplink { color:#000000; text-decoration: none; }
+a:active.cicshelplink { color:#ff0000; text-decoration: none; }
+a:hover.cicshelplink { color:#0000ff; text-decoration: underline; }
+
+

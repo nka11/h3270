@@ -23,6 +23,9 @@ package org.h3270.test;
 
 import junit.framework.TestCase;
 
+import org.easymock.MockControl;
+import org.h3270.render.ColorScheme;
+import org.h3270.render.H3270Configuration;
 import org.h3270.web.SessionState;
 
 /**
@@ -32,10 +35,41 @@ import org.h3270.web.SessionState;
 public class SessionStateTest extends TestCase {
     
     private SessionState objectUnderTest;
- 
+    private MockControl control;
+    private H3270Configuration mock;
+    private ColorScheme colorScheme;
+    
     public void setUp() throws Exception 
     {
-        objectUnderTest = new SessionState("");
+        control = MockControl.createControl(H3270Configuration.class);
+        
+        mock = (H3270Configuration)control.getMock();
+        
+        mock.getDefaultColorscheme();
+        control.setDefaultReturnValue("Blank");
+        
+        colorScheme = new ColorScheme();
+        mock.getColorScheme("Blank");
+        control.setDefaultReturnValue(colorScheme);
+        
+        mock.getDefaultFontname();
+        control.setDefaultReturnValue("nofont");
+        
+        control.replay();
+        
+        objectUnderTest = new SessionState(mock, "");
+    }
+    
+    public void tearDown() {
+        control.verify();
+    }
+    
+    public void testGetDefaultColorscheme() {
+        assertEquals(colorScheme, objectUnderTest.getActiveColorScheme());
+    }
+    
+    public void testGetDefaultFont() {
+        assertEquals("nofont", objectUnderTest.getFontName());
     }
     
     public void testSaveFontname() throws Exception {
@@ -54,18 +88,18 @@ public class SessionStateTest extends TestCase {
 
     public void testSaveMultiple() throws Exception {
         objectUnderTest.setActiveColorScheme("White Background");
-        objectUnderTest.setUseRenderers(true);
         objectUnderTest.setFontName("monospace");
         
         SessionState restoredState = getRestoredSessionState();
         
         assertEquals("monospace", restoredState.getFontName());
+        assertEquals("White Background", restoredState.getActiveColorScheme().getName());
     }
     
     private SessionState getRestoredSessionState() throws Exception {
         String savedState = objectUnderTest.getSavedState();
         
-        SessionState restoredState = new SessionState(savedState);
+        SessionState restoredState = new SessionState(mock, savedState);
         return restoredState;
     }
 }

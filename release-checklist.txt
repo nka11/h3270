@@ -2,9 +2,15 @@
   * increment version number
   * update doc (News)
   * generate ChangeLog / add release info
+  * create export area
+
+      cd ~/projects/h3270
+      mkdir h3270-1.0
+      cd h3270-1.0
+
   * copy into export area
 
-      cp -r -p ~/com/h3270 .
+      cp -r -p ~/projects/h3270/cvs .
 
   * within export area: 
       
@@ -22,8 +28,8 @@
 
   * final test in export area
 
-      cp ~/com/h3270/webapp/WEB-INF/bin/s3270 webapp/WEB-INF/bin
-      cp ~/com/h3270/webapp/WEB-INF/lib/* webapp/WEB-INF/lib
+      cp ~/projects/h3270/cvs/webapp/WEB-INF/bin/s3270 webapp/WEB-INF/bin
+      cp ~/projects/h3270/cvs/webapp/WEB-INF/lib/* webapp/WEB-INF/lib
       ant -Dservlet.jar=/usr/java/tomcat/common/lib/servlet-api.jar all
 
       <test>

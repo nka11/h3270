@@ -95,8 +95,12 @@ public class S3270 implements Terminal {
         lines.add (line);
       }
       int size = lines.size();
-      return new Result (lines.subList (0, size-1), 
-                         (String)lines.get (size-1));
+      if (size > 0)
+        return new Result (lines.subList (0, size-1), 
+                           (String)lines.get (size-1));
+      else
+        return new Result (new ArrayList(),
+                           "no status received");
     } catch (IOException ex) {
       throw new RuntimeException ("IOException during command: " + command 
                                 + ", " + ex);
@@ -194,7 +198,10 @@ public class S3270 implements Terminal {
         String value = f.getValue();
         for (int j=0; j < value.length(); j++) {
           char ch = value.charAt(j);
-          doCommand ("key (0x" + Integer.toHexString (ch) + ")");
+          if (ch == '\n')
+            doCommand ("newline");
+          else
+            doCommand ("key (0x" + Integer.toHexString (ch) + ")");
         }
       }
     }     

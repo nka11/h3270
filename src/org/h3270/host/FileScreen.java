@@ -84,8 +84,8 @@ public class FileScreen extends AbstractScreen {
         throw new RuntimeException ("EOF while reading field");
       else if (ch == '}') {
         buffer[y][index+1] = ' ';
-        Field f = new Field (this, x+1, y, index, y,
-                             false, false, false, true);
+        Field f = new InputField (this, (byte)0,
+                                  x+1, y, index, y);
         fields.add (f);
         return length + 1;
       } else {

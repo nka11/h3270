@@ -17,14 +17,17 @@ package org.h3270.render;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
 
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import org.h3270.host.*;
+import org.h3270.host.Screen;
 
 /**
  * An Engine is a collection of Renderers.
@@ -36,7 +39,7 @@ public class Engine implements Renderer {
 
   private Renderer fallback  = null;
   private List     renderers = null;
-  
+
   /**
    * Constructs an Engine based on all template files in the given basedir.
    */
@@ -49,19 +52,21 @@ public class Engine implements Renderer {
         return filename.endsWith(".html");
       }
     });
-    for (int i=0; i<templates.length; i++) {
-      renderers.add (new RegexRenderer(templates[i].toString()));
+    if (templates != null) {
+        for (int i=0; i<templates.length; i++) {
+            renderers.add (new RegexRenderer(templates[i].toString()));
+        }
     }
   }
-  
+
   public boolean canRender (Screen s) {
     return true;
   }
-  
+
   public boolean canRender (String screenText) {
-    return true; 
-  }  
-  
+    return true;
+  }
+
   public String render (Screen s) {
     String screenText = new TextRenderer().render(s);
     for (Iterator i = renderers.iterator(); i.hasNext();) {
@@ -70,7 +75,7 @@ public class Engine implements Renderer {
         return r.render(s);
     }
     return fallback.render(s);
-  }  
+  }
 
   private Renderer getRenderer (Screen s) {
     for (Iterator i = renderers.iterator(); i.hasNext();) {
@@ -82,7 +87,7 @@ public class Engine implements Renderer {
   }
 
   public static void main(String[] args) {
-    Engine e = new Engine("/usr/java/tomcat/webapps/h3270/WEB-INF/templates"); 
+    Engine e = new Engine("/usr/java/tomcat/webapps/h3270/WEB-INF/templates");
     System.out.println(e);
   }
 }

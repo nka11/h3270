@@ -197,7 +197,7 @@ public class S3270Impl implements S3270 {
           command.append(")");
           doCommand (command.toString());
         } catch (UnsupportedEncodingException ex) {
-          throw new RuntimeException(ex);
+          throw new RuntimeException("error: " + ex);
         }
       }
     }     

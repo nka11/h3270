@@ -128,6 +128,10 @@ public class S3270Screen extends AbstractScreen {
       if (line.length > width) width = line.length;
       buffer[y] = line;
     }     
+    // add the final field on the page
+    fields.add (createField (fieldStartCode,
+                             fieldStartX, fieldStartY,
+                             width-1, height-1));
   }
   
   public List getBufferData() {

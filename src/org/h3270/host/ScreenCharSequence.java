@@ -51,7 +51,7 @@ public class ScreenCharSequence {
     return text.charAt(index);
   }
 
-  public CharSequence subSequence(int start, int end) {
+  public String subSequence(int start, int end) {
     return text.substring (start, end);
   }
 

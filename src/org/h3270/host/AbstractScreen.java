@@ -102,12 +102,25 @@ public abstract class AbstractScreen implements Screen {
   public InputField getInputFieldAt(int x, int y) {
     for (Iterator i = fields.iterator(); i.hasNext();) {
       Field f = (Field)i.next();
-      if (!(f instanceof InputField))
-        continue;
-      if (y == f.getStartY()) {
-        int fx = f.getStartX();
-        if (x == fx || (x > fx && x < fx + f.getWidth()))
+      if (f instanceof InputField && !f.isEmpty()) {
+        int startx = f.getStartX();
+        int starty = f.getStartY();
+        int endx   = f.getEndX();
+        int endy   = f.getEndY();
+        
+        if (y < starty) continue;
+        if (y == starty) {
+          if (x < startx) continue;
+          if (y == endy && x > endx) continue;
+          return (InputField)f;         
+        }
+        if (y > endy) continue;
+        if (y == endy) {
+          if (x > endx) continue;
           return (InputField)f;
+        } else { // full row between start and end
+          return (InputField)f;
+        }
       }
     }
     return null;    

@@ -1,0 +1,46 @@
+2003-12-04  Andre Spiegel  <spiegel@gnu.org>
+
+	* web/Servlet.java (performKeyAction): Use RuntimeException in a
+	JDK 1.3-compatible way.
+
+	* render/RegexRenderer.java (render): Use HtmlRenderer.appendFocus().
+
+	* render/HtmlRenderer.java (appendFocus): New method.
+	(render): Use it.
+	(renderField): Formatting change.
+
+	* host/ScreenCharSequence.java (subSequence): Change return type
+	to String to make it JDK 1.3-compatible.
+
+	* host/Screen.java (getFocusedField): New method.
+
+	* host/S3270Screen.java (statusPattern): New field.
+	(update): Parse status line to get the current cursor position
+	and set the currently focused field.
+	(createField): Adapt to new constructor parameter of Field.
+
+	* host/FileScreen.java (readField): Adapt to new constructor
+	parameter of Field.
+
+	* host/Field.java (isFocused, setFocused): New field and accessor
+	methods.
+	(c'tor): Add parameter to set it.
+
+	* host/AbstractScreen.java (cursorX, cursorY): New fields.
+	(getFocusedField): New method.
+
+2003-12-03  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/RegexRenderer.java (getFilter): Use JDK1.3-compliant
+	RuntimeException.
+
+	* host/S3270Screen.java (c'tor, decode, dump): Use
+	JDK1.3-compliant RuntimeException.
+
+	* host/S3270Impl.java (submitScreen): Use JDK1.3-compliant
+	RuntimeException.
+
+2003-12-03  Andre Spiegel  <spiegel@gnu.org>
+
+	Initial commit of all files into CVS.
+

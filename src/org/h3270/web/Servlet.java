@@ -75,10 +75,10 @@ public class Servlet extends HttpServlet {
         String filename = 
           new File (getRealPath("/WEB-INF/dump"),
                     hostname.substring(5)).toString();
-        state.terminal = new S3270Dummy (filename);
+        state.terminal = new FileTerminal (filename);
       } else {
         state.terminal = 
-          new S3270Impl (hostname, getRealPath("/WEB-INF/bin"));
+          new S3270 (hostname, getRealPath("/WEB-INF/bin"));
       }
       state.useKeypad = false;
     } else if (request.getParameter ("disconnect") != null) {

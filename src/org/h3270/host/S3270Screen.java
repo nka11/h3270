@@ -69,7 +69,7 @@ public class S3270Screen extends AbstractScreen {
       }
       update (status, lines);
     } catch (IOException ex) {
-      throw new RuntimeException (ex);
+      throw new RuntimeException ("error: " + ex);
     } 
   }
 
@@ -116,7 +116,7 @@ public class S3270Screen extends AbstractScreen {
       out.println ("ok");
       out.close();
     } catch (IOException ex) {
-      throw new RuntimeException (ex);
+      throw new RuntimeException ("error: " + ex);
     } 
   }
 
@@ -161,7 +161,7 @@ public class S3270Screen extends AbstractScreen {
         try {
           result.append(new String(bytes, "cp273"));
         } catch (UnsupportedEncodingException ex) {
-          throw new RuntimeException(ex);
+          throw new RuntimeException("error: " + ex);
         }
       }
       index++;

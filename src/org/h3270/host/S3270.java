@@ -99,8 +99,8 @@ public class S3270 implements Terminal {
         return new Result (lines.subList (0, size-1), 
                            (String)lines.get (size-1));
       else
-        return new Result (new ArrayList(),
-                           "no status received");
+        throw new RuntimeException ("no status received in command: " 
+                                    + command);
     } catch (IOException ex) {
       throw new RuntimeException ("IOException during command: " + command 
                                 + ", " + ex);

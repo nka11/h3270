@@ -104,6 +104,7 @@ public class RegexRenderer extends HtmlRenderer {
       result.append (htmlTemplate.substring (index));
       result.append ("<input type=hidden name=key>\n");
       result.append ("</form>");
+      appendFocus (s, result);
       return result.toString();
     } else
       return "no match";

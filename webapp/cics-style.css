@@ -1,23 +1,20 @@
-.cicsform { font-family:courier; font-size:10pt; }
-
-pre, pre input, pre textarea {
+pre, pre input, textarea {
   font-family:courier;
+  font-size:10pt;
+  border-style:none;
 }
 
-.cicsfield { font-family:courier; 
-             font-size:10pt; 
-             border-style:none; 
-             background:lightgrey; }
+.h3270-form { background-color:white;
+              color:black; }
 
-.cicsdrop { font-family:courier; 
-            font-size:8pt; 
-            border-style:none;
-            border-width:0pt; 
-            background:lightgrey; }
+pre, pre input, textarea {
+  background-color:white;
+}
 
-a:link.cicshelplink { color:#000000; text-decoration: none; }
-a:visited.cicshelplink { color:#000000; text-decoration: none; }
-a:active.cicshelplink { color:#ff0000; text-decoration: none; }
-a:hover.cicshelplink { color:#0000ff; text-decoration: underline; }
+.h3270-input { color:green; background-color:lightgrey; }
 
+.h3270-input-intensified { color:red; background-color:lightgrey; }
 
+.h3270-intensified { color:blue; }
+
+                     

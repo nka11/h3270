@@ -137,6 +137,9 @@ public class Servlet extends HttpServlet {
         s3270.pf (number);
       else
         s3270.pa (number);
+    } else if (key.equals("")) {
+      // use ENTER as a default action if the actual key got lost
+      s3270.enter();
     } else { // other key: find a parameterless method of the same name
       try {
         Class c = s3270.getClass();

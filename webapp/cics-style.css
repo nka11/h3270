@@ -1,5 +1,9 @@
 .cicsform { font-family:courier; font-size:10pt; }
 
+pre, pre input, pre textarea {
+  font-family:courier;
+}
+
 .cicsfield { font-family:courier; 
              font-size:10pt; 
              border-style:none; 

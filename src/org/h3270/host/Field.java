@@ -24,7 +24,7 @@ package org.h3270.host;
 import org.h3270.regex.*;
 
 /**
- * Represents a Field that allows user input.
+ * Represents a Field on a Screen.
  * 
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
  * @version $Id$
@@ -105,6 +105,15 @@ public class Field {
    * @deprecated this method will disappear soon
    */
   public int getWidth() { return endx - startx + 1; } 
+
+  /**
+   * Returns the height of this Field, in lines.  If the control
+   * characters at the start or the end of this Field are at the end
+   * or the start of the preceding or next line, respectively, then
+   * those lines are not incluced in the height count -- only the actual
+   * text of the Field counts.
+   */  
+  public int getHeight() { return endy - starty + 1; }
   
   /**
    * Returns the Screen of which this Field is a part.
@@ -112,7 +121,10 @@ public class Field {
   public Screen getScreen() { return screen; }
   
   /**
-   * Returns the current value of this Field.
+   * Returns the current value of this Field.  This does not include
+   * the control character that starts the field, and it does not include
+   * leading or trailing newlines.  If this Field is a multi-line field,
+   * the individual lines are separated by newlines.
    */
   public String getValue() { 
     if (value == null) {
@@ -121,6 +133,27 @@ public class Field {
     return value; 
   }
   
+  private static Pattern linePattern = 
+    Pattern.compile ("^(?:(.*)\n)*(.*)$", Pattern.MULTILINE);
+  
+  /**
+   * Returns one of the lines of a potentially multi-line Field.
+   * @param lineNumber the number of the line to retrieve, starting at zero
+   */
+  public String getValue (int lineNumber) {
+    Matcher m = linePattern.matcher (getValue());
+    m.find();
+    return m.group(lineNumber + 1);
+  }
+  
+  /**
+   * Returns the textual representation of this Field.  Unlike getValue(),
+   * this methods prepends a blank for the opening field attribute, and
+   * adds newline characters at the beginning and the end as needed.
+   * Calling this method for each Field of a Screen, and concatenating
+   * the results, creates a full printable, textual representation of
+   * the screen.  
+   */
   public String getText() {
     StringBuffer result = new StringBuffer();
     if (startx == 0) {
@@ -133,9 +166,17 @@ public class Field {
       result.append ("\n");
     return result.toString();
   }
-  
 
-    
+  public boolean isMultiline() {
+    return endy > starty; 
+  }
+
+  public boolean isEmpty() {
+    if (starty == endy)
+      return startx >= endx;
+    else
+      return starty > endy;
+  } 
   
   public boolean isIntensified() {
     return displayMode == DISPLAY_INTENSIFIED;

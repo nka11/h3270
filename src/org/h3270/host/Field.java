@@ -121,6 +121,22 @@ public class Field {
     return value; 
   }
   
+  public String getText() {
+    StringBuffer result = new StringBuffer();
+    if (startx == 0) {
+      if (starty > 0)
+        result.append (" \n");
+    } else
+      result.append (" ");
+    result.append (this.getValue());
+    if (endx == screen.getWidth() - 1 && starty <= endy)
+      result.append ("\n");
+    return result.toString();
+  }
+  
+
+    
+  
   public boolean isIntensified() {
     return displayMode == DISPLAY_INTENSIFIED;
   }

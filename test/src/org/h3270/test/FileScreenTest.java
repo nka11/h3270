@@ -30,7 +30,7 @@ import org.h3270.render.*;
 import java.net.URL;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
  * @version $Id$
  */
 public class FileScreenTest extends TestCase {
@@ -66,11 +66,11 @@ public class FileScreenTest extends TestCase {
   }
 
   public void test_screen_1() {
-    screenTest ("/screen1.txt");
+    screenTest ("/org/h3270/test/screen1.txt");
   }
 
   public void test_screen_2() {
-    screenTest ("/screen2.txt");
+    screenTest ("/org/h3270/test/screen2.txt");
   }
 
   public static void main (String[] args) {

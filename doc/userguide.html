@@ -38,10 +38,151 @@
     <td class=content valign=top>
       <h1>User Guide</h1>
 
-      By default, h3270 provides a generic terminal emulation interface.
+      By default, h3270 provides a generic terminal emulation
+      interface.  You can use it to connect to any host that is
+      reachable from the machine on which h3270 runs via TCP/IP.  In
+      our example, we assume that h3270 runs in a default Tomcat
+      installation on the local machine.  The address to use in the
+      browser window is
+      <code>http://localhost:8080/h3270/servlet</code>.  When you
+      enter this address and hit return, the generic connect screen
+      as shown in fig.&nbsp;1 is displayed.
       <p>
-      [...]
-
+      <center>
+        <a href="screens/gui-1.png">
+          <img src="screens/gui-1-small.png" border="0">
+        </a>
+        <p>
+        Fig. 1: Generic Screen at Startup
+      </center>
+      <p>
+      In the input field at the lower left corner, enter the DNS
+      address of the host you want to connect to.  You can either
+      press ENTER or push the "Connect" button on the lower right to
+      let h3270 connect to the indicated host.  If the connection can
+      be established, the login screen of the specified host should
+      appear, as shown in fig.&nbsp;2.  (For this particular host
+      screen, we have defined a rendering template to make it look
+      pretty.  Normally, if h3270 doesn't know anything about the host
+      you connect to, you will see a simple, character-based layout.)
+      <p>
+      <center>
+        <a href="screens/gui-2.png">
+          <img src="screens/gui-2-small.png" border="0">
+        </a>
+        <p>
+        Fig. 2: Terminal Emulator Connected to Host
+      </center>
+      <p>
+      You can operate the host application from within the browser
+      window very much the same as you would do in an ordinary
+      terminal or emulator.  You can use the mouse or keyboard to
+      place the cursor into the input field you want to make changes
+      to, and press ENTER to send your modified fields back to the
+      host.
+      <p>
+      Please note: The HTML-based input fields that h3270 uses work
+      somewhat differently than what you may know from traditional
+      terminals and emulators.  For example, 3270 terminals usually
+      operate in <i>overwrite mode</i>, so what you type replaces the
+      original contents of the field key by key.  Many host
+      applications make use of this by prefilling input fields with
+      underscores, and the like.  Unfortunately, there is no such
+      overwrite mode available for HTML input fields.  We have not
+      completely settled on a way to handle this nicely in h3270.  For
+      the time being, our approach is to remove leading and trailing
+      blanks, underscores, and NUL characters from the contents of
+      input fields when we display them.  As a special case, this
+      means when a field contains <i>only</i> blanks, underscores, or
+      NUL characters, it will start out completely empty in HTML.
+      This allows for convenient input from within the browser, but
+      may cause problems with the underlying host application in some
+      circumstances.  This particular area should be considered work
+      in progress.
+      <p>
+      Many host applications also make extensive use of function keys
+      (such as PF7 and PA1).  By default, h3270 uses the function
+      keys of your keyboard (F1-12 on traditional PC keyboards) for
+      PF1-12.  However, some of these keys are normally also used by
+      your web browser or operating system, and so neither h3270 nor
+      the host application will actually receive these key events.
+      To remedy this, you can press the button in the lower right
+      corner of the page to display an auxiliary keypad beneath your
+      application (see fig.&nbsp;3).
+      <p>
+      <center>
+        <a href="screens/gui-3.png">
+          <img src="screens/gui-3-small.png" border="0">
+        </a>
+        <p>
+        Fig. 3: Keypad Enabled
+      </center>
+      <p>
+      Some of the keys on this keypad are not implemented yet, partly
+      because they do not really make sense in an HTML interface.  All
+      the function keys (PFx and PAx) do work, however (although
+      PF13-24 are still missing).  The keypad in its current form is
+      therefore only a starting point which probably must be tailored
+      to the particular needs of your application (this does require
+      programming within h3270).
+      <p>
+      The meaning of the other buttons at the bottom of the page
+      (next to the "Keypad" button) is as follows:
+      <dl>
+        <dt><b>Disconnect</b></dt>
+        <dd>
+          Disconnects h3270 from the host and returns to the initial
+          screen (fig.&nbsp;1).
+        </dd>
+        <p>
+        <dt><b>Refresh</b></dt>
+        <dd>
+          Refreshes the HTML page from the screen buffer within h3270.
+          This does not send any data to the host.  However, this
+          currently is the only way to see any changes that the host
+          may have sent to h3270 after the page was initially
+          displayed (we're considering to use server-side push to make
+          this automatic).
+        </dd>
+        <p>
+        <dt><b>Render</b></dt>
+        <dd>
+          Toggles h3270's regex-based rendering engine.  If the
+          engine is on, <i>and</i> a rendering template has been
+          defined for a particular page, the output of the engine is
+          displayed instead of the simple, character-based layout.
+          Pressing the button once turns the engine off, so that you
+          always see the character-based layout.  Initially, the
+          engine is on.
+        </dd>
+        <p>
+        <dt><b>Dump</b></dt>
+        <dd>
+          Writes a dump of the current screen buffer contents to a
+          file.  Pressing this button opens a dialog where you can
+          enter the file name.  The file is written to
+          the <code>WEB-INF/dump</code> directory within the h3270 web
+          application.  On the initial connect screen (fig.&nbsp;1),
+          you can specify this filename prefixed
+          with <code>file:</code> instead of a host to connect to.
+          h3270 will then display this screen statically (you cannot
+          interact with it in this mode).  This is useful for testing
+          rendering templates without actually connecting to a host.
+        </dd>
+        <p>
+        <dt><b>Log</b></dt>
+        <dd>
+          When you press this button once, h3270 starts logging all
+          communication with the s3270 protocol engine.  When you
+          press the button a second time, the entire log is written
+          to the log file of your web application container.  This is
+          useful for debugging only.
+        <p>
+        <dt><b>Keypad</b></dt>
+        <dd>
+          Toggles the auxiliary HTML keypad (see above).
+        </dd>
+      </dl>
     </td>
   </tr>
 </table>

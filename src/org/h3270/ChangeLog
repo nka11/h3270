@@ -1,3 +1,27 @@
+2004-12-01  Andre Spiegel  <spiegel@gnu.org>
+
+	* Version.java: Version 1.2.2 released.
+
+	* host/FileScreen.java: Deprecate this type, since it hasn't been
+	updated to h3270 1.2 and beyond.
+
+	* web/Servlet.java (doPost): Add protocol to file: URL.
+
+2004-11-30  Andre Spiegel  <spiegel@gnu.org>
+
+	* web/AbstractServlet.java, web/Servlet.java,
+	web/SessionState.java, web/StyleServlet.java,
+	render/H3270Configuration.java, render/SelectOptionBean.java,
+	render/ColorScheme.java, render/AvalonConfiguration.java,
+	regex/Pattern.java, host/S3270.java: Reformatted for two-space
+	indentation.
+
+	* host/Field.java (ATTR_NOT_RENDERED): Removed, was unused.
+
+	* host/Field.java: Reformatted for two-space indentation.
+
+	* web/Servlet.java (doPost): Set screen to null on disconnect.
+
 2004-11-25  Alphonse Bendt  <alphonse.bendt@it-fws.de>
 
 	* render/RegexRenderer.java: removed unused imports

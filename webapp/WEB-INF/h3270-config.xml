@@ -2,7 +2,7 @@
 <!DOCTYPE h3270 SYSTEM "etc/h3270-config.dtd">
 <h3270>
 	<!-- <exec-path>/usr/local/bin</exec-path> -->
-	<style>h3270</style>
+	<!-- <style>h3270</style> -->
 	
 	<configuration>
 		<fonts default="times">

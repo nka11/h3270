@@ -2,6 +2,9 @@
 <head>
 <title>h3270 -- Installation</title>
 <link rel="stylesheet" type="text/css" href="styles.css">
+<style>
+.installation-list li { margin-top: 1em; }
+</style>
 </head>
 <body>
 <table width=100% style="background-color:black;">
@@ -77,7 +80,7 @@
       instructions, we assume that you are using Tomcat version 4 or
       higher, but the instructions should apply to any other web
       container with only trivial changes.
-      <ol>
+      <ol class="installation-list">
 
         <li>Build and install Ant as described in its installation
         instructions.</li>
@@ -104,11 +107,13 @@
         and <code>cygwin1.dll</code>
         into <code>$H3270_HOME/webapp/WEB-INF/bin</code>.  (There may
         be other ways to do it, but the above is the procedure we
-        actually verified.). Alternatively you can put s3270 somewhere on your path and add the
-        following entry to the configuration file:
+        actually verified.). Alternatively you can put s3270 elsewhere
+        in your file system (e.g. <code>/usr/local/bin</code>) and add
+        the following entry to the configuration file, 
+        <code>$H3270_HOME/webapp/WEB-INF/h3270-config.xml</code>:
+
         <pre>
-            &lt;exec-path&gt;/path/to/s3270/&lt;/exec-path&gt; 
-        </pre>
+            &lt;exec-path&gt;/usr/local/bin&lt;/exec-path&gt;</pre>
 
         <li>Go to the <code>$H3270_HOME</code> directory and
         type <code>ant</code> to build the program.  This requires
@@ -123,20 +128,33 @@
         This will compile h3270 as a web application under
         <code>$H3270_HOME/webapp</code>.
         </li>
-
+        <li>You can also build a web archive (.war file) for h3270 by
+        typing <code>ant war</code> on the command line.  This will
+        create a file <code>h3270.war</code>
+        in <code>$H3270_HOME</code>.  However, note that this .war
+        file won't contain any s3270 binary that you placed
+        into <code>WEB-INF/bin</code>.  This is because
+        platform-dependent files do not belong in a web archive, and
+        besides, the permissions wouldn't be set properly if you
+        deployed this web archive to an application server.
+        Therefore, if you want to package h3270 up in a web archive,
+        you need to configure it to call s3270 from an external
+        location (see step 5. above).
         <li>Deploy the h3270 web application to Tomcat.  You can do
         this by copying (or moving) the entire directory tree
         under <code>$H3270_HOME/webapp</code>
         to <code>$TOMCAT_HOME/webapps/h3270</code> (so that
         the <code>webapp</code> directory from the distribution ends
-        up being renamed to <code>h3270</code> in Tomcat).  However,
-        for development use it is probably more convenient to keep
-        the <code>webapp</code> directory where it is and point Tomcat
-        to this directory in its <code>server.xml</code> file.  To do
-        this, add the following
-        to <code>$TOMCAT_HOME/conf/server.xml</code> (the section
-        where it should be added is indicated by comments in this
-        file):
+        up being renamed to <code>h3270</code> in Tomcat).
+        Alternatively, if you built a web archive in the previous
+        step, you may also deploy this to the application server by
+        whatever means is available.  For development use, it is
+        probably most convenient to keep the <code>webapp</code>
+        directory where it is and point Tomcat to this directory in
+        its <code>server.xml</code> file.  To do this, add the
+        following to <code>$TOMCAT_HOME/conf/server.xml</code> (the
+        section where it should be added is indicated by comments in
+        this file):
         <pre>
           &lt;Context path="/h3270" docBase="<i>$H3270_HOME</i>/webapp"
                        debug="0" reloadable="true"&gt;

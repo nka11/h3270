@@ -1,7 +1,14 @@
 <html>
 <head>
 <title>h3270</title>
-<link rel="stylesheet" type="text/css" href="cics-style.css">
+<style>
+pre, pre input, textarea {
+	font-family: courier;
+	font-size: 10pt;
+	border-width: 0pt;
+}
+<%= request.getAttribute("style") %>
+</style>
 </head>
 <body>
 
@@ -91,11 +98,19 @@
     }
   }
 
+  function openPrefs() {
+    prefsWindow = window.open ("prefs.jsp",
+                               "h3270 Preferences", 
+                               "top=200,left=300,width=270,height=180");
+    if (prefsWindow.opener == null)
+      prefsWindow.opener = self;
+  }
+
 </script>
 
 <table height=100% style="border-style:solid; border-width:1px; border-collapse:collapse;">
   <tr>
-    <td width=720px align=center valign=center>
+    <td width=720px align=center valign=center class="h3270-form">
       <% String screen = (String)request.getAttribute ("screen");
          if (screen != null)
            out.println (screen);
@@ -122,17 +137,22 @@
                                    style="background-color:lightgrey;"
                                    name=hostname></td><td width=70% align=right>
                  <input type=submit name=connect value="Connect">
+                 <input type=button name=prefs value="Preferences..."
+                        onClick="openPrefs();">
               <% } else { %>
                  Host: <b><%= request.getAttribute ("hostname") %></b></td><td width=70% align=right>
                  <input type=submit name=disconnect value="Disconnect">
                  <input type=submit name=refresh value="Refresh">
-                 <input type=submit name=render value="Render">
                  <input type=hidden name=dumpfile value="">
                  <input type=button name=dump value="Dump"
                         onClick="document.control.dumpfile.value=prompt('Filename:',''); document.control.submit();">
+                 <input type=button name=prefs value="Preferences..."
+                        onClick="openPrefs();">
                  <input type=submit name=log value="Log">
                  <input type=submit name=keypad value="Keypad">
               <% } %>
+                 <input type=hidden name=colorscheme>
+                 <input type=hidden name=render>
             </td>
         </table>
       </form>

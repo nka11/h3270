@@ -21,6 +21,7 @@ package org.h3270.render;
  * MA 02111-1307 USA
  */
 
+import java.util.*;
 import org.h3270.host.*;
 
 /**
@@ -69,22 +70,31 @@ public class HtmlRenderer implements Renderer {
 
   private void renderFormatted (Screen screen, StringBuffer result) {
     result.append ("<pre>");
-    for (int y = 0; y < screen.getHeight(); y++) {
-      for (int x = 0; x < screen.getWidth(); x++) {
-        Field f = screen.getInputFieldAt (x, y);
-        if (f != null) {
-          renderField (result, f);
-          x += f.getWidth() - 1;  
-        } else {
-          char ch = screen.charAt (x, y);
-          if (ch == ' ' || ch == '\u0000')
-            result.append (" ");
+    for (Iterator i = screen.getFields().iterator(); i.hasNext();) {
+      Field f = (Field)i.next();
+      if (f instanceof InputField) {
+        if (f.getStartX() == 0) {
+          if (f.getStartY() > 0) {
+            result.append (" \n");
+          }
+        } else
+          result.append (" ");          
+        renderInputField (result, (InputField)f);
+        if (f.getEndX() == screen.getWidth()-1 && f.getEndY() >= f.getStartY())
+          result.append ("\n");
+      } else {
+        if (f.isIntensified()) result.append ("<font color=blue>");
+        String text = f.getText();
+        for (int j=0; j<text.length(); j++) {
+          char ch = text.charAt(j);
+          if (ch == '\u0000')
+            result.append (' ');
           else
             result.append (ch);
         }
+        if (f.isIntensified()) result.append ("</font>");
       }
-      result.append ("\n");
-    }     
+    }
     result.append ("</pre>");
   }
 
@@ -105,20 +115,17 @@ public class HtmlRenderer implements Renderer {
     result.append ("</textarea>\n");  
   }
 
-  protected void renderField (StringBuffer result, Field f) {
-    if (f instanceof InputField) {
-      result.append ("<input ");
-      result.append ("type=" + (f.isHidden() ? "password " : "text "));
-      result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY() + "\" ");
-      result.append ("class=cicsfield ");
-      String value = f.getValue();
-      result.append ("value=\"" + InputField.trim (value) + "\" ");
-      result.append ("maxlength=\"" + f.getWidth() + "\" ");
-      result.append ("size=\"" + f.getWidth() + "\" ");
-      result.append (">");
-    } else {
-      for (int i=0; i<f.getWidth(); i++) result.append(' ');
-    }
+  protected void renderInputField (StringBuffer result, InputField f) {
+    result.append ("<input ");
+    result.append ("type=" + (f.isHidden() ? "password " : "text "));
+    result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY() + "\" ");
+    result.append ("class=cicsfield ");
+    String value = f.getValue();
+    result.append ("value=\"" + InputField.trim (value) + "\" ");
+    result.append ("maxlength=\"" + f.getWidth() + "\" ");
+    result.append ("size=\"" + f.getWidth() + "\" ");
+    if (f.isIntensified()) result.append ("style=\"color:red;\" ");
+    result.append (">");
   }
 
 }

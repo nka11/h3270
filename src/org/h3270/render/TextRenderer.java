@@ -32,6 +32,18 @@ import java.io.*;
  */
 public class TextRenderer implements Renderer {
 
+  private boolean markIntensified = false;
+  private boolean markHidden = false;
+  
+  public TextRenderer() {
+  }
+  
+  public TextRenderer (boolean markIntensified,
+                       boolean markHidden) {
+    this.markIntensified = markIntensified;
+    this.markHidden = markHidden;                       
+  }
+
   public boolean canRender (Screen s) {
     return true;
   }
@@ -44,30 +56,23 @@ public class TextRenderer implements Renderer {
     StringBuffer result = new StringBuffer();
     for (Iterator i = s.getFields().iterator(); i.hasNext();) {
       Field f = (Field)i.next();
-      if (f.getStartX() == 0 && f.getStartY() == 0) {
-        // nothing
-      } else if (f.getStartX() == 0 && f.getStartY() > 0) {
-        result.append(' ');
-        result.append('\n');
-      } else
-        result.append(' ');
-      result.append(f.getValue());
-      if (f.getEndX() == s.getWidth()-1 && f.getEndY() >= f.getStartY()) {
-        result.append('\n');
+      result.append (f.getText());
+    }
+
+    if (markIntensified) {
+      markFields (s, result, '[', ']', new FieldSelector() {
+        public boolean checkField (final Field f) {
+          return !(f instanceof InputField) && f.isIntensified();
+        }
+      });
+    }    
+      
+    markFields (s, result, '{', '}', new FieldSelector() {
+      public boolean checkField (final Field f) {
+        return f instanceof InputField;
       }
-    }
-    for (Iterator i = s.getFields().iterator(); i.hasNext();) {
-      Field f = (Field)i.next();
-      if (!(f instanceof InputField)) continue;
-      if (f.getStartX() == 0)
-        setChar (s, result, s.getWidth()-1, f.getStartY()-1, '{');
-      else
-        setChar (s, result, f.getStartX()-1, f.getStartY(), '{');
-      if (f.getEndX() == s.getWidth()-1 && f.getEndY() < s.getHeight()-1)
-        setChar (s, result, 0, f.getEndY() + 1, '}');
-      else if (f.getEndX() < s.getWidth()-1)
-        setChar (s, result, f.getEndX() + 1, f.getEndY(), '}');
-    }
+    });
+    
     for (int i=0; i<result.length(); i++) {
       if (result.charAt(i) == '\u0000')
         result.setCharAt(i, ' ');
@@ -75,9 +80,62 @@ public class TextRenderer implements Renderer {
     return result.toString();
   }
 
-  private void setChar (Screen s, StringBuffer buf, int x, int y, char ch) {
-    int index = y * (s.getWidth() + 1) + x;
-    buf.setCharAt (index, ch);
+  /**
+   * This method marks some of the Fields in a textual screen representation
+   * by replacing the control characters with other characters.  For example,
+   * InputFields can be surrounded by '{' and '}' to make them visible and
+   * detectable.
+   * @param s the Screen on which we operate
+   * @param buf a StringBuffer holding the textual representation of the screen,
+   *            with individual lines separated by newline characters.
+   * @param openCh the character to be used for the initial control character
+   *               of a field
+   * @param closeCh the character to be used for the terminating control
+   *                character of the field
+   * @param fs a FieldSelector that decides which of the Fields should be marked
+   */
+  private void markFields (Screen s, StringBuffer buf,
+                           char openCh, char closeCh,
+                           FieldSelector fs) {
+    for (Iterator i = s.getFields().iterator(); i.hasNext();) {
+      Field f = (Field)i.next();
+      if (!fs.checkField(f)) continue;
+      int startx = f.getStartX();
+      int starty = f.getStartY();
+      int endx   = f.getEndX();
+      int endy   = f.getEndY();
+      int width  = s.getWidth();
+      
+      if (startx == 0)
+        setChar (buf, width, width-1, starty-1, openCh); 
+      else
+        setChar (buf, width, startx-1, starty, openCh);
+        
+      if (endx == width-1)
+        setChar (buf, width, 0, endy+1, closeCh);
+      else
+        setChar (buf, width, endx+1, endy, closeCh);
+    }
+  }
+
+  /**
+   * Changes one character in the given StringBuffer.  The character position
+   * is given in screen (x,y) coordinates.  The buffer holds the entire screen
+   * contents, with lines separated by a single newline character each.  If
+   * the x and y coordinates are out of range, this method silently ignores
+   * the request -- this makes the caller's code easier.
+   */
+  private void setChar (StringBuffer buf, int width, int x, int y, char ch) {
+    int index = y * (width + 1) + x;
+    if (index >= 0 && index < buf.length())
+      buf.setCharAt (index, ch);
+  }
+
+  /**
+   * Interface for selecting Fields.
+   */
+  private interface FieldSelector {
+    public boolean checkField (final Field f);
   }
 
 }

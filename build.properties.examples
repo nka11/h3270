@@ -1,0 +1,4 @@
+servlet.jar=/Library/JBoss/3.2/server/default/lib/javax.servlet.jar
+dir.deploy=/Library/JBoss/3.2/server/default/deploy
+dir.junit=/Users/alf/Library/Java/junit
+dir.j2ee=/usr/local/j2sdkee1.3.1/lib

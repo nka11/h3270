@@ -29,13 +29,12 @@
 	
 	<configuration>
 		<!-- list of available fonts -->
-		<fonts default="times">
+		<fonts default="courier">
 			<font name="courier" description="Courier" />
 			<font name="freemono" description="Free Mono" />
 			<font name="terminal" description="Terminal" />
 			<font name="couriernew" description="Courier New" />
 			<font name="monospace" description="Monospace" />
-			<font name="times" description="Times" />
 		</fonts>
 		
 		<!-- list of available colorschemes                       -->

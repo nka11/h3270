@@ -21,4 +21,4 @@ SOURCE DATA SET = ADCD.ZOSV14S.VTAM.SOURCE(USSN)
  ===> ENTER L FOLLOWED BY THE APPLID                                            
  ===> EXAMPLES: "L TSO", "L CICS", "L IMS3270                                   
                                                                                {
-                                                                               }
+                                                                               {

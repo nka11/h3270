@@ -2,9 +2,12 @@
 
 <script>
   function doApply() {
+    opener.document.control.colorscheme.value
+      = document.prefs.colorscheme.options
+                              [document.prefs.colorscheme.selectedIndex].text;
 
-    opener.document.control.colorscheme.value 
-      = document.prefs.colorscheme.value;
+	opener.document.control.font.value
+	  = document.prefs.font.options[document.prefs.font.selectedIndex].value;
 
     if (document.prefs.render.checked) {
       opener.document.control.render.value = "true";
@@ -25,6 +28,7 @@ td { font-family:freesans,arial,helvetica; }
 </style>
 
 <html>
+<body>
   <form name=prefs action="" method=POST>
   <table cellspacing="4" style="font-size:10pt;">
     <tr>
@@ -51,12 +55,16 @@ td { font-family:freesans,arial,helvetica; }
     <tr>
       <td>Font:</td>
       <td>
+        <% String currentFont = s.configuration.getFontName(); %>
         <select name=font style="min-width:12em;">
-          <option>Courier</option>
-          <option>Free Mono</option>
+          <option <%= currentFont.equals("courier") ? "selected" : "" %> value="courier">Courier</option>
+          <option <%= currentFont.equals("freemono") ? "selected" : "" %> value="freemono">Free Mono</option>
+		  <option <%= currentFont.equals("terminal") ? "selected" : "" %> value="terminal">Terminal</option>
+		  <option <%= currentFont.equals("couriernew") ? "selected" : "" %> value="couriernew">Courier New</option>
+		  <option <%= currentFont.equals("monospace") ? "selected" : "" %> value="monospace">Monospace</option>
         </select>
     </tr>
-    <tr>
+<!--    <tr>
       <td>Charset:</td>
       <td>
       <select name=charset style="min-width:12em;" selected=german>
@@ -81,17 +89,14 @@ td { font-family:freesans,arial,helvetica; }
         <option>us-intl</option>
       </select>
       </td>
-    </tr>
+    </tr> -->
     <tr>
-      <td>
-        <br>
-      </td>
-      <td>
+      <td colspan=2>
         <input type=checkbox name=render value="render"
         <% if (s.useRenderers)
              out.print (" checked ");
         %>
-        > Regex Rendering
+        > Use Regex Rendering Engine
       </td>
     </tr>
     <tr>
@@ -106,5 +111,5 @@ td { font-family:freesans,arial,helvetica; }
     </tr>
   </table>
   </form>
-
+</body>
 </html>

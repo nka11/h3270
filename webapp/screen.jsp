@@ -3,7 +3,6 @@
 <title>h3270</title>
 <style>
 pre, pre input, textarea {
-	font-family: courier;
 	font-size: 10pt;
 	border-width: 0pt;
 }
@@ -13,17 +12,19 @@ pre, pre input, textarea {
 <body>
 
 <script language="javascript1.2">
-
+ 
   // Keyboard Handling Code
 
-  if (isIE()) {
-    document.onkeydown = handleIEKeyDownEvent;
-    document.onhelp = handleIEKeyHelpEvent;
-  } else {
-    window.onkeydown = handleKeyDownEvent;
-    window.onkeypress = handleKeyPressEvent;
-    window.onhelp = handleKeyHelpEvent;
-    window.oncontextmenu = handleOnContextMenu;
+  if (document.screen != null) {
+  	if (isIE()) {
+      document.onkeydown = handleIEKeyDownEvent;
+      document.onhelp = handleIEKeyHelpEvent;
+    } else {
+      window.onkeydown = handleKeyDownEvent;
+      window.onkeypress = handleKeyPressEvent;
+      window.onhelp = handleKeyHelpEvent;
+      window.oncontextmenu = handleOnContextMenu;
+    }
   }
 
   function handleIEKeyDownEvent() {
@@ -101,8 +102,8 @@ pre, pre input, textarea {
 
   function openPrefs() {
     prefsWindow = window.open ("prefs.jsp",
-                               "h3270 Preferences", 
-                               "top=200,left=300,width=270,height=180");
+                               "Preferences",
+                               "width=280,height=170,left=500,top=300");
     if (prefsWindow.opener == null)
       prefsWindow.opener = self;
   }
@@ -153,6 +154,7 @@ pre, pre input, textarea {
                  <input type=submit name=keypad value="Keypad">
               <% } %>
                  <input type=hidden name=colorscheme>
+                 <input type=hidden name=font>
                  <input type=hidden name=render>
             </td>
         </table>

@@ -1,14 +1,20 @@
 2004-04-13  Andre Spiegel  <spiegel@gnu.org>
 
-	* render/TextRenderer.java (render):
-	Add special code for fields that start at the end
-	of the previous line.
+	* h3270 version 1.1 released.
 
-	* host/S3270Screen.java (fieldStart, fieldStartCode):
-	New private instance fields.
-	(decode): Use them to handle fields that start at the end
-	of the previous line.
+2004-04-13  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/TextRenderer.java (render): Add special code for fields
+	that start at the end of the previous line.
+
+	* host/S3270Screen.java (fieldStart, fieldStartCode): New private
+	instance fields.
+	(decode): Use them to handle fields that start at the end of the
+	previous line.
 	(updateBuffer): Initialize the new fields.
+
+	* web/Servlet.java (performKeyAction): Do an ENTER action if the
+	actual key got lost somehow.
 
 2004-03-08  Andre Spiegel  <spiegel@gnu.org>
 

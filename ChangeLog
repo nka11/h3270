@@ -1,5 +1,7 @@
 2004-04-13  Andre Spiegel  <spiegel@gnu.org>
 
+	* h3270 version 1.1 released.
+
 	Handle the case when a field starts in the last column of
 	the previous line (as it happens on the standard z/OS login
 	screen...)

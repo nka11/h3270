@@ -1,0 +1,32 @@
+         [L O C I S:  LIBRARY OF CONGRESS INFORMATION SYSTEM]                   
+                                                                                
+          To make a choice: type a number, then press[ENTER                     
+                                                                                
+  1]  Copyright Information    -- files available and up-to-date                
+                                                                                
+ [2]  Braille and Audio        -- files frozen mid-August 1999                  
+                                                                                
+ [3]  Federal Legislation      -- files frozen December 1998                    
+                                                                                
+*    *    *    *    *    *    *    *    *    *    *    *    *    *    *         
+                                                                                
+               [The LC Catalog Files are available at:                          
+                    http://lcweb.loc.gov/catalog/]                              
+                                                                                
+*    *    *    *    *    *    *    *    *    *    *    *    *    *    *         
+                                                                                
+[ 8]  Searching Hours and Basic Search Commands                                 
+[ 9]  Library of Congress General Information                                   
+[10]  Library of Congress Fast Facts                                            
+                                                                                
+[12]  Comments and Logoff                                                       
+      Choice: {  }                                                              
+                                                                   LOCISMENU    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

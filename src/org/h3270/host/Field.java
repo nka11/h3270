@@ -39,11 +39,13 @@ public class Field {
   private String value;
   private boolean isNumeric;
   private boolean isHidden;
+  private boolean isFocused;
   
   private boolean changed = false;
   
   public Field (Screen screen, int x, int y, int width,
-                String value, boolean isNumeric, boolean isHidden) {
+                String value, boolean isNumeric, boolean isHidden,
+                boolean isFocused) {
     this.screen = screen;
     this.x = x;
     this.y = y;
@@ -51,6 +53,7 @@ public class Field {
     this.value = value;
     this.isNumeric = isNumeric;
     this.isHidden = isHidden;
+    this.isFocused = isFocused;
   }
 
   /**
@@ -106,6 +109,11 @@ public class Field {
   
   public boolean isNumeric()    { return isNumeric; }
   public boolean isHidden()     { return isHidden; }
+  public boolean isFocused()    { return isFocused; }
+
+  public void setFocused (boolean flag) {
+    this.isFocused = flag;
+  }
 
   private static Pattern trimPattern = 
     Pattern.compile ("^[\\x00 _]*(.*?)[\\x00 _]*$", 0);

@@ -7,16 +7,89 @@
 
 <script language="javascript1.2">
 
-  function handler(e) { 
-    if (e.keyCode == 13) {
-      document.screen.key.value = "enter";
-      document.screen.submit();
-    } else if (e.keyCode >= 112 && e.keyCode <= 123) {
-      document.screen.key.value = "pf" + (e.keyCode - 111);
-      document.screen.submit();
+  // Keyboard Handling Code
+
+  if (isIE()) {
+    document.onkeydown = handleIEKeyDownEvent;
+    document.onhelp = handleIEKeyHelpEvent;
+  } else {
+    window.onkeydown = handleKeyDownEvent;
+    window.onkeypress = handleKeyPressEvent;
+    window.onhelp = handleKeyHelpEvent;
+    window.oncontextmenu = handleOnContextMenu;
+  }
+
+  function handleIEKeyDownEvent() {
+    return handleKeyDownEvent(event);
+  }
+
+  function handleIEKeyHelpEvent() {
+    return handleKeyHelpEvent(event);
+  }
+
+  function handleKeyDownEvent(eventObj) {
+    var keyCode = eventObj.keyCode;
+    if (keyCode == 13) {
+      sendFormWithKey("enter");
+    } else if ((!(eventObj.altKey)) 
+            && (!(eventObj.ctrlKey))
+            && (keyCode >=112)
+            && (keyCode <= 123)) {
+      cancelKeyEvent(eventObj);
+      handleFunctionKeyEvent(eventObj, keyCode);
     }
   }
-  document.onkeydown=handler;
+
+  function handleKeyPressEvent(eventObj) {
+    var iKC = eventObj.keyCode;
+    if ((!(eventObj.altKey)) && (!(eventObj.ctrlKey)) && (iKC >=112) && (iKC <= 123)) {
+      cancelKeyEvent(eventObj);
+    }
+  }
+
+  function handleKeyHelpEvent(eventObj) {
+    cancelKeyEvent(eventObj);
+  }
+
+  function handleOnContextMenu(eventObj) {
+    // Disable context menu to allow Shift + F10 
+    return false;
+  }
+
+  function cancelKeyEvent(eventObj) {
+    try {
+      eventObj.keyCode = 0;
+    } catch(e) {
+      eventObj.preventDefault();
+    }
+    eventObj.cancelBubble = true;
+    eventObj.returnValue = false;
+  }
+
+  function sendFormWithKey(strKey) {
+    document.screen.key.value = strKey;
+    document.screen.submit();
+  }
+
+  function handleFunctionKeyEvent(eventObj, keyCode) {
+    if ((!(eventObj.altKey)) && (!(eventObj.ctrlKey))) {
+      var functionKey;
+      if (!(eventObj.shiftKey)) {
+        functionKey = keyCode - 111;
+      } else {
+        functionKey = keyCode - 99;
+      }
+      sendFormWithKey("pf" + functionKey);
+    }
+  }
+
+  function isIE() {
+    if (document.all) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 </script>
 

@@ -1,3 +1,175 @@
+2004-06-20  Andre Spiegel  <spiegel@gnu.org>
+
+	* Version.java, web/Servlet.java, web/SessionState.java,
+	sites/locis/MainMenuFilter.java, test/AllTest.java,
+	test/FileScreenTest.java, test/RegexTest.java,
+	test/S3270ScreenTest.java, render/Engine.java, render/Filter.java,
+	render/HtmlRenderer.java, render/ParagraphFilter.java,
+	render/RegexRenderer.java, render/Renderer.java,
+	render/TextRenderer.java, host/AbstractScreen.java,
+	host/Field.java, host/FileScreen.java, host/FileTerminal.java,
+	host/InputField.java, host/S3270.java, host/S3270Screen.java,
+	host/Screen.java, host/ScreenCharSequence.java,
+	host/Terminal.java: Update copyright notice.
+
+	* test/screen7.dump, test/screen7.txt, test/screen8.dump,
+	test/screen8.txt: Initial revision.
+
+	* test/screen3.txt, test/screen4.txt, test/screen5.txt: Add
+	markers for intensified fields.
+
+	* render/RegexRenderer.java (render): Use super.renderInputField().
+
+	* render/HtmlRenderer.java (render): Rewritten to be
+	Field-based. Initial color support.
+	(renderInputField): Renamed from renderField(). Initial color
+	support for intensified fields.
+
+	* host/Field.java (getWidth): Fix off-by-one error.
+
+	* render/TextRenderer.java (render): Use Field.getText() to create
+	the output.
+
+	* host/Field.java (getText): New method, encapsulates what we did
+	in the TextRenderer before.
+
+2004-06-18  Andre Spiegel  <spiegel@gnu.org>
+
+	* test/S3270ScreenTest.java (screenTest): Add code to write the
+	actual result into a text file (commented out).
+
+	* test/screen6.txt: Use an open brace in the end, because
+	technically, it is the start of a new field.
+
+	* render/TextRenderer.java (render): Rewritten to render field-wise.
+
+	* host/S3270Screen.java (fieldStartCode, fieldStartX,
+	fieldStartY): Initialize to start a protected, normal field at
+	position (0,0).
+	(decode, updateBuffer): Adapt to this.
+
+	* host/AbstractScreen.java (substring): Be careful to return the
+	empty string if coordinates are in reverse.
+
+	* host/S3270Screen.java (updateBuffer): Don't forget to add the
+	final field.
+
+	* render/TextRenderer.java (render): Fix the case when an input
+	field begins on the final char of the screen.
+
+	* web/Servlet.java (submitScreen): Only submit InputFields.
+
+	* test/screen4.txt: Place the final brace properly, as we can
+	recognize it now.
+
+	* render/HtmlRenderer.java (renderField): Only render InputFields.
+	(renderFormatted): Only call renderField() for InputFields.
+
+	* render/TextRenderer.java (render): Only put braces around
+	InputFields.
+
+	* host/S3270Screen.java (createField): Return an InputField or a
+	Field, depending on the start code.
+	(decode): Consider everything as a field, not just input fields.
+	(update): Use Screen.getInputFieldAt() to set the focus.
+
+	* host/S3270.java (submitScreen): Only submit InputFields, not all
+	Fields.
+
+	* host/FileScreen.java (readField): Return an InputField, not a
+	Field.
+
+	* host/ScreenCharSequence.java (getFieldAt): Redefined to use
+	Screen.getInputFieldAt().
+
+	* host/AbstractScreen.java: Adapt to new Screen interface.
+
+	* host/Screen.java (getInputFieldAt, isInputField): Renamed from
+	getFieldAt() and isField(), respectively.
+	(getFocusedField): Returns an InputField now.
+
+	* host/Field.java: This class only represents protected fields
+	now.  All stuff for unprotected fields has been moved into
+	subclass InputField.  Reworked display modes; each field is now
+	either "normal", "intensified", or "hidden".
+
+	* host/InputField.java: Initial revision.
+
+2004-06-17  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/TextRenderer.java (render): Handle multi-line fields properly.
+
+	* host/S3270Screen.java (fieldStartX, fieldStartY): New fields.
+	(fieldStart): Field removed.
+	(decode): Handle multi-line fields properly.
+	(createField): Remove value arg, pass full coordinates
+	of start point and end point.
+	(updateBuffer): Initialize fieldStartX and fieldStartY properly.
+
+	* host/Field.java (c'tor): Remove value arg.
+	(getValue): Get the value from the screen on demand.
+	(setValue): Get the value from the screen if needed.
+
+	* host/FileScreen.java (readField): Adapt to new Field constructor.
+
+	* host/AbstractScreen.java (substring): Methods implemented.
+
+	* host/Screen.java (substring): Three new methods.
+
+2004-06-16  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270Screen.java: Remove FIELD_... constants and refer to
+	the new ones in the Field class instead.
+
+	* host/S3270.java (main): Use S3270 instead of S3270Impl.
+
+	* web/Servlet.java: Adapt to new names of S3270 classes in host
+	package.
+
+	* host/S3270Dummy.java: Renamed to FileTerminal.java
+
+	* host/S3270Impl.java: Renamed to S3270.java
+
+	* host/S3270.java: This now contains the code that formerly was
+	S3270Impl.java.  The interface is now defined in Terminal.java.
+
+	* host/FileTerminal.java: Renamed from S3270Dummy.java
+
+	* host/Terminal.java: Renamed from S3270.java.
+
+	* web/SessionState.java: Use Terminal instead of S3270.
+
+	* web/Servlet.java: Adapt to new Field interface.
+
+	* test/S3270ScreenTest.java: Add "screen6" test case.
+
+	* test/screen1.txt, test/screen2.txt, test/screen3.dump,
+	test/screen3.txt, test/screen4.dump, test/screen4.txt,
+	test/screen5.dump, test/screen5.txt, test/screen6.dump,
+	test/screen6.txt: Initial revision.
+
+	* test/RegexTest.java (setUp): Implement to allow switching
+	between regex implementations.
+
+	* render/TextRenderer.java, render/HtmlRenderer.java,
+	host/S3270Screen.java, host/FileScreen.java: Adapt to new Field
+	interface.
+
+	* host/AbstractScreen.java (charAt, getFieldAt): Use
+	Field.getStartX/Y() instead of Field.getX/Y().
+
+	* host/Field.java (x, y, width): Fields removed.
+	(startx, starty, endx, endy): New fields.  Update all uses.
+
+	* host/Field.java (ATTR_PROTECTED, ATTR_DISP_1, ATTR_DISP_2,
+	ATTR_NUMERIC): New public constants.
+
+2004-06-15  Andre Spiegel  <spiegel@gnu.org>
+
+	* regex/Pattern.java (useJRegex): New static field and accessor
+	method.
+	(getPatternClass): Use it.
+
 2004-04-13  Andre Spiegel  <spiegel@gnu.org>
 
 	* h3270 version 1.1 released.

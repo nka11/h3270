@@ -50,6 +50,33 @@ public interface Screen {
    * Control characters are returned as blanks.
    */
   public char charAt (int x, int y);
+
+  /**
+   * Returns the contents of a region on this screen.
+   * 
+   * @param startx x coordinate of the starting point (inclusive)
+   * @param starty y coordinate of the starting point
+   * @param endx x coordinate of the end point (inclusive)
+   * @param endy y coordinate of the end point
+   * @return the region as a String, with line breaks (newline characters)
+   *         inserted
+   */  
+  public String substring (int startx, int starty, int endx, int endy);
+
+  /**
+   * Returns a part of a row on this screen, as a string.
+   * @param startx x coordinate of the starting point (inclusive)
+   * @param endx x coordinate of the end point (inclusive)
+   * @param y number of the row
+   */
+  public String substring (int startx, int endx, int y);
+
+  /**
+   * Returns a single row of this screen.
+   * @param y the row number
+   * @return the row as a String, without a terminating newline
+   */
+  public String substring (int y);
   
   /**
    * Returns a list of all Fields on this screen.

@@ -24,6 +24,7 @@ package org.h3270.render;
 import java.util.*;
 
 import org.h3270.host.*;
+import java.io.*;
 
 /**
  * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
@@ -41,15 +42,19 @@ public class TextRenderer implements Renderer {
 
   public String render (Screen s) {
     StringBuffer result = new StringBuffer();
-    for (int y = 0; y < s.getHeight(); y++) {
-      for (int x = 0; x < s.getWidth(); x++) {
-        char ch = s.charAt (x, y);
-        if (ch == '\u0000')
-          result.append (' ');
-        else
-          result.append (s.charAt(x, y));
+    for (Iterator i = s.getFields().iterator(); i.hasNext();) {
+      Field f = (Field)i.next();
+      if (f.getStartX() == 0 && f.getStartY() == 0) {
+        // nothing
+      } else if (f.getStartX() == 0 && f.getStartY() > 0) {
+        result.append(' ');
+        result.append('\n');
+      } else
+        result.append(' ');
+      result.append(f.getValue());
+      if (f.getEndX() == s.getWidth()-1 && f.getEndY() >= f.getStartY()) {
+        result.append('\n');
       }
-      result.append ('\n');
     }
     for (Iterator i = s.getFields().iterator(); i.hasNext();) {
       Field f = (Field)i.next();
@@ -62,6 +67,10 @@ public class TextRenderer implements Renderer {
         setChar (s, result, 0, f.getEndY() + 1, '}');
       else if (f.getEndX() < s.getWidth()-1)
         setChar (s, result, f.getEndX() + 1, f.getEndY(), '}');
+    }
+    for (int i=0; i<result.length(); i++) {
+      if (result.charAt(i) == '\u0000')
+        result.setCharAt(i, ' ');
     }
     return result.toString();
   }

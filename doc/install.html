@@ -1,0 +1,152 @@
+<html>
+<head>
+<title>h3270 -- Installation</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<table width=100% style="background-color:black;">
+  <tr style="background-color:black;">
+    <td><img src="h3270-logo.png"></td>
+    <td width=100% align=right style="padding-right:10px;">
+      <img src="it-fws-logo.png">
+    </td>
+  <tr>
+</table>
+<table width=100%>
+  <tr height=100%>
+    <td class=menu width=160px valign=top>
+      <a href="index.html">Home</a><br>
+      <a href="screenshots.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="license.html">License</a><br>
+      <a href="credits.html">Credits</a><br><br>
+
+      <a href="relnotes.html">Release Notes</a><br>
+      <a href="install.html">Installation</a><br>
+      <a href="userguide.html">User Guide</a><br><br>
+
+      <a href="http://sourceforge.net/projects/h3270">Project Page</a><br>
+      <a href="http://sourceforge.net/mail/?group_id=95795">Mailing Lists</a><br>
+      <a href="http://sourceforge.net/tracker/?group_id=95795">Bug Reports</a><br>
+      <a href="http://sourceforge.net/cvs/?group_id=95795">CVS Access</a>
+      <br><br><br><br><br><br>
+      <a href="http://sourceforge.net">
+        <img src="http://sourceforge.net/sflogo.php?group_id=95795&amp;type=2"
+             width="125" height="37" border="0" alt="SourceForge.net Logo"/>
+      </a>
+    </td>
+    <td class=content valign=top>
+      <h1>Prerequisites</h1> 
+
+      h3270 is a server-side Java application and therefore runs in
+      any environment where Java is available.  s3270, on which h3270
+      relies, is a C program that's easy to build and which runs under
+      all major operating systems (we have tested this under GNU/Linux
+      and Windows).
+      <p>
+      This is what you need in order to get h3270 up and running:
+      <ul>
+        <li>JDK 1.3 or higher (JDK 1.4 recommended).</li>
+        <li>If you use JDK 1.3, you also need the <a
+        href="http://jregex.sourceforge.net">JRegex</a> library to
+        provide regular expressions.</li>
+        <li>A J2EE-compliant web container.  Any version of <a
+        href="http://jakarta.apache.org/tomcat">Tomcat</a>, for
+        example, will do (we have tested versions 3.3.1a, 4.1.29, and
+        5.0.14).  We have also been successful to run h3270 as an
+        IView within the SAP Portal Server (PDK), but don't have any
+        production quality code for that yet.</li>
+        <li>The <a href="http://ant.apache.org">Ant</a> build tool.
+        We've been using version 1.5.1, but any recent version should
+        do.
+        <li>The s3270 program to communicate with the host.  Because
+        of a special feature that was added particularly for h3270,
+        you need <a
+        href="http://x3270.bgp.nu/download/s3270-latest.tgz">s3270
+        version 3.3.1-alpha10</a> or higher.</li>
+      </ul>
+
+      <h1>Installation</h1>
+
+      The following are the steps to install h3270.  In these
+      instructions, we assume that you are using Tomcat version 4 or
+      higher, but the instructions should apply to any other web
+      container with only trivial changes.
+      <ol>
+
+        <li>Build and install Ant as described in its installation
+        instructions.</li>
+
+        <li>Build and install Tomcat as described in its installation
+        instructions.  In the following, we refer to the directory
+        where you installed Tomcat as <code>$TOMCAT_HOME</code>.</li>
+
+        <li>Unpack h3270 into a directory of your choice.  We call
+        this directory <code>$H3270_HOME</code>.</li>
+
+        <li>If you are using JDK 1.3, download the <a
+        href="http://jregex.sourceforge.net">JRegex</a> package.  It
+        is distributed as a jar file,
+        e.g. <code>jregex1.2_01-src.jar</code>.  Place this jar file
+        into <code>$H3270_HOME/webapp/WEB-INF/lib</code>.</li>
+
+        <li>Download and build s3270 according to its installation
+        instructions.  Place the resulting executable
+        into <code>$H3270_HOME/webapp/WEB-INF/bin</code>.  To build
+        s3270 under Windows, we recommend the <a
+        href="http://www.cygwin.com">Cygwin</a> environment.  Link
+        s3270 statically and place both <code>s3270.exe</code>
+        and <code>cygwin1.dll</code>
+        into <code>$H3270_HOME/webapp/WEB-INF/bin</code>.  (There may
+        be other ways to do it, but the above is the procedure we
+        actually verified.)
+
+        <li>Go to the <code>$H3270_HOME</code> directory and
+        type <code>ant</code> to build the program.  This requires
+        that the classes from the Servlet API are available on your
+        classpath.  These classes are included in the Tomcat
+        distribution under <code>$TOMCAT_HOME/common/lib/servlet.jar</code> (or
+        <code>.../servlet-api.jar</code>).  If this is not on your
+        classpath, you can also provide it to Ant on the command line
+        by typing
+        <pre>
+            ant -Dservlet.jar=$TOMCAT_HOME/common/lib/servlet.jar</pre>
+        This will compile h3270 as a web application under
+        <code>$H3270_HOME/webapp</code>.
+        </li>
+
+        <li>Deploy the h3270 web application to Tomcat.  You can do
+        this by copying (or moving) the entire directory tree
+        under <code>$H3270_HOME/webapp</code>
+        to <code>$TOMCAT_HOME/webapps/h3270</code> (so that
+        the <code>webapp</code> directory from the distribution ends
+        up being renamed to <code>h3270</code> in Tomcat).  However,
+        for development use it is probably more convenient to keep
+        the <code>webapp</code> directory where it is and point Tomcat
+        to this directory in its <code>server.xml</code> file.  To do
+        this, add the following
+        to <code>$TOMCAT_HOME/conf/server.xml</code> (the section
+        where it should be added is indicated by comments in this
+        file):
+        <pre>
+          &lt;Context path="/h3270" docBase="<i>$H3270_HOME</i>/webapp"
+                       debug="0" reloadable="true"&gt;
+          &lt;/Context&gt;</pre>
+        In the above, make sure that you
+        replace <code>$H3270_HOME</code> which the actual path to the
+        directory where you unpacked h3270.</li>
+
+        <li>Start Tomcat and point your browser
+        to <code>http://localhost:8080/h3270/servlet</code>.  You will
+        be presented with a generic terminal emulation screen, which
+        allows you to connect to any host that your computer can reach
+        via TCP/IP.  For instructions how to use this interface, and
+        to customize the rendering engine, please refer to the 
+        <a href="userguide.html">H3270&nbsp;User&nbsp;Guide</a>.</li>
+      </ol>
+
+    </td>
+  </tr>
+</table>
+</body>
+</html>

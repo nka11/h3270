@@ -1,16 +1,19 @@
-
-      <form name="control" action="<%= response.encodeURL("servlet") %>" method=POST>
-        <table width=100%>
+        <table style="width:100%;">
           <tr>
+            <form name="control" 
+                  action="<%= response.encodeURL("servlet") %>"
+                  method=POST>
             <td width=30% align=left>
               <% if (!sessionState.isConnected()) { %>
                  Host:&nbsp;<input type=text
                                    style="background-color:lightgrey;"
-                                   name=hostname></td><td width=70% align=right>
+                                   name=hostname>
+            </td>
+            <td width=70% align=right>
                  <input type=submit name=connect value="Connect">
                  <input type=button id="prefs" name=prefs value="Preferences..."
                         onClick="openPrefs();">
-              <% } else { %>
+            <% } else { %>
                  Host: <b><%= sessionState.getHostname() %></b>
               </td>
               <td width=70% align=right>
@@ -23,10 +26,11 @@
                         onClick="openPrefs();">
                  <input type=submit name=keypad value="Keypad">
               <% } %>
-                 <input type=hidden name=colorscheme>
-                 <input type=hidden name=font>
-                 <input type=hidden name=render>
               </td>
+              <input type=hidden name=colorscheme>
+              <input type=hidden name=font>
+              <input type=hidden name=render>
+            </form>
             </tr>
         </table>
       </form>

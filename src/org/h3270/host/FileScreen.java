@@ -29,8 +29,10 @@ import java.net.URL;
  * Test implementation of the Screen interface.  It reads an ASCII dump
  * of a 3270 screen from a file.  In this file, input fields must be delimited
  * by '{' and '}'.
+ * 
+ * @deprecated This class has not been updated to h3270 1.2 and beyond.
  *
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
  * @version $Id$
  */
 public class FileScreen extends AbstractScreen {

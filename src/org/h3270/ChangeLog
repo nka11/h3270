@@ -1,3 +1,15 @@
+2004-04-13  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/TextRenderer.java (render):
+	Add special code for fields that start at the end
+	of the previous line.
+
+	* host/S3270Screen.java (fieldStart, fieldStartCode):
+	New private instance fields.
+	(decode): Use them to handle fields that start at the end
+	of the previous line.
+	(updateBuffer): Initialize the new fields.
+
 2004-03-08  Andre Spiegel  <spiegel@gnu.org>
 
 	Changes to handle invisible fields, suggested by

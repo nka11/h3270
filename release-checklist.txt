@@ -22,14 +22,25 @@
 
   * final test in export area
 
-      ant all
       cp ~/com/h3270/webapp/WEB-INF/bin/s3270 webapp/WEB-INF/bin
+      cp ~/com/h3270/webapp/WEB-INF/lib/* webapp/WEB-INF/lib
+      ant -Dservlet.jar=/usr/java/tomcat/common/lib/servlet-api.jar all
 
       <test>
       
       ant clean
       rm -rf webapp/WEB-INF/bin/*
+      rm -rf webapp/WEB-INF/lib/*
 
   * apply CVS tag from work area
-  * bundle & upload
+
+  * bundle
+
+      tar cvzf h3270-1.0.tar.gz h3270-1.0      
+      zip -r h3270-1.0.zip h3270-1.0
+      md5sum h3270-1.0.tar.gz > h3270-1.0.tar.gz.md5 
+      md5sum h3270-1.0.zip > h3270-1.0.zip.md5
+
+  * upload
+
   * publish doc

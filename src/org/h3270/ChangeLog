@@ -1,3 +1,23 @@
+2003-12-11  Andre Spiegel  <spiegel@gnu.org>
+
+	* h3270 version 1.0 released.
+
+2003-12-11  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270Impl.java (updateScreen): Use "readbuffer ascii"
+	rather than ebcdic.  Handling of codepages is now deferred to
+	s3270.
+	(submitScreen): Pass field contents in ASCII.
+	(c'tor): Add comment and template for codepage support in s3270.
+
+	* host/S3270Screen.java (decode): Assume buffer contents are
+	ASCII, not EBCDIC.
+	(update): Reflect this in javadoc.
+
+	* render/RegexRenderer.java (placeholderPattern): Use negative
+	lookbehind so that we don't match HTML character
+	references (&#035;).
+
 2003-12-04  Andre Spiegel  <spiegel@gnu.org>
 
 	* web/Servlet.java (performKeyAction): Use RuntimeException in a

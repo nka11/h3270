@@ -23,6 +23,6 @@ package org.h3270;
 
 public class Version {
 
-  public static final String value = "1.2";
+  public static final String value = "1.2.1";
 
 }

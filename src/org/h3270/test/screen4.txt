@@ -1,4 +1,4 @@
-  VM/ESA{Version 2 Release 4.0}Online at{CUNY/UCC{                        }     
+[[VM/ESA{Version 2 Release 4.0}Online at{CUNY/UCC{                        }     
                                                                                 
                                                                                 
                                                                                 
@@ -23,10 +23,10 @@
                                                                                 
                                                                                 
                                                                                 
- Fill in your USERID and PASSWORD and press ENTER                               
- (Your password will not appear when you type it)                               
- USERID   ===>{        }                                                        
- PASSWORD ===>{                                        }                        
+[Fill in your USERID and PASSWORD and press ENTER                               
+[(Your password will not appear when you type it)                               
+[USERID   ===>{        }                                                        
+[PASSWORD ===>{                                        }                        
                                                                                 
- COMMAND  ===>{                                                                 
+[COMMAND  ===>{                                                                 
                                                            }Running   CUNYVM    

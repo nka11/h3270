@@ -21,56 +21,98 @@ package org.h3270.web;
  * MA 02111-1307 USA
  */
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.h3270.regex.*;
-import java.lang.reflect.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import org.h3270.host.*;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.h3270.host.Field;
-import org.h3270.render.*;
+import org.h3270.host.FileTerminal;
+import org.h3270.host.InputField;
+import org.h3270.host.S3270;
+import org.h3270.host.Screen;
+import org.h3270.host.Terminal;
+import org.h3270.regex.Matcher;
+import org.h3270.regex.Pattern;
+import org.h3270.render.AvalonConfiguration;
+import org.h3270.render.Engine;
+import org.h3270.render.H3270Configuration;
+import org.h3270.render.HtmlRenderer;
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
  * @version $Id$
  */
-public class Servlet extends HttpServlet {
+public class Servlet extends AbstractServlet {
 
-    private final static Log logger = LogFactory.getLog(Servlet.class);
+    private static final Pattern FUNCTION_KEY_PATTERN = Pattern
+            .compile("p(f|a)([0-9]{1,2})");
 
-    private static final String PATH_S3270 = "path.s3270";
+    private String execPath;
 
-    private HtmlRenderer basicRenderer = new HtmlRenderer();
+    private String templateDir;
+
+    private final HtmlRenderer basicRenderer = new HtmlRenderer();
 
     private Engine engine = null;
 
+    private H3270Configuration h3270Configuration;
+
+    private String mainJSP = "/screen.jsp";
+    
+    public void init() throws ServletException {
+        super.init();
+        
+        Configuration config = getConfiguration();
+        
+        Configuration dirConfig = config.getChild("template-dir");
+        
+        templateDir = getRealPath(dirConfig.getValue("/WEB-INF/templates"));
+        
+        engine = new Engine(templateDir);
+
+        execPath = config.getChild("exec-path").getValue(
+                getRealPath("/WEB-INF/bin"));
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Set template-dir to " + templateDir);
+            logger.debug("Set exec-path to " + execPath);
+        }
+
+        try {
+            h3270Configuration = new AvalonConfiguration(config
+                    .getChild("configuration"));
+        } catch (ConfigurationException e) {
+            logger.fatal("Could not access configuration", e);
+            throw new ServletException(e);
+        }
+    }
+
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        //        System.out.println(getServletContext().getContextPath());
+
         SessionState state = getSessionState(request);
 
         if (state.terminal != null) {
             state.terminal.updateScreen();
             Screen s = state.terminal.getScreen();
-            //if (false)
-            if (state.isUseRenderers() && engine.canRender(s))
-                request.setAttribute("screen", engine.render(s));
-            else
-                request.setAttribute("screen", basicRenderer.render(s));
-            request.setAttribute("hostname", state.terminal.getHostname());
-            request.setAttribute("keypad", state.isUseKeypad() ? "on" : null);
-            String style = "pre, pre input, textarea {\n" + "  font-family: "
-                    + state.getFontName() + ";\n" + "}\n"
-                    + state.getActiveColorScheme().toCSS();
-            request.setAttribute("style", style);
+
+            if (state.isUseRenderers() && engine.canRender(s)) {
+                state.setScreen(engine.render(s));
+            } else {
+                state.setScreen(basicRenderer.render(s));
+            }
         }
-        getServletContext().getRequestDispatcher("/screen.jsp").forward(
+        getServletContext().getRequestDispatcher(mainJSP).forward(
                 request, response);
     }
 
@@ -82,24 +124,27 @@ public class Servlet extends HttpServlet {
         boolean prevRendering = state.isUseRenderers();
         handlePreferences(state, request, response);
         if (state.isUseRenderers() && !prevRendering)
-            engine = new Engine(getRealPath("/WEB-INF/templates"));
+            engine = new Engine(templateDir);
 
         if (request.getParameter("connect") != null) {
             String hostname = request.getParameter("hostname");
-            if (hostname.startsWith("file:")) {
-                String filename = new File(getRealPath("/WEB-INF/dump"),
-                        hostname.substring(5)).toString();
-                state.terminal = new FileTerminal(filename);
-            } else {
-                String execPath = getInitParameter(PATH_S3270);
 
-                if (execPath == null || "".equals(execPath)) {
-                    execPath = getRealPath("/WEB-INF/bin");
+            // TODO message to user if no hostname specified
+            if (!hostname.equals("")) {
+                if (logger.isInfoEnabled()) {
+                    logger.info("Connecting to " + hostname);
                 }
 
-                state.terminal = new S3270(hostname, execPath);
+                if (hostname.startsWith("file:")) {
+                    String filename = new File(getRealPath("/WEB-INF/dump"),
+                            hostname.substring(5)).toString();
+                    state.terminal = new FileTerminal(filename);
+                } else {
+                    state.terminal = new S3270(hostname, execPath);
+                }
+
+                state.setUseKeypad(false);
             }
-            state.setUseKeypad(false);
         } else if (request.getParameter("disconnect") != null) {
             if (state.terminal != null)
                 state.terminal.disconnect();
@@ -110,7 +155,7 @@ public class Servlet extends HttpServlet {
                 && !request.getParameter("dumpfile").equals("")) {
             String filename = new File(getRealPath("/WEB-INF/dump"), request
                     .getParameter("dumpfile")).toString();
-            state.terminal.dumpScreen(filename); 
+            state.terminal.dumpScreen(filename);
         } else if (request.getParameter("keypad") != null) {
             state.setUseKeypad(!state.isUseKeypad());
         } else if (state.terminal != null) {
@@ -152,15 +197,13 @@ public class Servlet extends HttpServlet {
         }
 
         if (modified) {
-            // if the SessionState has been modified send a Cookie to
-            // the Browser to maintain State across Sessions
             Cookie cookie = new Cookie(SessionState.COOKIE_NAME, state
                     .getSavedState());
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Sending Cookie: " + state);
             }
-            
+
             cookie.setMaxAge(Integer.MAX_VALUE);
 
             response.addCookie(cookie);
@@ -168,20 +211,10 @@ public class Servlet extends HttpServlet {
     }
 
     /**
-     * Convenience method, to save some typing.
-     */
-    private String getRealPath(String path) {
-        return getServletContext().getRealPath(path);
-    }
-
-    private static Pattern functionKeyPattern = Pattern
-            .compile("p(f|a)([0-9]{1,2})");
-
-    /**
      * Perform the s3270 action that is specified by the given key name.
      */
     private void performKeyAction(Terminal terminal, String key) {
-        Matcher m = functionKeyPattern.matcher(key);
+        Matcher m = FUNCTION_KEY_PATTERN.matcher(key);
         if (m.matches()) { // function key
             int number = Integer.parseInt(m.group(2));
             if (m.group(1).equals("f"))
@@ -251,13 +284,13 @@ public class Servlet extends HttpServlet {
     private SessionState getSessionState(HttpServletRequest request)
             throws IOException {
         HttpSession session = request.getSession();
-                
+
         SessionState result = (SessionState) session
                 .getAttribute("sessionState");
         if (result == null) {
             String savedState = getSavedSessionState(request);
 
-            result = new SessionState(savedState);
+            result = new SessionState(h3270Configuration, savedState);
             session.setAttribute("sessionState", result);
         }
         return result;
@@ -285,12 +318,6 @@ public class Servlet extends HttpServlet {
             }
         }
         return null;
-    }
-
-    public void init() throws ServletException {
-        super.init();
-
-        engine = new Engine(getRealPath("/WEB-INF/templates"));
     }
 
 }

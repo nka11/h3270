@@ -105,8 +105,9 @@ public class S3270Screen extends AbstractScreen {
     if (m.find()) {
       cursorX = Integer.parseInt (m.group(2));
       cursorY = Integer.parseInt (m.group(1));
-      Field f = getFieldAt (cursorX, cursorY);
-      if (f != null) f.setFocused (true);
+      InputField f = getInputFieldAt (cursorX, cursorY);
+      if (f != null) 
+        f.setFocused (true);
     } else {
       cursorX = 0;
       cursorY = 0;
@@ -172,22 +173,22 @@ public class S3270Screen extends AbstractScreen {
         if (m.group(1).equals("c0")) {
           if (fieldStartX != -1) {
             // if we've been in an open field, close it now
+            int fieldEndX = index - 1;
+            int fieldEndY = y;
+            if (fieldEndX == -1) {
+              fieldEndX = width-1;
+              fieldEndY--;
+            }
             fields.add (createField (fieldStartCode, 
                                      fieldStartX, fieldStartY,
-                                     index-1, y));
+                                     fieldEndX,   fieldEndY));
             fieldStartX = -1;
             fieldStartY = -1;
             fieldStartCode = 0x00;
           }            
-          byte fieldCode = (byte)Integer.parseInt (m.group(2), 16);
-          if (((fieldCode & Field.ATTR_PROTECTED) == 0) ||
-              ((fieldCode & Field.ATTR_NOT_RENDERED) == Field.ATTR_NOT_RENDERED))
-          {
-            // unprotected or "unrendered" (invisible): a new field begins
-            fieldStartX = index + 1;
-            fieldStartY = y;
-            fieldStartCode = fieldCode;
-          }
+          fieldStartX = index + 1;
+          fieldStartY = y;
+          fieldStartCode = (byte)Integer.parseInt (m.group(2), 16);
         }
       } else {
         result.append ((char)(Integer.parseInt (code, 16)));
@@ -205,16 +206,13 @@ public class S3270Screen extends AbstractScreen {
   private Field createField (byte startCode,
                              int startx, int starty,
                              int endx, int endy) {
-    return new Field (this, startx, starty, endx, endy,
-                      (startCode & Field.ATTR_NUMERIC) != 0,
-                          (startCode & Field.ATTR_DISP_1) != 0
-                       && (startCode & Field.ATTR_DISP_2) != 0,
-                      false,
-                      (startCode & Field.ATTR_NOT_RENDERED) 
-                                         != Field.ATTR_NOT_RENDERED);
+    if ((startCode & Field.ATTR_PROTECTED) == 0)
+      return new InputField (this, startCode,
+                             startx, starty, endx, endy);
+    else
+      return new Field (this, startCode,
+                        startx, starty, endx, endy);
   }
-
-
                               
   public static void main (String[] args) throws IOException {
     BufferedReader in = new BufferedReader 

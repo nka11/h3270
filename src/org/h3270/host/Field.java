@@ -43,9 +43,10 @@ public class Field {
 
   private Screen screen;
 
-  private int x;
-  private int y;
-  private int width;
+  private int startx;
+  private int starty;
+  private int endx;
+  private int endy;
   private String value;
   private boolean isNumeric;
   private boolean isHidden;
@@ -54,13 +55,16 @@ public class Field {
   
   private boolean changed = false;
   
-  public Field (Screen screen, int x, int y, int width,
-                String value, boolean isNumeric, boolean isHidden,
+  public Field (Screen screen, 
+                int startx, int starty, int endx, int endy,
+                String value, 
+                boolean isNumeric, boolean isHidden,
                 boolean isFocused, boolean isRendered) {
     this.screen = screen;
-    this.x = x;
-    this.y = y;
-    this.width = width;
+    this.startx = startx;
+    this.starty = starty;
+    this.endx = endx;
+    this.endy = endy;
     this.value = value;
     this.isNumeric = isNumeric;
     this.isHidden = isHidden;
@@ -74,19 +78,34 @@ public class Field {
    * of the Field's first character, not of the control character that
    * opens the Field.
    */
-  public int getX() { return x; }
+  public int getStartX() { return startx; }
   
   /**
-   * Returns the y coordinate (row) of this Field.  Row numbers
+   * Returns the y coordinate (row) in which this Field begins.  Row numbers
    * start at zero, increasing downward from the top.
    */  
-  public int getY() { return y; }
+  public int getStartY() { return starty; }
   
+  /**
+   * Returns the x coordinate (column) at which this Field ends.
+   * Column numbers start at zero.  The number returned is the position
+   * of the Field's last character, not of the control character that
+   * terminates the Field.
+   */
+  public int getEndX() { return endx; }
+  
+  /**
+   * Returns the y coordinate (row) in which this Field ends.  Row numbers
+   * start at zero, increasing downward from the top.
+   */  
+  public int getEndY() { return endy; }
+    
   /**
    * Returns the width (number of characters) of this Field.
    * This does not include the control characters that delimit the Field.
+   * @deprecated this method will disappear soon
    */
-  public int getWidth() { return width; } 
+  public int getWidth() { return endx - startx; } 
   
   /**
    * Returns the Screen of which this Field is a part.
@@ -103,8 +122,8 @@ public class Field {
    */
   public void setValue (String value) { 
     if (!value.equals (trim (this.value))) {
-      if (value.length() > width)
-        this.value = value.substring (0, width);
+      if (value.length() > getWidth())
+        this.value = value.substring (0, getWidth());
       else
         this.value = value;
       changed = true;

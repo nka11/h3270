@@ -1,16 +1,14 @@
 
   // Keyboard Handling Code
 
-  if (document.screen != null) {
-  	if (isIE()) {
-      document.onkeydown = handleIEKeyDownEvent;
-      document.onhelp = handleIEKeyHelpEvent;
-    } else {
-      window.onkeydown = handleKeyDownEvent;
-      window.onkeypress = handleKeyPressEvent;
-      window.onhelp = handleKeyHelpEvent;
-      window.oncontextmenu = handleOnContextMenu;
-    }
+  if (isIE()) {
+    document.onkeydown = handleIEKeyDownEvent;
+    document.onhelp = handleIEKeyHelpEvent;
+  } else {
+    window.onkeydown = handleKeyDownEvent;
+    window.onkeypress = handleKeyPressEvent;
+    window.onhelp = handleKeyHelpEvent;
+    window.oncontextmenu = handleOnContextMenu;
   }
 
   function handleIEKeyDownEvent() {
@@ -62,8 +60,10 @@
   }
 
   function sendFormWithKey(strKey) {
-    document.screen.key.value = strKey;
-    document.screen.submit();
+    if (document.screen != null) {
+      document.screen.key.value = strKey;
+      document.screen.submit();
+    }
   }
 
   function handleFunctionKeyEvent(eventObj, keyCode) {

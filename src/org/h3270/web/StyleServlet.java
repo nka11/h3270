@@ -35,42 +35,36 @@ import org.apache.avalon.framework.configuration.Configuration;
  */
 public class StyleServlet extends AbstractServlet {
 
-    private String styleDirectory;
-    private final static String DEFAULT_STYLE = "h3270";
-    
-    public void init() throws ServletException {
-        super.init();  
-        
-        Configuration config = getConfiguration();
-        
-        Configuration dirConfig = config.getChild("style");
-        
-        styleDirectory = dirConfig.getValue(DEFAULT_STYLE);
-        
-        if (!styleDirectory.startsWith("/")) {
-            styleDirectory = "/" + styleDirectory;
-        }
-        
-        if (!styleDirectory.endsWith("/")) {
-            styleDirectory += "/";
-        }
+  private String styleDirectory;
+
+  private final static String DEFAULT_STYLE = "h3270";
+
+  public void init() throws ServletException {
+    super.init();
+    Configuration config = getConfiguration();
+    Configuration dirConfig = config.getChild("style");
+    styleDirectory = dirConfig.getValue(DEFAULT_STYLE);
+    if (!styleDirectory.startsWith("/")) {
+      styleDirectory = "/" + styleDirectory;
     }
-    
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        String uri = req.getParameter("resource");
-        
-        String newPath = styleDirectory + uri;
-        
-        if (logger.isDebugEnabled()) {
-            logger.debug("Fetching Resource " + uri + " from " + newPath);
-        }
-        
-        getServletContext().getRequestDispatcher(newPath).include(req, resp);
+    if (!styleDirectory.endsWith("/")) {
+      styleDirectory += "/";
+    }
+  }
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    String uri = req.getParameter("resource");
+    String newPath = styleDirectory + uri;
+    if (logger.isDebugEnabled()) {
+      logger.debug("Fetching Resource " + uri + " from " + newPath);
     }
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        doGet(req, resp);
-    }
+    getServletContext().getRequestDispatcher(newPath).include(req, resp);
+  }
+
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    doGet(req, resp);
+  }
 }

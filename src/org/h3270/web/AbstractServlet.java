@@ -35,43 +35,41 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractServlet extends HttpServlet {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+  protected final Log logger = LogFactory.getLog(getClass());
 
-    private static final String FILE_CONFIGURATION = "file.configuration";
+  private static final String FILE_CONFIGURATION = "file.configuration";
+  private static final String FILE_CONFIGURATION_DEFAULT = "/WEB-INF/h3270-config.xml";
 
-    private static final String FILE_CONFIGURATION_DEFAULT = "/WEB-INF/h3270-config.xml";
+  private Configuration configuration;
 
-    private Configuration configuration;
+  public void init() throws ServletException {
+    super.init();
 
-    public void init() throws ServletException {
-        super.init();
-
-        String configFile = getInitParameter(FILE_CONFIGURATION);
-        if (configFile == null) {
-            configFile = FILE_CONFIGURATION_DEFAULT;
-        }
-
-        DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
-
-        try {
-            configuration = configurationBuilder.build(getRealPath(configFile));
-        } catch (Exception e) {
-            logger.fatal("Please check that the Configuration file "
-                    + configFile + " exists and is valid", e);
-
-            throw new ServletException("Error reading Configuration "
-                    + configFile, e);
-        }
+    String configFile = getInitParameter(FILE_CONFIGURATION);
+    if (configFile == null) {
+      configFile = FILE_CONFIGURATION_DEFAULT;
     }
 
-    protected Configuration getConfiguration() {
-        return configuration;
+    DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
+
+    try {
+      configuration = configurationBuilder.build(getRealPath(configFile));
+    } catch (Exception e) {
+      logger.fatal("Please check that the Configuration file " + configFile
+          + " exists and is valid", e);
+
+      throw new ServletException("Error reading Configuration " + configFile, e);
     }
-    
-    /**
-     * Convenience method, to save some typing.
-     */
-    protected String getRealPath(String path) {
-        return getServletContext().getRealPath(path);
-    }
+  }
+
+  protected Configuration getConfiguration() {
+    return configuration;
+  }
+
+  /**
+   * Convenience method, to save some typing.
+   */
+  protected String getRealPath(String path) {
+    return getServletContext().getRealPath(path);
+  }
 }

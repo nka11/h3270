@@ -133,7 +133,7 @@ public class Field {
     return value; 
   }
   
-  private static Pattern linePattern = 
+  private static final Pattern LINE_PATTERN = 
     Pattern.compile ("^(?:(.*)\n)*(.*)$", Pattern.MULTILINE);
   
   /**
@@ -141,7 +141,7 @@ public class Field {
    * @param lineNumber the number of the line to retrieve, starting at zero
    */
   public String getValue (int lineNumber) {
-    Matcher m = linePattern.matcher (getValue());
+    Matcher m = LINE_PATTERN.matcher (getValue());
     m.find();
     return m.group(lineNumber + 1);
   }

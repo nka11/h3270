@@ -17,7 +17,7 @@ package org.h3270.host;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
 
@@ -32,9 +32,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
@@ -56,16 +56,36 @@ public class S3270 implements Terminal {
 
     private S3270Screen screen = null;
 
-    public S3270(String hostname, String path_to_s3270_binary) {
+    public S3270(String hostname, String path_to_s3270_binary,
+            Configuration config) {
+        final String charSet = config.getChild("charset").getValue("bracket");
+        final String model = config.getChild("model").getValue("3");
+        final String additional = config.getChild("additional").getValue("");
+        
         try {
             File s3270_binary = new File(path_to_s3270_binary, "s3270");
-            s3270 = Runtime.getRuntime().exec(
-                    s3270_binary.toString() + " -model 2 "
-                    // uncomment the following to support different charsets
-                            // (codepages) -- see s3270 docs for supported
-                            // charsets
-                            // + " -charset german "
-                            + hostname);
+
+            StringBuffer cmd = new StringBuffer(s3270_binary.toString());
+            cmd.append(" -model ");
+            cmd.append(model);
+            if (!charSet.equals("bracket")) {
+                cmd.append(" -charset ");
+                cmd.append(charSet);
+            }
+            
+            if (additional.length() > 0)
+            {
+                cmd.append(" ");
+                cmd.append(additional);
+            }
+
+            cmd.append(" ");
+            cmd.append(hostname);
+
+            logger.debug("Starting s3270: " + cmd.toString());
+
+            s3270 = Runtime.getRuntime().exec(cmd.toString());
+
             out = new PrintWriter(new OutputStreamWriter(s3270
                     .getOutputStream(), "ISO-8859-1"));
             in = new BufferedReader(new InputStreamReader(s3270
@@ -104,28 +124,29 @@ public class S3270 implements Terminal {
             if (logger.isDebugEnabled()) {
                 logger.debug("---> " + command);
             }
-            
+
             List lines = new ArrayList();
             while (true) {
                 String line = in.readLine();
                 if (line == null)
                     throw new EOFException("premature end of data");
-                
+
                 if (logger.isDebugEnabled()) {
                     logger.debug("<--- " + line);
                 }
-                
+
                 if (line.equals("ok"))
                     break;
                 lines.add(line);
             }
             int size = lines.size();
-            if (size > 0)
+            if (size > 0) {
                 return new Result(lines.subList(0, size - 1), (String) lines
                         .get(size - 1));
-            else
+            } else {
                 throw new RuntimeException("no status received in command: "
                         + command);
+            }
         } catch (IOException ex) {
             throw new RuntimeException("IOException during command: " + command
                     + ", " + ex);
@@ -222,11 +243,8 @@ public class S3270 implements Terminal {
                     char ch = value.charAt(j);
                     if (ch == '\n')
                         doCommand("newline");
-                    else if(!Integer.toHexString(ch).equals("0")){
+                    else if (!Integer.toHexString(ch).equals("0"))
                         doCommand("key (0x" + Integer.toHexString(ch) + ")");
-                    } else if(f.isMultiline()){
-                        doCommand("newline");
-                    }
                 }
             }
         }
@@ -239,8 +257,9 @@ public class S3270 implements Terminal {
                 char newCh = data.charAt(index);
                 if (newCh != screen.charAt(x, y)) {
                     doCommand("movecursor (" + y + ", " + x + ")");
-                    if(!Integer.toHexString(newCh).equals("0"))
+                    if (!Integer.toHexString(newCh).equals("0")) {
                         doCommand("key (0x" + Integer.toHexString(newCh) + ")");
+                    }
                 }
                 index++;
             }
@@ -284,16 +303,4 @@ public class S3270 implements Terminal {
     public void attn() {
         doCommand("attn");
     }
-    
-//    public static void main(String[] args) {
-//    	BasicConfigurator.configure();
-//        //Terminal terminal = new S3270("locis.loc.gov", "c:/home/shogun/bin");
-//    	Terminal terminal = new FileTerminal("h3270.dump");
-//        terminal.updateScreen();
-//        //terminal.dumpScreen("c:/temp/dump.txt");
-//        Screen s = terminal.getScreen();
-//        System.out.println(new HtmlRenderer().render(s));
-//        terminal.submitScreen();        
-//    }
-
 }

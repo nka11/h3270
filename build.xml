@@ -30,7 +30,7 @@
         </condition>
     </target>
 
-    <target name="all" depends="init,compile-regex,compile" />
+    <target name="all" depends="war" />
 
     <target name="compile" depends="init">
         <javac srcdir="${basedir}/src" destdir="${dir.classes}">
@@ -69,7 +69,7 @@
         </javac>
     </target>
 
-    <target name="war" depends="all">
+    <target name="war" depends="compile, test">
         <war destfile="${file.war}" basedir="${dir.webapp}" webxml="${dir.webapp}/WEB-INF/web.xml">
             <exclude name="WEB-INF/web.xml" />
         </war>
@@ -117,25 +117,15 @@
 
     <target name="test.run" depends="test.init">
         <property name="dir" value="${basedir}" />
-        <property name="verbose" value="false" />
-
-        <condition property="test.verbose">
-            <istrue value="${verbose}" />
-        </condition>
-
-        <echo level="verbose">
-			Testname: ${testname}
-			Directory: ${dir}
-		</echo>
-
+     
         <junit showoutput="true" printsummary="true" fork="true" dir="${dir}">
             <classpath refid="cp.run-test" />
             <test name="${testname}" />
-            <formatter if="test.verbose" type="plain" usefile="false" />
+            <formatter type="plain" usefile="false" />
         </junit>
     </target>
 
-    <target name="test" description="Run h3270 Unit Tests" depends="test.compile">
+    <target name="test" description="Run All h3270 Unit Tests" depends="test.compile">
         <antcall target="test.run">
             <param name="testname" value="org.h3270.test.AllTest" />
         </antcall>

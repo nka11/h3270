@@ -119,7 +119,8 @@ public class S3270Screen extends AbstractScreen {
     width = 0;
     buffer = new char[height][];
     fields = new ArrayList();
-    fieldStart = -1;
+    fieldStartX = -1;
+    fieldStartY = -1;
     fieldStartCode = 0x00;
     for (int y=0; y<height; y++) {
       char[] line = decode ((String)bufferData.get(y), y, fields);
@@ -149,7 +150,8 @@ public class S3270Screen extends AbstractScreen {
   private static final Pattern formattedCharPattern = 
     Pattern.compile ("SF\\((..)=(..)(,.*?)?\\)|[0-9a-fA-F]{2}");
 
-  private int  fieldStart = -1;
+  private int  fieldStartX = -1;
+  private int  fieldStartY = -1;
   private byte fieldStartCode = 0x00;
 
   /**
@@ -168,11 +170,13 @@ public class S3270Screen extends AbstractScreen {
             ("format information in unformatted screen");
         result.append (' ');
         if (m.group(1).equals("c0")) {
-          if (fieldStart != -1) {
+          if (fieldStartX != -1) {
             // if we've been in an open field, close it now
-            fields.add (createField (fieldStartCode, fieldStart, index, y,
-                                     result.substring (fieldStart, index)));
-            fieldStart = -1;
+            fields.add (createField (fieldStartCode, 
+                                     fieldStartX, fieldStartY,
+                                     index-1, y));
+            fieldStartX = -1;
+            fieldStartY = -1;
             fieldStartCode = 0x00;
           }            
           byte fieldCode = (byte)Integer.parseInt (m.group(2), 16);
@@ -180,35 +184,28 @@ public class S3270Screen extends AbstractScreen {
               ((fieldCode & Field.ATTR_NOT_RENDERED) == Field.ATTR_NOT_RENDERED))
           {
             // unprotected or "unrendered" (invisible): a new field begins
-            fieldStart = index + 1;
+            fieldStartX = index + 1;
+            fieldStartY = y;
             fieldStartCode = fieldCode;
           }
         }
-      } else
+      } else {
         result.append ((char)(Integer.parseInt (code, 16)));
+      }
       index++;
     }
-    // a field that extends past the end of the line
-    if (fieldStart != -1) {
-      if (fieldStart < index) {
-        // field started earlier on this line, consider it to end here
-        fields.add (createField (fieldStartCode, fieldStart, index, y,
-                                 result.substring (fieldStart, index)));
-        fieldStart = -1;
-        fieldStartCode = 0x00;
-      } else {
-        // opening attribute is the last character on this line,
-        // let the field begin in the next line
-        fieldStart = 0;
-      }
+    // a field that begins in the last column
+    if (fieldStartX == index) {
+      fieldStartX = 0;
+      fieldStartY++;
     }  
     return result.toString().toCharArray(); 
   }
   
   private Field createField (byte startCode,
-                             int start, int end, int y,
-                             String value) {
-    return new Field (this, start, y, end, y, value,
+                             int startx, int starty,
+                             int endx, int endy) {
+    return new Field (this, startx, starty, endx, endy,
                       (startCode & Field.ATTR_NUMERIC) != 0,
                           (startCode & Field.ATTR_DISP_1) != 0
                        && (startCode & Field.ATTR_DISP_2) != 0,
@@ -216,6 +213,8 @@ public class S3270Screen extends AbstractScreen {
                       (startCode & Field.ATTR_NOT_RENDERED) 
                                          != Field.ATTR_NOT_RENDERED);
   }
+
+
                               
   public static void main (String[] args) throws IOException {
     BufferedReader in = new BufferedReader 

@@ -58,6 +58,8 @@ public class Servlet extends HttpServlet {
         request.setAttribute ("screen", basicRenderer.render(s));
       request.setAttribute ("hostname", state.terminal.getHostname());
       request.setAttribute ("keypad", state.useKeypad ? "on" : null);
+      request.setAttribute ("style", 
+                            state.configuration.getActiveColorScheme().toCSS());
     }
     getServletContext().getRequestDispatcher ("/screen.jsp")
                        .forward (request, response);
@@ -68,6 +70,17 @@ public class Servlet extends HttpServlet {
     throws ServletException, IOException {
 
     SessionState state = getSessionState(request);
+
+    if (request.getParameter("colorscheme") != null)
+      state.configuration.setActiveColorScheme(request.getParameter("colorscheme"));
+    if (request.getParameter("render") != null) {
+      if (request.getParameter("render").equals("true"))
+        state.useRenderers = true;
+      else if (request.getParameter("render").equals("false"))
+        state.useRenderers = false;
+      if (state.useRenderers)
+        engine = new Engine (getRealPath("/WEB-INF/templates"));
+    }
 
     if (request.getParameter ("connect") != null) {
       String hostname = request.getParameter("hostname");
@@ -92,10 +105,6 @@ public class Servlet extends HttpServlet {
         new File (getRealPath("/WEB-INF/dump"),
                   request.getParameter("dumpfile")).toString();
       state.terminal.dumpScreen(filename);
-    } else if (request.getParameter ("render") != null) {
-      state.useRenderers = !state.useRenderers;
-      if (state.useRenderers)
-        engine = new Engine (getRealPath("/WEB-INF/templates"));
     } else if (request.getParameter ("log") != null) {
       if (state.terminal.getLog() == null) {
         state.terminal.startLogging();
@@ -108,7 +117,7 @@ public class Servlet extends HttpServlet {
       }
     } else if (request.getParameter ("keypad") != null) {
       state.useKeypad = !state.useKeypad;
-    } else {
+    } else if (state.terminal != null) {
       submitScreen (request);
       String key = request.getParameter ("key");
       if (key != null) performKeyAction (state.terminal, key);
@@ -166,11 +175,23 @@ public class Servlet extends HttpServlet {
     if (s.isFormatted()) {
       for (Iterator i = s.getFields().iterator(); i.hasNext();) {
         Field f = (Field)i.next();
-        if (!(f instanceof InputField)) continue;
-        String value = request.getParameter ("field_" + f.getStartX() 
-                                                + "_" + f.getStartY());
-        if (value != null) {
-          ((InputField)f).setValue (value);
+        if (f instanceof InputField) {
+          if (!f.isMultiline()) { 
+            String value = request.getParameter ("field_" + f.getStartX() 
+                                                 + "_" + f.getStartY());
+            if (value != null) {
+              ((InputField)f).setValue (value);
+            }
+          } else { // multi-line field
+            for (int j = 0; j < f.getHeight(); j++) {
+              String value = request.getParameter ("field_" + f.getStartX()
+                                                   + "_" + f.getStartY()
+                                                   + "_" + j);
+              if (value != null) {
+                ((InputField)f).setValue (j, value);
+              }
+            }
+          }
         }
       }
       state.terminal.submitScreen();

@@ -93,7 +93,7 @@ public class S3270Screen extends AbstractScreen {
                     );
 
   /**
-   * Updates this screen with output from "readbuffer ebcdic".
+   * Updates this screen with output from "readbuffer ascii".
    * @param status the status line that was returned by s3270
    * @param bufferData the actual screen data, as a list of strings
    */
@@ -185,14 +185,8 @@ public class S3270Screen extends AbstractScreen {
             fieldStartCode = fieldCode;
           }
         }
-      } else {
-        bytes[0] = (byte)Integer.parseInt(code, 16);
-        try {
-          result.append(new String(bytes, "cp273"));
-        } catch (UnsupportedEncodingException ex) {
-          throw new RuntimeException("error: " + ex);
-        }
-      }
+      } else
+        result.append ((char)(Integer.parseInt (code, 16)));
       index++;
     }
     // a field that extends past the end of the line --

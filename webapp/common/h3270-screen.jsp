@@ -1,6 +1,6 @@
 <table width=100%>
     <tr>
-        <td height="510px" align=center valign=center class="h3270-screen-border h3270-form">
+        <td style="height:37em;" align=center valign=center class="h3270-screen-border h3270-form">
       			<%= sessionState.getScreen() %>
         </td>
     </tr>

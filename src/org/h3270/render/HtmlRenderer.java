@@ -108,7 +108,6 @@ public class HtmlRenderer implements Renderer {
   protected void renderField (StringBuffer result, Field f) {
     result.append ("<input ");
     result.append ("type=" + (f.isHidden() ? "password " : "text "));
-    result.append ("onKeyDown=\"handler()\" ");
     result.append ("name=\"field_" + f.getX() + "_" + f.getY() + "\" ");
     result.append ("class=cicsfield ");
     String value = f.getValue();

@@ -1,24 +1,40 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
 <web-app>
-
-  <servlet>
-    <servlet-name>servlet</servlet-name>
-    <servlet-class>org.h3270.web.Servlet</servlet-class>
-    
-    <init-param>
-		<param-name>path.s3270</param-name>
-		<param-value>/usr/local/bin</param-value>
-	</init-param>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>servlet</servlet-name>
-    <url-pattern>/servlet</url-pattern>
+	<servlet>
+		<servlet-name>servlet</servlet-name>
+		<servlet-class>org.h3270.web.Servlet</servlet-class>
+		<init-param>
+			<param-name>file.configuration</param-name>
+			<param-value>/WEB-INF/h3270-config.xml</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>style</servlet-name>
+		<servlet-class>org.h3270.web.StyleServlet</servlet-class>
+		<init-param>
+			<param-name>file.configuration</param-name>
+			<param-value>/WEB-INF/h3270-config.xml</param-value>
+		</init-param>
+	</servlet>
+	
+	 <servlet-mapping>
+    <servlet-name>
+      servlet
+    </servlet-name>
+	<url-pattern> /servlet </url-pattern>
   </servlet-mapping>
-
-  <welcome-file-list>
-    <welcome-file>servlet</welcome-file>
-  </welcome-file-list>
-
+  
+   <servlet-mapping>
+    <servlet-name>
+      style
+    </servlet-name>
+	<url-pattern> /style </url-pattern>
+  </servlet-mapping>
+	
 </web-app>

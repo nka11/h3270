@@ -69,23 +69,25 @@
         </javac>
     </target>
 
-    <target name="war" depends="compile, test">
+    <target name="war" depends="compile, test" description="Build the WAR">
         <war destfile="${file.war}" basedir="${dir.webapp}" webxml="${dir.webapp}/WEB-INF/web.xml">
             <exclude name="WEB-INF/web.xml" />
+            <exclude name="WEB-INF/classes/**/test/**" />
+            <exclude name="WEB-INF/classes/com/**" />
         </war>
     </target>
 
-    <target name="deploy" depends="war">
+    <target name="deploy" depends="war" description="Deploy the Application (by copying)">
         <copy file="${file.war}" todir="${dir.deploy}" />
     </target>
 
-    <target name="undeploy">
+    <target name="undeploy" description="Undeploy the Application (by deleting the WAR)">
         <delete>
             <fileset dir="${dir.deploy}" includes="${file.war}" />
         </delete>
     </target>
 
-    <target name="clean">
+    <target name="clean" description="Delete all generated artifacts">
         <delete dir="${dir.classes}" />
         <delete file="${file.war}" />
     </target>

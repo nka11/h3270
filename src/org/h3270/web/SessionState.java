@@ -85,7 +85,15 @@ public class SessionState {
     private ColorScheme activeColorScheme;
 
     private String screen;
-    
+
+    /**
+     * although it is never called tomcat seems to insist to have a no-args
+     * constructor.
+     */
+    public SessionState() {
+        throw new IllegalStateException();
+    }
+
     public SessionState(H3270Configuration config, String savedState)
             throws IOException {
 
@@ -131,14 +139,14 @@ public class SessionState {
     public String getHostname() {
         if (terminal != null) {
             return terminal.getHostname();
-        } 
+        }
         return null;
     }
-        
+
     public boolean isConnected() {
         return terminal != null;
     }
-    
+
     public String getScreen() {
         if (screen != null) {
             return screen.toString();

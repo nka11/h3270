@@ -39,7 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.h3270.host.Terminal;
 import org.h3270.render.ColorScheme;
-import org.h3270.render.Configuration;
+import org.h3270.render.H3270Configuration;
 import org.h3270.render.SelectOptionBean;
 
 /**
@@ -48,8 +48,6 @@ import org.h3270.render.SelectOptionBean;
  */
 public class SessionState {
 
-    private static final Log logger = LogFactory.getLog(SessionState.class);
-    
     private static final StringEncoder ENCODER;
 
     private static final StringDecoder DECODER;
@@ -60,6 +58,8 @@ public class SessionState {
         ENCODER = codec;
         DECODER = codec;
     }
+
+    private static final Log logger = LogFactory.getLog(SessionState.class);
 
     public static final String COOKIE_NAME = "org.h3270.Settings";
 
@@ -76,7 +76,7 @@ public class SessionState {
 
     public Terminal terminal = null;
 
-    private Configuration configuration = new Configuration();
+    private final H3270Configuration h3270Config;
 
     private boolean useKeypad = false;
 
@@ -84,8 +84,13 @@ public class SessionState {
 
     private ColorScheme activeColorScheme;
 
-    public SessionState(String savedState) throws IOException {
-        
+    private String screen;
+    
+    public SessionState(H3270Configuration config, String savedState)
+            throws IOException {
+
+        h3270Config = config;
+
         String decoded;
         try {
             decoded = DECODER.decode(savedState);
@@ -99,8 +104,10 @@ public class SessionState {
 
         props.load(new ByteArrayInputStream(decoded.getBytes()));
 
-        logger.debug("trying to restore SessionState " + props);
-        
+        if (logger.isDebugEnabled()) {
+            logger.debug("trying to restore SessionState " + props);
+        }
+
         for (int x = 0; x < KEYS.length; ++x) {
             String key = KEYS[x];
 
@@ -109,7 +116,7 @@ public class SessionState {
             }
         }
 
-        setActiveColorScheme(getStringProperty(COLORSCHEME, configuration
+        setActiveColorScheme(getStringProperty(COLORSCHEME, h3270Config
                 .getDefaultColorscheme()));
 
         if (isPropertyDefined(KEYPAD)) {
@@ -119,6 +126,34 @@ public class SessionState {
 
     public String toString() {
         return "<SessionState: " + properties_.toString() + ">";
+    }
+
+    public String getHostname() {
+        if (terminal != null) {
+            return terminal.getHostname();
+        } 
+        return null;
+    }
+        
+    public boolean isConnected() {
+        return terminal != null;
+    }
+    
+    public String getScreen() {
+        if (screen != null) {
+            return screen.toString();
+        } else {
+            StringBuffer b = new StringBuffer();
+            b.append("<b>h3270 version ");
+            b.append(org.h3270.Version.value);
+            b.append("</b>\n<br><br>not connected\n");
+
+            return b.toString();
+        }
+    }
+
+    void setScreen(String screen) {
+        this.screen = screen;
     }
 
     public String getSavedState() throws IOException {
@@ -141,7 +176,7 @@ public class SessionState {
     }
 
     public String getFontName() {
-        return getStringProperty(FONTNAME, configuration.getDefaultFontname());
+        return getStringProperty(FONTNAME, h3270Config.getDefaultFontname());
     }
 
     public Iterator getColorschemeSelectOptions() {
@@ -164,7 +199,7 @@ public class SessionState {
 
     public Iterator getFontSelectOptions() {
         List list = new ArrayList();
-        Map validFonts = configuration.getValidFonts();
+        Map validFonts = h3270Config.getValidFonts();
 
         Iterator i = validFonts.keySet().iterator();
         while (i.hasNext()) {
@@ -183,8 +218,6 @@ public class SessionState {
     }
 
     private void put(String name, String value) {
-        logger.debug("put " + name + " => " + value);
-
         properties_.put(name, value);
     }
 
@@ -197,11 +230,11 @@ public class SessionState {
     }
 
     public List getColorSchemes() {
-        return configuration.getColorSchemes();
+        return h3270Config.getColorSchemes();
     }
 
     public boolean setActiveColorScheme(String schemeName) {
-        ColorScheme scheme = configuration.getColorScheme(schemeName);
+        ColorScheme scheme = h3270Config.getColorScheme(schemeName);
 
         logger.debug("setActiveColorScheme: " + schemeName);
 
@@ -231,8 +264,7 @@ public class SessionState {
     }
 
     public boolean isUseRenderers() {
-        return getBooleanProperty(RENDERER, configuration
-                .getDefaultUseRenderer());
+        return getBooleanProperty(RENDERER, h3270Config.getDefaultUseRenderer());
     }
 
     private boolean parseBooleanString(String s) {

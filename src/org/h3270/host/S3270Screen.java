@@ -84,7 +84,7 @@ public class S3270Screen extends AbstractScreen {
                      + "([0-9]+) "           // Cursor Row
                      + "([0-9]+) "           // Cursor Column
                      + "0x0 "                // Window ID (always 0x0)
-                     + "(?:[0-9]+|-)$"       // Time for last command
+                     + "(?:[0-9.]+|-)$"      // Time for last command
                     );
 
   /**

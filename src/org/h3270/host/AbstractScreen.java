@@ -53,7 +53,7 @@ public abstract class AbstractScreen implements Screen {
       throw new IndexOutOfBoundsException
         ("(" + x + ", " + y +")" 
          + ", should be in (0.." + width + ", 0.." + height + ")");
-    Field f = getFieldAt (x, y);
+    InputField f = getInputFieldAt (x, y);
     if (f != null) {
       String value = f.getValue();
       return value.charAt (x - f.getStartX()); 
@@ -94,24 +94,26 @@ public abstract class AbstractScreen implements Screen {
     return Collections.unmodifiableList (fields);
   }
 
-  public Field getFieldAt(int x, int y) {
+  public InputField getInputFieldAt(int x, int y) {
     for (Iterator i = fields.iterator(); i.hasNext();) {
       Field f = (Field)i.next();
+      if (!(f instanceof InputField))
+        continue;
       if (y == f.getStartY()) {
         int fx = f.getStartX();
         if (x == fx || (x > fx && x < fx + f.getWidth()))
-          return f;
+          return (InputField)f;
       }
     }
     return null;    
   }
 
-  public boolean isField(int x, int y) {
-    return getFieldAt (x, y) != null;
+  public boolean isInputField(int x, int y) {
+    return getInputFieldAt (x, y) != null;
   }
 
-  public Field getFocusedField() {
-    return this.getFieldAt (cursorX, cursorY);
+  public InputField getFocusedField() {
+    return this.getInputFieldAt (cursorX, cursorY);
   }
 
   public boolean isFormatted() {

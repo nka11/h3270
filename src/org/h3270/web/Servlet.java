@@ -71,17 +71,22 @@ public class Servlet extends AbstractServlet {
 
     private H3270Configuration h3270Configuration;
 
-    private String mainJSP;
+    private String mainJSP = DEFAULT_JSP;
 
     public void init() throws ServletException {
         super.init();
 
         Configuration config = getConfiguration();
 
-        if (config.getChild("style") != null) {
-            mainJSP = STYLE_JSP;
-        } else {
-            mainJSP = DEFAULT_JSP;
+        
+        Configuration styleConfig = config.getChild("style");
+        
+        try {
+            if (styleConfig.getValue() != null) {
+                mainJSP = STYLE_JSP;
+            }
+        } catch (ConfigurationException e) {
+            logger.info("Set main jsp to default");
         }
 
         Configuration dirConfig = config.getChild("template-dir");
@@ -94,6 +99,7 @@ public class Servlet extends AbstractServlet {
                 getRealPath("/WEB-INF/bin"));
 
         if (logger.isDebugEnabled()) {
+            logger.debug("Using main JSP: " + mainJSP);
             logger.debug("Set template-dir to " + templateDir);
             logger.debug("Set exec-path to " + execPath);
         }
@@ -293,7 +299,14 @@ public class Servlet extends AbstractServlet {
      */
     private SessionState getSessionState(HttpServletRequest request)
             throws IOException {
-        HttpSession session = request.getSession();
+        boolean forceNewSession =
+            request.getParameter("dump.session") != null;
+        
+        HttpSession session = request.getSession(forceNewSession);
+        
+        if (session == null) {
+            session = request.getSession();
+        }
 
         SessionState result = (SessionState) session
                 .getAttribute("sessionState");

@@ -85,6 +85,12 @@ public class S3270ScreenTest extends TestCase {
   private void screenTest (String filename) {
     Screen s = createScreenFromDump (filename + ".dump");
     String result   = new TextRenderer().render (s);
+    //try {
+    //  PrintWriter out = new PrintWriter (new FileWriter (filename + ".out"));
+    //  out.print (result);
+    //  out.close();
+    //} catch (Exception e) {
+    //}
     String expected = readTextScreen (filename + ".txt");
     assertEquals (expected, result);
   }

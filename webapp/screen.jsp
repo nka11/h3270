@@ -30,7 +30,7 @@
 </jsp:include>
 <!-- end include head -->
 
-<table width=100% border=0 cellpadding=0 cellspacing=0>
+<table width=100% border=0 cellpadding=0 cellspacing=0 >
   <tr>
     <td width=10% valign="top">
         <!-- begin include navbar -->
@@ -40,25 +40,16 @@
         <!-- end include navbar -->
     </td>
     
-    <td width=80% height=510px align=center valign=center class="h3270-screen-border h3270-form">
-      	<%= sessionState.getScreen() %>
+    <td width=80% valign=top>
+        <br>
+        <%@ include file="common/h3270-screen.jsp" %>
     </td>
     
-    <td width=10% rowspan=2 valign=top>   
-       	<% if (sessionState.isUseKeypad()) { %>    
-         	<jsp:include page="keys.html" flush="true"/>
-    		<% } %>
+    <td width="10%" valign="top">   
+         <% if (sessionState.isUseKeypad()) { %>    
+               <jsp:include page="keys.html" flush="true"/>
+         <% } %>
      </td>
-  </tr>
-  
-  <tr>
-    <td>
-        <!-- empty -->
-    </td>
-    
-    <td align=left height="10px" valign=bottom class="h3270-screen-border">
-        <%@ include file="common/h3270-control.jsp" %>
-    </td>
   </tr>
 </table>
 </body>

@@ -148,7 +148,7 @@ public class Servlet extends HttpServlet {
         throw new RuntimeException ("illegal s3270 method access for key: " + key);
       } catch (InvocationTargetException ex) {
         throw new RuntimeException ("error invoking s3270 for key: " + key
-                                  + ", exception: " + ex.getCause()); 
+                                 + ", exception: " + ex.getTargetException()); 
       }
     }
   }

@@ -68,6 +68,7 @@ public class HtmlRenderer implements Renderer {
   }
 
   private void renderFormatted (Screen screen, StringBuffer result) {
+    result.append ("<pre>");
     for (int y = 0; y < screen.getHeight(); y++) {
       for (int x = 0; x < screen.getWidth(); x++) {
         Field f = screen.getFieldAt (x, y);
@@ -77,13 +78,14 @@ public class HtmlRenderer implements Renderer {
         } else {
           char ch = screen.charAt (x, y);
           if (ch == ' ' || ch == '\u0000')
-            result.append ("&nbsp;");
+            result.append (" ");
           else
             result.append (ch);
         }
       }
-      result.append ("<br>\n");
+      result.append ("\n");
     }     
+    result.append ("</pre>");
   }
 
   private void renderUnformatted (Screen screen, StringBuffer result) {
@@ -111,6 +113,7 @@ public class HtmlRenderer implements Renderer {
     result.append ("class=cicsfield ");
     String value = f.getValue();
     result.append ("value=\"" + Field.trim (value) + "\" ");
+    result.append ("maxlength=\"" + f.getWidth() + "\" ");
     result.append ("size=\"" + f.getWidth() + "\" ");
     result.append (">");
   }

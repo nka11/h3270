@@ -43,7 +43,7 @@ public class S3270Screen extends AbstractScreen {
 
   private List bufferData = null;
   private String status = null;
-
+  
   public S3270Screen() {
     width  = 0;
     height = 0;
@@ -74,7 +74,26 @@ public class S3270Screen extends AbstractScreen {
   }
 
   /**
-   * Updates this screen with output from "readbuffer ascii".
+   * Pattern that matches a status line from s3270.
+   * Example:   U F U C(hostname) I 3 32 80 22 15 0x0 -
+   */
+  private static Pattern statusPattern =
+    Pattern.compile (  "^[ULE] "             // Keyboard State
+                     + "[FU] "               // Formatted / Unformatted
+                     + "[PU] "               // Protected / Unprotected (at cursor)
+                     + "(?:C\\([^)]*\\)|N) " // Connected / Not Connected
+                     + "[ILCN] "             // Emulator Mode
+                     + "[2-5] "              // Model Number
+                     + "[0-9]+ "             // Number of Rows
+                     + "[0-9]+ "             // Number of Columns
+                     + "([0-9]+) "           // Cursor Row
+                     + "([0-9]+) "           // Cursor Column
+                     + "0x0 "                // Window ID (always 0x0)
+                     + "(?:[0-9]+|-)$"       // Time for last command
+                    );
+
+  /**
+   * Updates this screen with output from "readbuffer ebcdic".
    * @param status the status line that was returned by s3270
    * @param bufferData the actual screen data, as a list of strings
    */
@@ -86,6 +105,16 @@ public class S3270Screen extends AbstractScreen {
     } else {
       isFormatted = false;
       updateBuffer (bufferData);
+    }
+    Matcher m = statusPattern.matcher(status);
+    if (m.find()) {
+      cursorX = Integer.parseInt (m.group(2));
+      cursorY = Integer.parseInt (m.group(1));
+      Field f = getFieldAt (cursorX, cursorY);
+      if (f != null) f.setFocused (true);
+    } else {
+      cursorX = 0;
+      cursorY = 0;
     }
   }
   
@@ -183,7 +212,8 @@ public class S3270Screen extends AbstractScreen {
     return new Field (this, start, y, end - start, value,
                       (startCode & FIELD_ATTR_NUMERIC) != 0,
                           (startCode & FIELD_ATTR_DISP_1) != 0
-                       && (startCode & FIELD_ATTR_DISP_2) != 0);
+                       && (startCode & FIELD_ATTR_DISP_2) != 0,
+                      false);
   }
                               
   public static void main (String[] args) throws IOException {

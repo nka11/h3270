@@ -75,6 +75,12 @@ public interface Screen {
    * see {@link #getFieldAt getFieldAt()}.
    */
   public boolean isField (int x, int y);
+
+  /**
+   * Gets the Field in which the cursor is currently, or null if
+   * the cursor is not in a Field.
+   */
+  public Field getFocusedField();
   
   /**
    * Returns true if this Screen is formatted.

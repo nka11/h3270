@@ -106,12 +106,12 @@
       in progress.
       <p>
       Many host applications also make extensive use of function keys
-      (such as PF7 and PA1).  By default, h3270 uses the function
+      (such as PF7 and PA1).  h3270 uses the function
       keys of your keyboard (F1-12 on traditional PC keyboards) for
-      PF1-12.  However, some of these keys are normally also used by
-      your web browser or operating system, and so neither h3270 nor
-      the host application will actually receive these key events.
-      To remedy this, you can press the button in the lower right
+      PF1-12.  Any events from these function keys are handled so that
+      the h3270 web application receives them, rather than the
+      browser or the operating system (this is a new feature since
+      h3270 version 1.1).  You can also press the button in the lower right
       corner of the page to display an auxiliary keypad beneath your
       application (see fig.&nbsp;3).
       <p>

@@ -1,0 +1,182 @@
+<html>
+<head>
+<title>h3270 -- Configuration</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<table width=100% style="background-color:black;">
+  <tr style="background-color:black;">
+    <td><a href="index.html"><img src="h3270-logo.png" border="0"></a></td>
+    <td width=100% align=right style="padding-right:10px;">
+      <a href="http://www.it-fws.de/e_home.htm">
+        <img src="it-fws-logo.png" border="0">
+      </a>
+    </td>
+  <tr>
+</table>
+<table width=100%>
+  <tr height=100%>
+    <td class=menu width=160px valign=top>
+      <a href="index.html">Home</a><br>
+      <a href="screenshots.html">Screenshots</a><br>
+      <a href="download.html">Download</a><br>
+      <a href="license.html">License</a><br>
+      <a href="credits.html">Credits</a><br><br>
+
+      <a href="relnotes.html">Release Notes</a><br>
+      <a href="install.html">Installation</a><br>
+      <a href="userguide.html">User Guide</a><br>
+      <a href="config.html">Configuration</a><br><br>
+
+      <a href="http://sourceforge.net/projects/h3270">Project Page</a><br>
+      <a href="http://sourceforge.net/mail/?group_id=95795">Mailing Lists</a><br>
+      <a href="http://sourceforge.net/tracker/?group_id=95795">Bug Reports</a><br>
+      <a href="http://sourceforge.net/cvs/?group_id=95795">CVS Access</a>
+      <br><br><br><br><br><br>
+      <a href="http://sourceforge.net">
+        <img src="http://sourceforge.net/sflogo.php?group_id=95795&amp;type=2"
+             width="125" height="37" border="0" alt="SourceForge.net Logo"/>
+      </a>
+    </td>
+    <td class=content valign=top>
+      <h1>Configuration</h1> 
+      This page explains how to configure h3270's rendering engine,
+      which allows you to transform your host applications from a
+      character-based layout to the look and feel of a web
+      application.  The rendering engine uses regular expressions as
+      known from many programming tools and languages such as Perl and
+      also Java.  In the following, we assume that you are basically
+      familiar with regular expressions.  To learn about them, we
+      recommend the book <a
+      href="http://www.oreilly.com/catalog/regex2/">Mastering Regular
+      Expressions</a> by Jeffrey Friedl.
+      <p>
+      The basic idea is that you provide an <i>HTML template page</i>
+      (or short: <i>template</i>) for one or more host screens.  A
+      template says how a particular screen (or a group of screens)
+      should appear in HTML.  Each template consists of three parts:
+      an <i>accept pattern</i>, a <i>match pattern</i>, and an <i>HTML
+      body</i>.
+      <ul>
+        <li>The <b>accept pattern</b> is a regular expression that decides
+        whether this template applies to a particular host screen.  It
+        applies if the pattern matches the textual representation of
+        the screen.</li>
+        <p>
+        <li>The <b>match pattern</b> is a regular expression that is used to
+        parse relevant information from the host
+        screen.  Text captured by <i>capturing groups</i> in this
+        regular expression can later be inserted into the HTML body.</li>
+        <p>
+        <li>The <b>HTML body</b> is an ordinary HTML page that may
+        contain special markers such as <i>#1, #2, #3</i>.  These
+        special markers indicate where text captured by the <i>match
+        pattern</i> should be inserted into the page.</li>
+      </ul>
+      Syntactically, the accept pattern and the match pattern are
+      specified in two special HTML comments at the start of the
+      template file.  (This means that you can edit and view the HTML
+      part with any ordinary HTML tool.)  The structure is shown
+      below: Both special comments must begin in the first column of
+      the file, and include the reserved words <code>accept</code>
+      resp. <code>match</code> in the indicated positions.  The
+      regular expressions start in the following line and extend to
+      the end of the comment, not including the final newline before
+      the end-of-comment marker.  This marker also needs to go into
+      the first column.  The rest of the template file, after the two
+      special comments, is the HTML body (it needn't be
+      in <code>&lt;HTML&gt;&lt;/HTML&gt;</code> tags).
+      <p>
+      <center>
+      <pre class=codex style="width:40em;"><span style="color:red;">&lt;!-- accept</span>
+
+    <i>Accept Pattern Here</i>
+
+<span style="color:red;">--&gt;</span>
+
+<span style="color:blue;">&lt;!-- match</span>
+
+    <i>Match Pattern Here</i>
+
+<span style="color:blue;">--&gt;</span>
+
+<span style="color:green;">&lt;html&gt;</span>
+
+    <i>HTML Body Here</i>
+
+<span style="color:green;">&lt;/html&gt;</span></pre>
+      </center>
+      <p>
+      When h3270 starts up, the rendering engine initializes itself by
+      reading all template files from the
+      directory <code>WEB-INF/templates</code> within the h3270 web
+      application.  Template files look like ordinary HTML files,
+      with the same extension, <code>.html</code>.  When a particular
+      host screen is encountered by h3270, it tries all the accept
+      patterns of the template pages it has found in the above
+      directory against the textual representation of the host
+      screen.  The first template that matches is selected to render
+      the screen.  (You can find some example templates included
+      within the <code>templates</code> directory of the h3270 distribution.)
+      <p>
+      The <b>accept pattern</b> is an ordinary regular expression,
+      which is applied to the host screen in JDK standard mode with no
+      optional flags.  The pattern only needs to match somewhere
+      inside the host screen, not the entire screen.  In the textual
+      representation against which the pattern is matched, screen
+      lines are terminated with newline characters (which correspond
+      naturally to newlines in the pattern).  Input fields in the host
+      screen are marked by "{" and "}" characters (these appear in the
+      exact positions where the field attributes were in the original
+      host screen).
+      <p>
+      The <b>match pattern</b> is applied to the screen after the
+      corresponding accept pattern was found to match.  Unlike the
+      accept pattern, the match pattern is applied in DOTALL mode
+      (where "." matches everything, including a newline), because
+      that is more convenient in the match pattern.  You can change
+      this by switching DOTALL mode off inside the pattern with
+      "<code>(?-s)</code>".  The match pattern needn't match the entire screen,
+      only part of it, but it is an error if the match pattern
+      does <i>not</i> match the screen at all after the accept
+      pattern has succeeded.
+      <p>
+      Within the match pattern, you can use capturing groups
+      (parenthesized subexpressions) to capture text from the host
+      screen for later insertion into the HTML body.  If you
+      want to include an <i>input field</i> from the host screen
+      within the rendered HTML page, you <i>must</i> match this input
+      field within a capturing group.  The result must be a capturing
+      group that starts and ends with "{" and "}" characters; such
+      groups are recognized and handled specially by the engine.
+      Thus, a common expression to match and capture an input field is
+      "<code>(\{.*?\})</code>".  (This uses a non-greedy asterisk so
+      that the match doesn't run off beyond the terminating "}".)
+      <p>
+      Within the <b>HTML body</b>, you can use placeholders such
+      as <i>#1, #2, #3</i> for text that was captured by corresponding
+      groups of the match pattern.  To include a literal "&#035;" character
+      in your HTML page, write it as <code>&amp;#035;</code> (the hash
+      mark inside this expression is not counted as a placeholder
+      because it comes after an "&amp;").  If the
+      text that was captured by a particular group is enclosed in "{"
+      and "}" characters, an HTML input field for the corresponding
+      host screen field will be generated.
+      <p>
+      As an additional feature, you can write a qualified Java class
+      name within braces after a placeholder, such as
+      "<code>#1{org.h3270.render.ParagraphFilter}</code>".  This means
+      that before the captured text is placed into the HTML page, it
+      is run through the <code>filter()</code> method of an instance
+      of the specified class, which must implement the
+      interface <code>org.h3270.render.Filter</code>.  You can use
+      this to make arbitrary modifications to the text captured from
+      the host screen before it gets into the HTML page.  As an
+      example, the above <code>ParagraphFilter</code> finds empty
+      lines within the text and replaces them with HTML &lt;p&gt;
+      tags.
+    </td>
+  </tr>
+</table>
+</body>
+</html>

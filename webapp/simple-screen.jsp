@@ -22,13 +22,19 @@
 
 <table>
   <tr>
-    <td style="width:50em;">
+    <td style="width:50em;padding-right:0;">
       <%@ include file="common/h3270-screen.jsp" %>
     </td>   
     
     <% if (sessionState.isUseKeypad()) { %>    
-      <td valign=top >   
-        <jsp:include page="keys.html" flush="true"/>
+      <td valign=top>
+        <table>
+          <tr>
+            <td valign=top>
+              <jsp:include page="keys.html" flush="true"/>
+            </td>
+          </tr>
+        </table>
       </td>
     <% } %>
   </tr>

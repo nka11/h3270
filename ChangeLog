@@ -1,32 +1,1013 @@
-2004-07-26  Andre Spiegel  <spiegel@gnu.org>
+2004-09-17 15:25  bendt
 
-	* h3270 version 1.2-pre1 released.
+	* src/org/h3270/Version.java: incremented Version
 
-	The character-based terminal emulation has been improved.
-	It now supports colors and true multi-line fields.  The Web GUI
-	has a new "Preferences" dialog that allows you to choose between
-	several predefined color schemes, choose a font, and control
-	the regex rendering engine.
+2004-09-17 13:28  bendt
 
-2004-04-13  Andre Spiegel  <spiegel@gnu.org>
+	* src/org/h3270/web/Servlet.java: (init): bug in init
 
-	* h3270 version 1.1 released.
+2004-09-17 13:27  bendt
 
-	Handle the case when a field starts in the last column of
-	the previous line (as it happens on the standard z/OS login
-	screen...)
+	* webapp/WEB-INF/h3270-config.xml: disable new style feature by
+	  default
 
-2004-03-08  Andre Spiegel  <spiegel@gnu.org>
+2004-09-17 13:26  bendt
 
-	Changes to handle invisible fields, suggested by
-	Michael Ervin <symphyl@yahoo.com>.
+	* build.xml: added descriptions
 
-2003-12-16  Andre Spiegel  <spiegel@gnu.org>
+2004-09-17 12:53  bendt
 
-	Pass all function keys through to h3270.
-	Use HTML pre tag to render in text mode, not nbsp.
-	(Changes suggested by Eiffel.)
-	
-2003-12-11  Andre Spiegel  <spiegel@gnu.org>
+	* webapp/WEB-INF/: h3270-config.xml, etc/h3270-config.dtd: clean up
+	  config file and dtd
 
-	* h3270 version 1.0 released.
+2004-09-17 12:44  bendt
+
+	* build.xml: (all): made war the default target
+
+2004-09-17 12:44  bendt
+
+	* webapp/h3270/images/: h3270-logo.png, it-fws-logo.png: example
+	  h3270 style
+
+2004-09-17 12:43  bendt
+
+	* webapp/: screen.jsp, simple-screen.jsp, common/h3270-screen.jsp:
+	  [no log message]
+
+2004-09-17 12:43  bendt
+
+	* src/org/h3270/web/: Servlet.java, StyleServlet.java: (config):
+	  added config parameter style.
+
+2004-09-17 12:42  bendt
+
+	* webapp/it-fws/: head.jsp, navbar.jsp, stylesheet.jsp,
+	  images/box_botcorner_l.jpg, images/box_botcorner_r.jpg,
+	  images/box_bottom.jpg, images/box_main.jpg, images/box_mainl.jpg,
+	  images/box_mainr.jpg, images/box_maintop.jpg,
+	  images/box_maintopl.jpg, images/box_maintopr.jpg,
+	  images/box_top.jpg, images/box_topcorner_l.jpg,
+	  images/box_topcorner_r.jpg, images/linetop.jpg,
+	  images/linkout.gif, images/navback.jpg, images/navbottom.jpg,
+	  images/navround.jpg, images/pageon.gif, images/shapetop.jpg,
+	  images/titleback.jpg, images/titlelogo.jpg,
+	  images/titlemiddle.jpg, images/titleright.jpg: added example
+	  it-fws style
+
+2004-09-17 12:41  bendt
+
+	* webapp/h3270/: head.jsp, navbar.jsp, stylesheet.jsp: example
+	  h3270 style
+
+2004-09-11 23:43  bendt
+
+	* .cvsignore: ignored files
+
+2004-09-11 23:42  bendt
+
+	* build.xml: added easymockadded undeploy target
+
+2004-09-11 23:41  bendt
+
+	* webapp/WEB-INF/web.xml: added 2nd servlet
+
+2004-09-11 23:41  bendt
+
+	* webapp/WEB-INF/: h3270-config.xml, etc/h3270-config.dtd,
+	  lib/avalon-framework-4.2.0.jar: added avalon library for
+	  configurationadded config file and dtd
+
+2004-09-11 23:40  bendt
+
+	* webapp/: screen.jsp, simple-screen.jsp, common/h3270-control.jsp,
+	  common/h3270-css.jsp, common/keyboard.js: split screen.jsp in
+	  reusable snippets so that its easier to create custom layouts
+
+2004-09-11 23:38  bendt
+
+	* webapp/keys.html: (css): changed size of keypad
+
+2004-09-11 23:37  bendt
+
+	* webapp/index.jsp: added index.jsp
+
+2004-09-11 23:36  bendt
+
+	* test/src/org/h3270/test/SessionStateTest.java:
+	  (SessionStateTest): added mock configuration
+
+2004-09-11 23:35  bendt
+
+	*
+	  test/src/com/meterware/servletunit/ServletUnitServletContext.java:
+	  (getResourcePaths): patch httpunit class. null caused an
+	  exception during tests
+
+2004-09-11 23:33  bendt
+
+	* test/lib/easymock.jar: added lib for testing
+
+2004-09-11 23:33  bendt
+
+	* src/org/h3270/web/SessionState.java: (SessionState): use new
+	  configuratino method
+
+2004-09-11 23:32  bendt
+
+	* src/org/h3270/web/: AbstractServlet.java, Servlet.java,
+	  StyleServlet.java: (AbstractServlet): abstract base class for
+	  h3270 servlets(Servlet): inherit from baseclass. configuration
+	  now uses avalon configuration.(StyleServlet): new servlet
+
+2004-09-11 23:30  bendt
+
+	* src/org/h3270/render/: AvalonConfiguration.java,
+	  Configuration.java, H3270Configuration.java:
+	  (H3270Configuration): extracted interface from old Configuration
+	  class and renamed to H3270Configuration(Configuration): removed
+	  (AvalonConfiguration): default implementation of
+	  H3270Configuration which fetches data from an Avalon
+	  Configuration
+
+2004-09-11 23:27  bendt
+
+	* src/org/h3270/host/S3270.java: (log): removed unused member
+
+2004-08-29 14:59  bendt
+
+	* src/org/h3270/: host/S3270.java, host/Terminal.java,
+	  web/Servlet.java: (*): use commons logger to log interaction with
+	  h3270 process      removed methods startLogging, stopLogging,
+	  getLog
+
+2004-08-27 19:35  bendt
+
+	* src/org/h3270/test/: AllTest.java, FileScreenTest.java,
+	  RegexTest.java, S3270ScreenTest.java, screen1.txt, screen2.txt,
+	  screen3.dump, screen3.txt, screen4.dump, screen4.txt,
+	  screen5.dump, screen5.txt, screen6.dump, screen6.txt,
+	  screen7.dump, screen7.txt, screen8.dump, screen8.txt: (tests):
+	  moved to /test/src
+
+2004-08-27 19:29  bendt
+
+	* project.xml: (new): added maven project file. does not work yet.
+	  needs some work done ...
+
+2004-08-27 19:24  bendt
+
+	* webapp/WEB-INF/web.xml: (h3270): added servlet init param to
+	  configure path to h3270
+
+2004-08-27 19:22  bendt
+
+	* build.properties.examples: (new): set build properties
+
+2004-08-27 19:20  bendt
+
+	* build.xml: (build): added features: deploy, servlet test, etc.
+
+2004-08-27 19:17  bendt
+
+	* webapp/WEB-INF/lib/: commons-codec-1.3.jar,
+	  commons-logging-api-1.0.4.jar: (libs): added commons-codec to
+	  encode session state, added commons-logging for logging
+
+2004-08-27 19:17  bendt
+
+	* webapp/: prefs.jsp, screen.jsp: (jsp): cleaned up jsp code,
+	  encode url to maintain session state, etc.
+
+2004-08-27 19:15  bendt
+
+	* test/lib/: httpunit.jar, js.jar, nekohtml.jar, nekohtmlXni.jar,
+	  resolver.jar, xercesImpl.jar, xml-apis.jar, xmlParserAPIs.jar:
+	  added libs necessary for httpunit testing
+
+2004-08-27 19:12  bendt
+
+	* src/org/h3270/web/SessionState.java: (sessionstate): state can be
+	  reconstructed from cookie
+
+2004-08-27 19:12  bendt
+
+	* src/org/h3270/web/Servlet.java: (): added logger, added session
+	  handling code
+
+2004-08-27 19:11  bendt
+
+	* src/org/h3270/render/ColorScheme.java: (): formatted
+
+2004-08-27 19:10  bendt
+
+	* src/org/h3270/render/Configuration.java: (): moved state to
+	  SessionState. the class now holds only the configurable options
+
+2004-08-27 19:08  bendt
+
+	* src/org/h3270/render/Engine.java: (ctor): added curly braces
+
+2004-08-27 19:06  bendt
+
+	* src/org/h3270/render/RegexRenderer.java: (filePattern,
+	  placeholderPattern): renamed, made final
+
+2004-08-27 19:04  bendt
+
+	* src/org/h3270/render/SelectOptionBean.java: (SelectOptionBean):
+	  new class to represent an option inside a html select
+
+2004-08-27 19:03  bendt
+
+	* src/org/h3270/render/TextRenderer.java: (header): organized
+	  imports
+
+2004-08-27 18:58  bendt
+
+	* src/org/h3270/host/S3270Screen.java: (formattedCharPattern):
+	  renamed, made final
+
+2004-08-27 18:57  bendt
+
+	* src/org/h3270/host/S3270.java: (data, status): made members final
+
+2004-08-27 18:56  bendt
+
+	* src/org/h3270/host/InputField.java: (linePattern, trimPattern):
+	  made final, renamed
+
+2004-08-27 18:55  bendt
+
+	* src/org/h3270/host/FileScreen.java: (ctor): fetch file from
+	  classpath
+
+2004-08-27 18:54  bendt
+
+	* src/org/h3270/host/Field.java: (linePattern): made final, renamed
+
+2004-08-27 18:49  bendt
+
+	* test/src/org/h3270/test/: AllTest.java, FileScreenTest.java,
+	  RegexTest.java, S3270ScreenTest.java, screen1.txt, screen2.txt,
+	  screen3.dump, screen3.txt, screen4.dump, screen4.txt,
+	  screen5.dump, screen5.txt, screen6.dump, screen6.txt,
+	  screen7.dump, screen7.txt, screen8.dump, screen8.txt: moved tests
+	  from src to test/srcadded ServletTests
+
+2004-08-27 18:44  bendt
+
+	* test/src/org/h3270/test/: screen7.out, AbstractServletTest.java,
+	  Cookie.java, PreferencesTest.java, SessionStateTest.java,
+	  screen3.out, screen4.out, screen5.out, screen6.out, screen8.out:
+	  moved tests from src to test/src
+
+2004-08-27 18:18  spiegel
+
+	* release-checklist.txt: minor update
+
+2004-07-26 15:15  spiegel
+
+	* webapp/WEB-INF/templates/locis-main.html: Don't let the new
+	  styles wreck it.
+
+2004-07-26 15:14  spiegel
+
+	* doc/index.html: 1.2-pre1 news
+
+2004-07-26 14:47  spiegel
+
+	* doc/relnotes.html: Add notes for 1.2-pre1.
+
+2004-07-26 13:59  spiegel
+
+	* ChangeLog: #
+
+2004-07-26 13:45  spiegel
+
+	* src/org/h3270/ChangeLog: #
+
+2004-07-26 13:34  spiegel
+
+	* src/org/h3270/Version.java: Set to version 1.2-pre1.
+
+2004-07-23 16:51  spiegel
+
+	* src/org/h3270/render/Configuration.java: (fontName): New field
+	  and accessor methods.  (createDefaultColorSchemes): Prettify.
+
+2004-07-23 16:49  spiegel
+
+	* src/org/h3270/web/Servlet.java: (doGet): Include CSS font
+	  configuration in output.  (handlePreferences): New method.
+	  (doPost): Call it.
+
+2004-07-23 16:12  spiegel
+
+	* webapp/cics-style.css: [no log message]
+
+2004-07-23 16:11  spiegel
+
+	* webapp/: screen.jsp, prefs.jsp: Changes for configurability.
+
+2004-07-23 09:21  spiegel
+
+	* src/org/h3270/host/S3270.java: (doCommand): When no status has
+	  been received, throw exception rather than return a dummy result.
+
+2004-07-07 07:37  spiegel
+
+	* webapp/screen.jsp: (handleKeyDownEvent): Cancel Enter Events, to
+	  keep IE from sending double requests.
+
+2004-07-05 11:39  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (statusPattern): Add a
+	  crucial dot in the final field (time elapsed).
+
+2004-07-05 11:27  spiegel
+
+	* src/org/h3270/host/AbstractScreen.java: (getInputFieldAt):
+	  Rewritten not to use Field.getWidth().
+
+2004-07-05 11:21  spiegel
+
+	* src/org/h3270/host/InputField.java: (setValue(String)): Refuse to
+	  be called for multiline fields.  (setValue(int, String)): Fix
+	  prefix bug.
+
+2004-07-02 11:20  spiegel
+
+	* webapp/prefs.jsp: Add Apply button.
+
+2004-06-25 11:56  spiegel
+
+	* webapp/screen.jsp: Work together with prefs.jsp.
+
+2004-06-25 11:56  spiegel
+
+	* webapp/prefs.jsp: Initial revision.
+
+2004-06-25 11:55  spiegel
+
+	* src/org/h3270/render/ColorScheme.java: (name, getName): New field
+	  and accessor method.	(c'tor): New monster constructor.  Update
+	  no-arg c'tor.
+
+2004-06-25 11:51  spiegel
+
+	* src/org/h3270/web/SessionState.java: (configuration): New field.
+
+2004-06-25 11:50  spiegel
+
+	* src/org/h3270/web/Servlet.java: (doGet): Pass attribute "style"
+	  to the JSP.  (doPost): Handle "colorscheme" and "render"
+	  attributes from Preferences dialog.  (submitScreen): Handle
+	  multi-line fields.
+
+2004-06-25 11:43  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (createHtmlInput): New
+	  method.  (renderInputField): Use it, allow multi-line fields.
+	  (render, renderFormatted, renderUnformatted): Updated.
+
+2004-06-25 11:41  spiegel
+
+	* src/org/h3270/host/S3270.java: (doCommand): Return a dummy Result
+	  object if we get a single "ok" from s3270.  (submitScreen):
+	  Handle multiline fields.
+
+2004-06-25 11:38  spiegel
+
+	* src/org/h3270/host/InputField.java: (linePattern): New field.
+	  (setValue (int, String)): New method.  (setValue): Rename
+	  variable to fix scoping problem.  (trim): Improve javadoc.
+
+2004-06-25 09:55  spiegel
+
+	* src/org/h3270/host/Field.java: (getHeight, getValue(int),
+	  isEmpty, isMultiline): New methods.  (linePattern): New field.
+	  (getText, getValue): Improve javadoc.
+
+2004-06-25 09:39  spiegel
+
+	* src/org/h3270/render/Configuration.java: Initial revision.
+
+2004-06-21 15:23  spiegel
+
+	* src/org/h3270/render/ColorScheme.java: Initial revision.
+
+2004-06-20 20:42  spiegel
+
+	* src/org/h3270/ChangeLog: #
+
+2004-06-20 20:37  spiegel
+
+	* src/org/h3270/: host/AbstractScreen.java, host/Field.java,
+	  host/FileScreen.java, host/FileTerminal.java,
+	  host/InputField.java, host/S3270.java, host/S3270Screen.java,
+	  host/Screen.java, host/ScreenCharSequence.java,
+	  host/Terminal.java, render/Engine.java, render/Filter.java,
+	  render/HtmlRenderer.java, render/ParagraphFilter.java,
+	  render/RegexRenderer.java, render/Renderer.java,
+	  render/TextRenderer.java, sites/locis/MainMenuFilter.java,
+	  test/AllTest.java, test/FileScreenTest.java, test/RegexTest.java,
+	  test/S3270ScreenTest.java, Version.java, web/Servlet.java,
+	  web/SessionState.java: Update copyright notice.
+
+2004-06-20 14:33  spiegel
+
+	* src/org/h3270/test/: screen7.dump, screen7.txt, screen8.dump,
+	  screen8.txt: Initial revision.
+
+2004-06-20 14:32  spiegel
+
+	* src/org/h3270/test/: screen3.txt, screen4.txt, screen5.txt: Add
+	  markers for intensified fields.
+
+2004-06-20 14:30  spiegel
+
+	* src/org/h3270/render/RegexRenderer.java: (render): Use
+	  super.renderInputField().
+
+2004-06-20 14:29  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (render): Rewritten to be
+	  Field-based. Initial color support.  (renderInputField): Renamed
+	  from renderField(). Initial color support for intensified fields.
+
+2004-06-20 14:21  spiegel
+
+	* src/org/h3270/host/Field.java: (getWidth): Fix off-by-one error.
+
+2004-06-20 11:37  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: (render): Use
+	  Field.getText() to create the output.
+
+2004-06-20 11:35  spiegel
+
+	* src/org/h3270/host/Field.java: (getText): New method,
+	  encapsulates what we did in the TextRenderer before.
+
+2004-06-18 19:23  spiegel
+
+	* src/org/h3270/test/S3270ScreenTest.java: (screenTest): Add code
+	  to write the actual result into a text file (commented out).
+
+2004-06-18 19:22  spiegel
+
+	* src/org/h3270/test/screen6.txt: Use an open brace in the end,
+	  because technically, it is the start of a new field.
+
+2004-06-18 19:21  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: (render): Rewritten to
+	  render field-wise.
+
+2004-06-18 19:20  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (fieldStartCode,
+	  fieldStartX, fieldStartY): Initialize to start a protected,
+	  normal field at position (0,0).  (decode, updateBuffer): Adapt to
+	  this.
+
+2004-06-18 19:18  spiegel
+
+	* src/org/h3270/host/AbstractScreen.java: (substring): Be careful
+	  to return the empty string if coordinates are in reverse.
+
+2004-06-18 13:49  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (updateBuffer): Don't forget
+	  to add the final field.
+
+2004-06-18 13:47  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: (render): Fix the case
+	  when an input field begins on the final char of the screen.
+
+2004-06-18 13:15  spiegel
+
+	* src/org/h3270/web/Servlet.java: (submitScreen): Only submit
+	  InputFields.
+
+2004-06-18 13:13  spiegel
+
+	* src/org/h3270/test/screen4.txt: Place the final brace properly,
+	  as we can recognize it now.
+
+2004-06-18 13:12  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (renderField): Only
+	  render InputFields.  (renderFormatted): Only call renderField()
+	  for InputFields.
+
+2004-06-18 13:10  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: (render): Only put braces
+	  around InputFields.
+
+2004-06-18 13:09  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (createField): Return an
+	  InputField or a Field, depending on the start code.  (decode):
+	  Consider everything as a field, not just input fields.  (update):
+	  Use Screen.getInputFieldAt() to set the focus.
+
+2004-06-18 13:07  spiegel
+
+	* src/org/h3270/host/S3270.java: (submitScreen): Only submit
+	  InputFields, not all Fields.
+
+2004-06-18 13:06  spiegel
+
+	* src/org/h3270/host/FileScreen.java: (readField): Return an
+	  InputField, not a Field.
+
+2004-06-18 13:05  spiegel
+
+	* src/org/h3270/host/ScreenCharSequence.java: (getFieldAt):
+	  Redefined to use Screen.getInputFieldAt().
+
+2004-06-18 13:04  spiegel
+
+	* src/org/h3270/host/AbstractScreen.java: Adapt to new Screen
+	  interface.
+
+2004-06-18 13:03  spiegel
+
+	* src/org/h3270/host/Screen.java: (getInputFieldAt, isInputField):
+	  Renamed from getFieldAt() and isField(), respectively.
+	  (getFocusedField): Returns an InputField now.
+
+2004-06-18 13:01  spiegel
+
+	* src/org/h3270/host/Field.java: This class only represents
+	  protected fields now.  All stuff for unprotected fields has been
+	  moved into subclass InputField.  Reworked display modes; each
+	  field is now either "normal", "intensified", or "hidden".
+
+2004-06-18 12:58  spiegel
+
+	* src/org/h3270/host/InputField.java: Initial revision.
+
+2004-06-17 09:25  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: (render): Handle
+	  multi-line fields properly.
+
+2004-06-17 09:24  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (fieldStartX, fieldStartY):
+	  New fields.  (fieldStart): Field removed.  (decode): Handle
+	  multi-line fields properly.  (createField): Remove value arg,
+	  pass full coordinates of start point and end point.
+	  (updateBuffer): Initialize fieldStartX and fieldStartY properly.
+
+2004-06-17 09:20  spiegel
+
+	* src/org/h3270/host/Field.java: (c'tor): Remove value arg.
+	  (getValue): Get the value from the screen on demand.	(setValue):
+	  Get the value from the screen if needed.
+
+2004-06-17 09:18  spiegel
+
+	* src/org/h3270/host/FileScreen.java: (readField): Adapt to new
+	  Field constructor.
+
+2004-06-17 09:16  spiegel
+
+	* src/org/h3270/host/AbstractScreen.java: (substring): Methods
+	  implemented.
+
+2004-06-17 09:16  spiegel
+
+	* src/org/h3270/host/Screen.java: (substring): Three new methods.
+
+2004-06-16 16:34  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: Remove FIELD_... constants
+	  and refer to the new ones in the Field class instead.
+
+2004-06-16 16:29  spiegel
+
+	* src/org/h3270/host/S3270.java: (main): Use S3270 instead of
+	  S3270Impl.
+
+2004-06-16 16:27  spiegel
+
+	* src/org/h3270/web/Servlet.java: Adapt to new names of S3270
+	  classes in host package.
+
+2004-06-16 16:26  spiegel
+
+	* src/org/h3270/host/S3270Dummy.java: Renamed to FileTerminal.java
+
+2004-06-16 16:25  spiegel
+
+	* src/org/h3270/host/S3270Impl.java: Renamed to S3270.java
+
+2004-06-16 16:21  spiegel
+
+	* src/org/h3270/host/S3270.java: This now contains the code that
+	  formerly was S3270Impl.java.	The interface is now defined in
+	  Terminal.java.
+
+2004-06-16 16:20  spiegel
+
+	* src/org/h3270/host/FileTerminal.java: Renamed from
+	  S3270Dummy.java
+
+2004-06-16 16:16  spiegel
+
+	* src/org/h3270/host/Terminal.java: Renamed from S3270.java.
+
+2004-06-16 16:14  spiegel
+
+	* src/org/h3270/web/SessionState.java: Use Terminal instead of
+	  S3270.
+
+2004-06-16 16:14  spiegel
+
+	* src/org/h3270/web/Servlet.java: Adapt to new Field interface.
+
+2004-06-16 16:13  spiegel
+
+	* src/org/h3270/test/S3270ScreenTest.java: Add "screen6" test case.
+
+2004-06-16 16:12  spiegel
+
+	* src/org/h3270/test/: screen1.txt, screen2.txt, screen3.dump,
+	  screen3.txt, screen4.dump, screen4.txt, screen5.dump,
+	  screen5.txt, screen6.dump, screen6.txt: Initial revision.
+
+2004-06-16 16:10  spiegel
+
+	* src/org/h3270/test/RegexTest.java: (setUp): Implement to allow
+	  switching between regex implementations.
+
+2004-06-16 16:09  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: Adapt to new Field
+	  interface.
+
+2004-06-16 16:06  spiegel
+
+	* src/org/h3270/: host/S3270Screen.java, render/HtmlRenderer.java:
+	  Adapt to new Field interface.
+
+2004-06-16 16:02  spiegel
+
+	* src/org/h3270/host/FileScreen.java: Adapt to new Field interface.
+
+2004-06-16 16:02  spiegel
+
+	* src/org/h3270/host/AbstractScreen.java: (charAt, getFieldAt): Use
+	  Field.getStartX/Y() instead of Field.getX/Y().
+
+2004-06-16 16:00  spiegel
+
+	* src/org/h3270/host/Field.java: (x, y, width): Fields removed.
+	  (startx, starty, endx, endy): New fields.  Update all uses.
+
+2004-06-16 15:31  spiegel
+
+	* src/org/h3270/host/Field.java: (ATTR_PROTECTED, ATTR_DISP_1,
+	  ATTR_DISP_2, ATTR_NUMERIC): New public constants.
+
+2004-06-15 08:26  spiegel
+
+	* src/org/h3270/regex/Pattern.java: (useJRegex): New static field
+	  and accessor method.	(getPatternClass): Use it.
+
+2004-04-13 10:42  spiegel
+
+	* release-checklist.txt: #
+
+2004-04-13 10:26  spiegel
+
+	* doc/index.html: Add 1.1 news.
+
+2004-04-13 10:26  spiegel
+
+	* doc/relnotes.html: Add 1.1 release notes.
+
+2004-04-13 10:23  spiegel
+
+	* ChangeLog, src/org/h3270/ChangeLog: #
+
+2004-04-13 10:17  spiegel
+
+	* src/org/h3270/Version.java: Bump version number to 1.1.
+
+2004-04-13 10:16  spiegel
+
+	* src/org/h3270/web/Servlet.java: (performKeyAction): Do an ENTER
+	  action if the actual key got lost somehow.
+
+2004-04-13 09:45  spiegel
+
+	* doc/userguide.html: Document changes in keyboard handling.
+
+2004-04-13 09:32  spiegel
+
+	* ChangeLog: #
+
+2004-04-13 08:38  spiegel
+
+	* src/org/h3270/ChangeLog: #
+
+2004-04-13 08:29  spiegel
+
+	* src/org/h3270/render/TextRenderer.java: (render): Add special
+	  code for fields that start at the end of the previous line.
+
+2004-04-13 08:27  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (fieldStart,
+	  fieldStartCode): New private instance fields.  (decode): Use them
+	  to handle fields that start at the end of the previous line.
+	  (updateBuffer): Initialize the new fields.
+
+2004-03-08 12:49  spiegel
+
+	* src/org/h3270/ChangeLog: #
+
+2004-03-08 12:44  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (renderField): If the
+	  Field is not rendered, just print spaces.
+
+2004-03-08 12:43  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (FIELD_ATTR_NOT_RENDERED):
+	  New pseudo attribute.  (createField, decode): Detect the above
+	  case and handle it.
+
+2004-03-08 12:41  spiegel
+
+	* src/org/h3270/host/FileScreen.java: (readField): Use new Field
+	  constructor.
+
+2004-03-08 12:40  spiegel
+
+	* src/org/h3270/host/Field.java: (isRendered): New field and
+	  accessor method.  (c'tor): Add new parameter to set it.
+
+2004-03-02 18:46  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (renderField): Don't call
+	  JavaScript handler() method, which no longer exists.
+
+2003-12-16 21:46  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (renderField): Add
+	  maxlength attribute.	(renderFormatted): Use pre instead of nbsp.
+	  Changes suggested by Eiffel.
+
+2003-12-16 21:45  spiegel
+
+	* webapp/cics-style.css: Format pre tags in courier as well.
+
+2003-12-16 21:44  spiegel
+
+	* webapp/screen.jsp: Cancel function key events and handle IE
+	  properly (suggested by Eiffel).
+
+2003-12-11 16:17  spiegel
+
+	* release-checklist.txt: Bits and pieces.
+
+2003-12-11 16:15  spiegel
+
+	* doc/: config.html, credits.html, download.html, index.html,
+	  install.html, license.html, relnotes.html, screenshots.html,
+	  userguide.html: Update download link.
+
+2003-12-11 16:02  spiegel
+
+	* release-checklist.txt: Initial revision.
+
+2003-12-11 16:01  spiegel
+
+	* src/org/h3270/ChangeLog: #
+
+2003-12-11 15:56  spiegel
+
+	* src/org/h3270/Version.java: Bump to version 1.0.
+
+2003-12-11 15:52  spiegel
+
+	* ChangeLog: #
+
+2003-12-11 15:07  spiegel
+
+	* webapp/screen.jsp: Add version info on initial screen.
+
+2003-12-11 14:53  spiegel
+
+	* README: add contact information
+
+2003-12-11 14:50  spiegel
+
+	* webapp/WEB-INF/dump/: advantis-help.dump, advantis.dump,
+	  locis.dump: Initial revision.
+
+2003-12-11 14:44  spiegel
+
+	* webapp/WEB-INF/web.xml: Rearrange order of declarations, to
+	  comply with DTD.
+
+2003-12-11 14:35  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (decode): Assume buffer
+	  contents are ASCII, not EBCDIC.  (update): Reflect this in
+	  javadoc.
+
+2003-12-11 14:33  spiegel
+
+	* src/org/h3270/host/S3270Impl.java: (updateScreen): Use
+	  "readbuffer ascii" rather than ebcdic.  Handling of codepages is
+	  now deferred to s3270.  (submitScreen): Pass field contents in
+	  ASCII.  (c'tor): Add comment and template for codepage support in
+	  s3270.
+
+2003-12-11 14:16  spiegel
+
+	* doc/config.html: formatting change
+
+2003-12-11 14:08  spiegel
+
+	* doc/: credits.html, download.html, index.html, install.html,
+	  license.html, relnotes.html, screenshots.html, styles.css,
+	  userguide.html: Add configuration guide to menu.
+
+2003-12-11 14:05  spiegel
+
+	* doc/config.html: Initial revision.
+
+2003-12-11 14:02  spiegel
+
+	* src/org/h3270/render/RegexRenderer.java: (placeholderPattern):
+	  Use negative lookbehind so that we don't match HTML character
+	  references (&#035;).
+
+2003-12-05 13:52  spiegel
+
+	* doc/index.html: Add news item explaining new ETA for 1.0.
+
+2003-12-05 13:51  spiegel
+
+	* doc/download.html: Update
+
+2003-12-05 08:17  spiegel
+
+	* doc/: credits.html, download.html, index.html, install.html,
+	  license.html, relnotes.html, screenshots.html, userguide.html:
+	  Add links in header images.  Update it-fws links to refer to the
+	  english homepage.
+
+2003-12-04 23:31  spiegel
+
+	* src/org/h3270/ChangeLog: #
+
+2003-12-04 23:28  spiegel
+
+	* build.xml: Enhanced so that it builds properly under both JDK 1.3
+	  and 1.4.
+
+2003-12-04 23:27  spiegel
+
+	* src/org/h3270/web/Servlet.java: (performKeyAction): Use
+	  RuntimeException in a JDK 1.3-compatible way.
+
+2003-12-04 23:26  spiegel
+
+	* src/org/h3270/render/RegexRenderer.java: (render): Use
+	  HtmlRenderer.appendFocus().
+
+2003-12-04 23:25  spiegel
+
+	* src/org/h3270/render/HtmlRenderer.java: (appendFocus): New
+	  method.  (render): Use it.  (renderField): Formatting change.
+
+2003-12-04 23:24  spiegel
+
+	* src/org/h3270/host/ScreenCharSequence.java: (subSequence): Change
+	  return type to String to make it JDK 1.3-compatible.
+
+2003-12-04 23:23  spiegel
+
+	* src/org/h3270/host/Screen.java: (getFocusedField): New method.
+
+2003-12-04 23:22  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (statusPattern): New field.
+	  (update): Parse status line to get the current cursor position
+	  and set the currently focused field.	(createField): Adapt to new
+	  constructor parameter of Field.
+
+2003-12-04 23:20  spiegel
+
+	* src/org/h3270/host/FileScreen.java: (readField): Adapt to new
+	  constructor parameter of Field.
+
+2003-12-04 23:19  spiegel
+
+	* src/org/h3270/host/Field.java: (isFocused, setFocused): New field
+	  and accessor methods.  (c'tor): Add parameter to set it.
+
+2003-12-04 23:18  spiegel
+
+	* src/org/h3270/host/AbstractScreen.java: (cursorX, cursorY): New
+	  fields.  (getFocusedField): New method.
+
+2003-12-03 19:18  spiegel
+
+	* doc/index.html: Add news entry.
+
+2003-12-03 19:13  spiegel
+
+	* doc/screenshots.html: center tables
+
+2003-12-03 14:21  spiegel
+
+	* doc/userguide.html: Completed initial version.
+
+2003-12-03 12:53  spiegel
+
+	* doc/screens/: gui-1-small.png, gui-1.png, gui-2-small.png,
+	  gui-2.png, gui-3-small.png, gui-3.png: Initial revision.
+
+2003-12-03 11:11  spiegel
+
+	* src/org/h3270/render/RegexRenderer.java: (getFilter): Use
+	  JDK1.3-compliant RuntimeException.
+
+2003-12-03 11:10  spiegel
+
+	* src/org/h3270/host/S3270Screen.java: (c'tor, decode, dump): Use
+	  JDK1.3-compliant RuntimeException.
+
+2003-12-03 11:09  spiegel
+
+	* src/org/h3270/host/S3270Impl.java: (submitScreen): Use
+	  JDK1.3-compliant RuntimeException.
+
+2003-12-03 10:56  spiegel
+
+	* webapp/: cics-style.css, keys.html, screen.jsp,
+	  WEB-INF/templates/advantis-help.html,
+	  WEB-INF/templates/advantis-login.html,
+	  WEB-INF/templates/locis-main.html: Initial revision.
+
+2003-12-03 10:18  spiegel
+
+	* src/org/h3270/ChangeLog: Initial revision.
+
+2003-12-03 10:03  spiegel
+
+	* webapp/: WEB-INF/web.xml, images/att-logo.gif,
+	  images/locis-background.jpg, images/locis-main-background.jpg:
+	  Initial revision.
+
+2003-12-03 10:01  spiegel
+
+	* doc/: credits.html, download.html, h3270-logo.png,
+	  h3270-whitepaper.pdf, index.html, install.html, it-fws-logo.png,
+	  license.html, relnotes.html, screenshots.html, styles.css,
+	  userguide.html: Initial revision
+
+2003-12-03 09:58  spiegel
+
+	* doc/screens/: advantis-html-small.png, advantis-html.png,
+	  advantis-render-small.png, advantis-render.png,
+	  advantis-term-small.png, advantis-term.png, locis-html-small.png,
+	  locis-html.png, locis-render-small.png, locis-render.png,
+	  locis-term-small.png, locis-term.png: Initial revision.
+
+2003-12-03 09:53  spiegel
+
+	* src/org/h3270/web/: MultipartResponse.java, Servlet.java,
+	  SessionState.java: Initial revision.
+
+2003-12-03 09:50  spiegel
+
+	* src/org/h3270/: host/AbstractScreen.java, host/Field.java,
+	  host/FileScreen.java, host/S3270.java, host/S3270Dummy.java,
+	  host/S3270Impl.java, host/S3270Screen.java, host/Screen.java,
+	  host/ScreenCharSequence.java, Version.java,
+	  regex/JDKMatcher.java, regex/JDKPattern.java,
+	  regex/JRegexMatcher.java, regex/JRegexPattern.java,
+	  regex/Matcher.java, regex/Pattern.java, render/Engine.java,
+	  render/Filter.java, render/HtmlRenderer.java,
+	  render/ParagraphFilter.java, render/RegexRenderer.java,
+	  render/Renderer.java, render/TextRenderer.java,
+	  sites/locis/MainMenuFilter.java, test/AllTest.java,
+	  test/FileScreenTest.java, test/RegexTest.java,
+	  test/S3270ScreenTest.java: Initial revision.
+
+2003-12-03 09:47  spiegel
+
+	* LICENSE, README, build.xml: Initial revision.
+

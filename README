@@ -1,0 +1,10 @@
+This directory tree holds h3270, a program to operate IBM 3270 hosts
+from within a web browser.
+
+For the full documentation, including installation instructions,
+see doc/index.html.
+
+The development of h3270 is coordinated by it-frameworksolutions,
+Berlin (www.it-fws.de).  See the file doc/credits.html for full
+credits.
+

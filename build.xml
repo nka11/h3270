@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="h3270" default="all" basedir=".">
+
+  <target name="all" depends="compile">
+    
+  </target>
+
+  <target name="compile">
+    <javac srcdir="${basedir}/src"
+           destdir="${basedir}/webapp/WEB-INF/classes">
+      <classpath path="${servlet.jar}:${classpath}"/>
+      <exclude name="org/h3270/regex/JRegex*.java"/>
+      <exclude name="org/h3270/test/*.java"/>
+    </javac>
+  </target>
+
+  <target name="clean">
+    <delete dir="${basedir}/webapp/WEB-INF/classes/org"/>
+  </target>
+
+</project>

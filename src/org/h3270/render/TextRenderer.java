@@ -53,12 +53,12 @@ public class TextRenderer implements Renderer {
     }
     for (Iterator i = s.getFields().iterator(); i.hasNext();) {
       Field f = (Field)i.next();
-      if (f.getX() == 0)
-        setChar (s, result, s.getWidth()-1, f.getY()-1, '{');
+      if (f.getStartX() == 0)
+        setChar (s, result, s.getWidth()-1, f.getStartY()-1, '{');
       else
-        setChar (s, result, f.getX()-1, f.getY(), '{');
-      if (f.getX() + f.getWidth() < s.getWidth())
-        setChar (s, result, f.getX()+f.getWidth(), f.getY(), '}');
+        setChar (s, result, f.getStartX()-1, f.getStartY(), '{');
+      if (f.getStartX() + f.getWidth() < s.getWidth())
+        setChar (s, result, f.getStartX()+f.getWidth(), f.getStartY(), '}');
     }
     return result.toString();
   }

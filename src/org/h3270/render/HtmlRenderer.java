@@ -61,7 +61,7 @@ public class HtmlRenderer implements Renderer {
     Field f = screen.getFocusedField();
     if (f != null) {
       buffer.append ("<script>\n");
-      buffer.append ("  document.screen.field_" + f.getX() + "_" + f.getY() +
+      buffer.append ("  document.screen.field_" + f.getStartX() + "_" + f.getStartY() +
                      ".focus()\n");
       buffer.append ("</script>\n");
     }
@@ -109,7 +109,7 @@ public class HtmlRenderer implements Renderer {
     if (f.isRendered()) {
       result.append ("<input ");
       result.append ("type=" + (f.isHidden() ? "password " : "text "));
-      result.append ("name=\"field_" + f.getX() + "_" + f.getY() + "\" ");
+      result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY() + "\" ");
       result.append ("class=cicsfield ");
       String value = f.getValue();
       result.append ("value=\"" + Field.trim (value) + "\" ");

@@ -48,15 +48,15 @@ public class Servlet extends HttpServlet {
 
     SessionState state = getSessionState (request);
 
-    if (state.s3270 != null) {
-      state.s3270.updateScreen();
-      Screen s = state.s3270.getScreen();
+    if (state.terminal != null) {
+      state.terminal.updateScreen();
+      Screen s = state.terminal.getScreen();
       //if (false)
       if (state.useRenderers && engine.canRender (s))
         request.setAttribute ("screen", engine.render(s));
       else
         request.setAttribute ("screen", basicRenderer.render(s));
-      request.setAttribute ("hostname", state.s3270.getHostname());
+      request.setAttribute ("hostname", state.terminal.getHostname());
       request.setAttribute ("keypad", state.useKeypad ? "on" : null);
     }
     getServletContext().getRequestDispatcher ("/screen.jsp")
@@ -75,43 +75,43 @@ public class Servlet extends HttpServlet {
         String filename = 
           new File (getRealPath("/WEB-INF/dump"),
                     hostname.substring(5)).toString();
-        state.s3270 = new S3270Dummy (filename);
+        state.terminal = new S3270Dummy (filename);
       } else {
-        state.s3270 = 
+        state.terminal = 
           new S3270Impl (hostname, getRealPath("/WEB-INF/bin"));
       }
       state.useKeypad = false;
     } else if (request.getParameter ("disconnect") != null) {
-      if (state.s3270 != null) state.s3270.disconnect();
-      state.s3270 = null;
+      if (state.terminal != null) state.terminal.disconnect();
+      state.terminal = null;
     } else if (request.getParameter ("refresh") != null) {
-      state.s3270.updateScreen();
+      state.terminal.updateScreen();
     } else if (request.getParameter ("dumpfile") != null
                && !request.getParameter ("dumpfile").equals("")) {
       String filename = 
         new File (getRealPath("/WEB-INF/dump"),
                   request.getParameter("dumpfile")).toString();
-      state.s3270.dumpScreen(filename);
+      state.terminal.dumpScreen(filename);
     } else if (request.getParameter ("render") != null) {
       state.useRenderers = !state.useRenderers;
       if (state.useRenderers)
         engine = new Engine (getRealPath("/WEB-INF/templates"));
     } else if (request.getParameter ("log") != null) {
-      if (state.s3270.getLog() == null) {
-        state.s3270.startLogging();
+      if (state.terminal.getLog() == null) {
+        state.terminal.startLogging();
       } else {
         getServletContext().log ("*** COMMUNICATION LOG ***");
-        for (Iterator i = state.s3270.getLog().iterator(); i.hasNext();) {
+        for (Iterator i = state.terminal.getLog().iterator(); i.hasNext();) {
           getServletContext().log (i.next().toString());
         }
-        state.s3270.stopLogging();
+        state.terminal.stopLogging();
       }
     } else if (request.getParameter ("keypad") != null) {
       state.useKeypad = !state.useKeypad;
     } else {
       submitScreen (request);
       String key = request.getParameter ("key");
-      if (key != null) performKeyAction (state.s3270, key);
+      if (key != null) performKeyAction (state.terminal, key);
     }
     doGet (request, response);
   }
@@ -129,22 +129,22 @@ public class Servlet extends HttpServlet {
   /**
    * Perform the s3270 action that is specified by the given key name.
    */
-  private void performKeyAction (S3270 s3270, String key) {
+  private void performKeyAction (Terminal terminal, String key) {
     Matcher m = functionKeyPattern.matcher (key);
     if (m.matches()) { // function key
       int number = Integer.parseInt (m.group(2));
       if (m.group(1).equals ("f"))
-        s3270.pf (number);
+        terminal.pf (number);
       else
-        s3270.pa (number);
+        terminal.pa (number);
     } else if (key.equals("")) {
       // use ENTER as a default action if the actual key got lost
-      s3270.enter();
+      terminal.enter();
     } else { // other key: find a parameterless method of the same name
       try {
-        Class c = s3270.getClass();
+        Class c = terminal.getClass();
         Method method = c.getMethod (key, new Class[]{});
-        method.invoke (s3270, new Object[]{});
+        method.invoke (terminal, new Object[]{});
       } catch (NoSuchMethodException ex) {
         throw new RuntimeException ("no s3270 method for key: " + key);
       } catch (IllegalAccessException ex) {
@@ -162,19 +162,19 @@ public class Servlet extends HttpServlet {
    */
   private void submitScreen (HttpServletRequest request) {
     SessionState state = getSessionState(request);
-    Screen s = state.s3270.getScreen();
+    Screen s = state.terminal.getScreen();
     if (s.isFormatted()) {
       for (Iterator i = s.getFields().iterator(); i.hasNext();) {
         Field f = (Field)i.next();
-        String value = request.getParameter ("field_" + f.getX() 
-                                                + "_" + f.getY());
+        String value = request.getParameter ("field_" + f.getStartX() 
+                                                + "_" + f.getStartY());
         if (value != null) {
           f.setValue (value);
         }
       }
-      state.s3270.submitScreen();
+      state.terminal.submitScreen();
     } else {
-      state.s3270.submitUnformatted ((String)request.getParameter ("field"));
+      state.terminal.submitUnformatted ((String)request.getParameter ("field"));
     }
   }
 

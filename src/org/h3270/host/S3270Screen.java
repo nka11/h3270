@@ -218,7 +218,7 @@ public class S3270Screen extends AbstractScreen {
   private Field createField (byte startCode,
                              int start, int end, int y,
                              String value) {
-    return new Field (this, start, y, end - start, value,
+    return new Field (this, start, y, end, y, value,
                       (startCode & FIELD_ATTR_NUMERIC) != 0,
                           (startCode & FIELD_ATTR_DISP_1) != 0
                        && (startCode & FIELD_ATTR_DISP_2) != 0,
@@ -229,7 +229,7 @@ public class S3270Screen extends AbstractScreen {
                               
   public static void main (String[] args) throws IOException {
     BufferedReader in = new BufferedReader 
-                          (new FileReader ("webapp/WEB-INF/dump/don.dump"));
+                          (new FileReader ("src/org/h3270/test/screen6.dump"));
     List lines = new ArrayList();
     while (true) {
       String line = in.readLine();

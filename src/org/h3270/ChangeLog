@@ -1,3 +1,133 @@
+2004-11-25  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* render/RegexRenderer.java: removed unused imports
+
+	* host/S3270Screen.java (decode): remove extended attributes (SA
+	...) from s3270 stream before decoding. this was added to fix a
+	problem reported by marcin sokolowski.
+
+	* host/S3270.java (*): added curly braces around single line
+	blocks.
+
+	* host/AbstractScreen.java (members): added logger
+	(substring): added try/catch/log in case substring fails.
+
+2004-11-16  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* web/Servlet.java (s3270): added support to configure charset and
+	model.
+
+	* host/S3270.java (submitUnformatted): another patch by dirk bogun
+	to fix multline fields.
+
+2004-11-10  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* web/Servlet.java (FileTerminal ctor): use InputStream instead of
+	String
+
+	* render/RegexRenderer.java (main): commented out
+
+	* host/S3270.java (submit): don't send 0x0 bytes to host. this is
+	an intended fix for bug 1063147. thanks to Dirk Bogun for the fix.
+
+	* host/FileTerminal.java, host/S3270Screen.java (ctor): use
+	InputStream instead of String
+
+	* host/Field.java (getValue): use StringTokenizer instead of
+	regexp. This is an intended fix for bug 1063147. Thanks to Dirk
+	Bogun for the fix.
+
+2004-10-20  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* Version.java: preparation for 1.2.1
+
+2004-10-06  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* web/SessionState.java (ctor): added no-args ctor as tomcat seems
+	to insist on it even though it is never invoked.
+
+2004-09-26  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* regex/Pattern.java (getPatternConstructor): better error message
+	when no Pattern class is available.
+
+2004-09-17  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* Version.java: incremented Version
+
+	* web/Servlet.java (init): bug in init
+
+	* web/Servlet.java, web/StyleServlet.java (config):
+	added config parameter style.
+
+2004-09-11  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* web/SessionState.java (SessionState): use new configuratino
+	method
+
+	* web/AbstractServlet.java, web/Servlet.java,
+	web/StyleServlet.java (AbstractServlet): abstract base class for
+	h3270 servlets
+	(Servlet): inherit from baseclass. configuration now uses avalon
+	configuration.
+	(StyleServlet): new servlet
+
+	* render/AvalonConfiguration.java, render/Configuration.java,
+	render/H3270Configuration.java (H3270Configuration): extracted
+	interface from old Configuration class and renamed to
+	H3270Configuration
+	(Configuration): removed
+	(AvalonConfiguration): default implementation of
+	H3270Configuration which fetches data from an Avalon Configuration
+
+	* host/S3270.java (log): removed unused member
+
+2004-08-29  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* host/S3270.java, host/Terminal.java, web/Servlet.java (*): use
+	commons logger to log interaction with h3270 process removed
+	methods startLogging, stopLogging, getLog
+
+2004-08-27  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* test/AllTest.java, test/FileScreenTest.java,
+	test/RegexTest.java, test/S3270ScreenTest.java, test/screen1.txt,
+	test/screen2.txt, test/screen3.dump, test/screen3.txt,
+	test/screen4.dump, test/screen4.txt, test/screen5.dump,
+	test/screen5.txt, test/screen6.dump, test/screen6.txt,
+	test/screen7.dump, test/screen7.txt, test/screen8.dump,
+	test/screen8.txt (tests): moved to /test/src
+
+	* web/SessionState.java (sessionstate): state can be reconstructed
+	from cookie
+
+	* web/Servlet.java (): added logger, added session handling code
+
+	* render/ColorScheme.java (): formatted
+
+	* render/Configuration.java (): moved state to SessionState. the
+	class now holds only the configurable options
+
+	* render/Engine.java (ctor): added curly braces
+
+	* render/RegexRenderer.java (filePattern, placeholderPattern):
+	renamed, made final
+
+	* render/SelectOptionBean.java (SelectOptionBean): new class to
+	represent an option inside a html select
+
+	* render/TextRenderer.java (header): organized imports
+
+	* host/S3270Screen.java (formattedCharPattern): renamed, made final
+
+	* host/S3270.java (data, status): made members final
+
+	* host/InputField.java (linePattern, trimPattern): made final, renamed
+
+	* host/FileScreen.java (ctor): fetch file from classpath
+
+	* host/Field.java (linePattern): made final, renamed
+
 2004-07-26  Andre Spiegel  <spiegel@gnu.org>
 
 	* h3270 version 1.2-pre1 released.

@@ -116,7 +116,7 @@ public class RegexRenderer extends HtmlRenderer {
       Filter result = (Filter)clz.newInstance();
       return result;
     } catch (Exception ex) {
-      throw new RuntimeException (ex);
+      throw new RuntimeException ("error: " + ex);
     }
   }
   

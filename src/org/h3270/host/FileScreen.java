@@ -30,7 +30,7 @@ import java.io.*;
  * by '{' and '}'.
  * 
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
- * @version 2003-07-08
+ * @version $Id$
  */
 public class FileScreen extends AbstractScreen {
 
@@ -85,7 +85,7 @@ public class FileScreen extends AbstractScreen {
       else if (ch == '}') {
         buffer[y][index+1] = ' ';
         Field f = new Field (this, x+1, y, length, value.toString(),
-                             false, false, false);
+                             false, false, false, true);
         fields.add (f);
         return length + 1;
       } else {

@@ -2,71 +2,140 @@
 
 <project name="h3270" default="all" basedir=".">
 
-  <target name="init">
+    <property file="${basedir}/build.properties" />
 
-    <condition property="jregex.available">
-      <available classname="jregex.Pattern">
-        <classpath path="${classpath}">
-          <fileset dir="${basedir}/webapp/WEB-INF/lib" includes="*.jar"/>
-        </classpath>
-      </available>
-    </condition>
+    <property name="dir.lib" value="${basedir}/webapp/WEB-INF/lib" />
+    <property name="file.war" value="h3270w.war" />
+    <property name="dir.webapp" value="${basedir}/webapp" />
+    <property name="dir.classes" value="${dir.webapp}/WEB-INF/classes" />
+    <property name="dir.test" value="${basedir}/test" />
 
-    <condition property="jdk.regex.available">
-      <available classname="java.util.regex.Pattern"/>
-    </condition>
+    <target name="init">
+        <mkdir dir="${dir.classes}" />
 
-  </target>
+        <path id="cp.base">
+            <pathelement location="${dir.classes}" />
+            <fileset dir="${dir.lib}" includes="*.jar" />
+            <pathelement location="${servlet.jar}" />
+        </path>
 
-  <target name="all" depends="init,compile-regex,compile"/>
+        <condition property="jregex.available">
+            <available classname="jregex.Pattern">
+                <classpath refid="cp.base" />
+            </available>
+        </condition>
 
-  <target name="compile" depends="init">
-    <javac srcdir="${basedir}/src"
-           destdir="${basedir}/webapp/WEB-INF/classes">
-      <classpath path="${servlet.jar}:${classpath}"/>
-      <exclude name="org/h3270/regex/*.java"/>
-      <exclude name="org/h3270/test/*.java"/>
-    </javac>
-  </target>
+        <condition property="jdk.regex.available">
+            <available classname="java.util.regex.Pattern" />
+        </condition>
+    </target>
 
-  <target name="compile-regex" depends="init">
-    <javac srcdir="${basedir}/src"
-           destdir="${basedir}/webapp/WEB-INF/classes"
-           extdirs="${basedir}/webapp/WEB-INF/lib">
-      <include name="org/h3270/regex/*.java"/>
-      <exclude name="org/h3270/regex/JRegex*.java"/>
-      <exclude name="org/h3270/regex/JDK*.java"/>
-    </javac>
-    <antcall target="compile-jdk-regex"/>
-    <antcall target="compile-jregex"/>
-  </target>
+    <target name="all" depends="init,compile-regex,compile" />
 
-  <target name="compile-jdk-regex" if="jdk.regex.available">
-    <javac srcdir="${basedir}/src"
-           destdir="${basedir}/webapp/WEB-INF/classes"
-           extdirs="${basedir}/webapp/WEB-INF/lib">
-      <include name="org/h3270/regex/JDK*.java"/>
-    </javac>
-  </target>
+    <target name="compile" depends="init">
+        <javac srcdir="${basedir}/src" destdir="${dir.classes}">
+            <classpath refid="cp.base" />
+            <exclude name="org/h3270/regex/*.java" />
+        </javac>
 
-  <target name="compile-jregex" if="jregex.available">
-    <javac srcdir="${basedir}/src"
-           destdir="${basedir}/webapp/WEB-INF/classes"
-           extdirs="${basedir}/webapp/WEB-INF/lib">
-      <include name="org/h3270/regex/JRegex*.java"/>
-    </javac>
-  </target>
+        <antcall target="compile-regex" />
+    </target>
 
-  <target name="war" depends="all">
-    <war destfile="h3270w.war"
-         basedir="${basedir}/webapp"
-         webxml="${basedir}/webapp/WEB-INF/web.xml"/>
+    <target name="test.compile" depends="test.init">
+        <javac srcdir="${basedir}/test/src" destdir="${dir.classes}">
+            <classpath refid="cp.test" />
+        </javac>
+    </target>
 
+    <target name="compile-regex" depends="init">
+        <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
+            <include name="org/h3270/regex/*.java" />
+            <exclude name="org/h3270/regex/JRegex*.java" />
+            <exclude name="org/h3270/regex/JDK*.java" />
+        </javac>
+        <antcall target="compile-jdk-regex" />
+        <antcall target="compile-jregex" />
+    </target>
 
-  </target>
+    <target name="compile-jdk-regex" if="jdk.regex.available">
+        <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
+            <include name="org/h3270/regex/JDK*.java" />
+        </javac>
+    </target>
 
-  <target name="clean">
-    <delete dir="${basedir}/webapp/WEB-INF/classes/org"/>
-  </target>
+    <target name="compile-jregex" if="jregex.available">
+        <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
+            <include name="org/h3270/regex/JRegex*.java" />
+        </javac>
+    </target>
 
+    <target name="war" depends="all">
+        <war destfile="${file.war}" basedir="${dir.webapp}" webxml="${dir.webapp}/WEB-INF/web.xml">
+            <exclude name="WEB-INF/web.xml" />
+        </war>
+    </target>
+
+    <target name="deploy" depends="war">
+        <copy file="${file.war}" todir="${dir.deploy}" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${dir.classes}" />
+        <delete file="${file.war}" />
+    </target>
+
+    <target name="test.init" depends="init">
+        <path id="cp.test">
+            <fileset dir="${dir.j2ee}" includes="*.jar" />
+
+            <pathelement location="${dir.test}/lib/xmlParserAPIs.jar" />
+            <pathelement location="${dir.test}/lib/xml-apis.jar" />
+            <pathelement location="${dir.test}/lib/xercesImpl.jar" />
+            <pathelement location="${dir.test}/lib/resolver.jar" />
+            <pathelement location="${dir.test}/lib/nekohtmlXni.jar" />
+            <pathelement location="${dir.test}/lib/nekohtml.jar" />
+            <pathelement location="${dir.test}/lib/nekohtml.jar" />
+            <pathelement location="${dir.test}/lib/js.jar" />
+            <pathelement location="${dir.test}/lib/httpunit.jar" />
+
+            <path refid="cp.base" />
+        </path>
+
+        <!-- add test sources so resources can be found -->
+        <path id="cp.run-test">
+            <path refid="cp.test" />
+            <pathelement location="${dir.test}/src" />
+        </path>
+    </target>
+
+    <target name="test.run" depends="test.init">
+        <property name="dir" value="${basedir}" />
+        <property name="verbose" value="false" />
+
+        <condition property="test.verbose">
+            <istrue value="${verbose}" />
+        </condition>
+
+        <echo level="verbose">
+			Testname: ${testname}
+			Directory: ${dir}
+		</echo>
+
+        <junit showoutput="true" printsummary="true" fork="true" dir="${dir}">
+            <classpath refid="cp.run-test" />
+            <test name="${testname}" />
+            <formatter if="test.verbose" type="plain" usefile="false" />
+        </junit>
+    </target>
+
+    <target name="test" description="Run h3270 Unit Tests" depends="test.compile">
+        <antcall target="test.run">
+            <param name="testname" value="org.h3270.test.AllTest" />
+        </antcall>
+
+        <antcall target="test.run">
+            <param name="testname" value="org.h3270.test.PreferencesTest" />
+            <param name="dir" value="${dir.webapp}" />
+        </antcall>
+    </target>
 </project>

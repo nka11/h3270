@@ -2,17 +2,67 @@
 
 <project name="h3270" default="all" basedir=".">
 
-  <target name="all" depends="compile">
-    
+  <target name="init">
+
+    <condition property="jregex.available">
+      <available classname="jregex.Pattern">
+        <classpath path="${classpath}">
+          <fileset dir="${basedir}/webapp/WEB-INF/lib" includes="*.jar"/>
+        </classpath>
+      </available>
+    </condition>
+
+    <condition property="jdk.regex.available">
+      <available classname="java.util.regex.Pattern"/>
+    </condition>
+
   </target>
 
-  <target name="compile">
+  <target name="all" depends="init,compile-regex,compile"/>
+
+  <target name="compile" depends="init">
     <javac srcdir="${basedir}/src"
            destdir="${basedir}/webapp/WEB-INF/classes">
       <classpath path="${servlet.jar}:${classpath}"/>
-      <exclude name="org/h3270/regex/JRegex*.java"/>
+      <exclude name="org/h3270/regex/*.java"/>
       <exclude name="org/h3270/test/*.java"/>
     </javac>
+  </target>
+
+  <target name="compile-regex" depends="init">
+    <javac srcdir="${basedir}/src"
+           destdir="${basedir}/webapp/WEB-INF/classes"
+           extdirs="${basedir}/webapp/WEB-INF/lib">
+      <include name="org/h3270/regex/*.java"/>
+      <exclude name="org/h3270/regex/JRegex*.java"/>
+      <exclude name="org/h3270/regex/JDK*.java"/>
+    </javac>
+    <antcall target="compile-jdk-regex"/>
+    <antcall target="compile-jregex"/>
+  </target>
+
+  <target name="compile-jdk-regex" if="jdk.regex.available">
+    <javac srcdir="${basedir}/src"
+           destdir="${basedir}/webapp/WEB-INF/classes"
+           extdirs="${basedir}/webapp/WEB-INF/lib">
+      <include name="org/h3270/regex/JDK*.java"/>
+    </javac>
+  </target>
+
+  <target name="compile-jregex" if="jregex.available">
+    <javac srcdir="${basedir}/src"
+           destdir="${basedir}/webapp/WEB-INF/classes"
+           extdirs="${basedir}/webapp/WEB-INF/lib">
+      <include name="org/h3270/regex/JRegex*.java"/>
+    </javac>
+  </target>
+
+  <target name="war" depends="all">
+    <war destfile="h3270w.war"
+         basedir="${basedir}/webapp"
+         webxml="${basedir}/webapp/WEB-INF/web.xml"/>
+
+
   </target>
 
   <target name="clean">

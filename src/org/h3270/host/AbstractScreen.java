@@ -21,7 +21,13 @@ package org.h3270.host;
  * MA 02111-1307 USA
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
@@ -29,6 +35,8 @@ import java.util.*;
  */
 public abstract class AbstractScreen implements Screen {
 
+  protected final Log logger = LogFactory.getLog(getClass());
+    
   protected char buffer[][] = null;
   
   protected int width  = 0;
@@ -88,7 +96,16 @@ public abstract class AbstractScreen implements Screen {
   }
     
   public String substring (int startx, int endx, int y) {
-    return new String (buffer[y], startx, endx - startx + 1);
+      
+      String s = null;
+      
+      try{
+          s = new String (buffer[y], startx, endx - startx + 1);
+      }catch(Exception e)
+      {
+          logger.error("Error parsing substring", e);
+      }
+      return s;
   }  
    
   public String substring (int y) {

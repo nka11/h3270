@@ -57,7 +57,6 @@ public class Field {
   
   public Field (Screen screen, 
                 int startx, int starty, int endx, int endy,
-                String value, 
                 boolean isNumeric, boolean isHidden,
                 boolean isFocused, boolean isRendered) {
     this.screen = screen;
@@ -65,7 +64,6 @@ public class Field {
     this.starty = starty;
     this.endx = endx;
     this.endy = endy;
-    this.value = value;
     this.isNumeric = isNumeric;
     this.isHidden = isHidden;
     this.isFocused = isFocused;
@@ -115,12 +113,18 @@ public class Field {
   /**
    * Returns the current value of this Field.
    */
-  public String getValue() { return value; }
+  public String getValue() { 
+    if (value == null) {
+      value = screen.substring (startx, starty, endx, endy);
+    }
+    return value; 
+  }
   
   /**
    * Sets the value of this Field.
    */
   public void setValue (String value) { 
+    if (value == null) getValue();
     if (!value.equals (trim (this.value))) {
       if (value.length() > getWidth())
         this.value = value.substring (0, getWidth());

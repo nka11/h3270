@@ -129,6 +129,8 @@ public class S3270Screen extends AbstractScreen {
     width = 0;
     buffer = new char[height][];
     fields = new ArrayList();
+    fieldStart = -1;
+    fieldStartCode = 0x00;
     for (int y=0; y<height; y++) {
       char[] line = decode ((String)bufferData.get(y), y, fields);
       if (line.length > width) width = line.length;
@@ -157,16 +159,16 @@ public class S3270Screen extends AbstractScreen {
   private static final Pattern formattedCharPattern = 
     Pattern.compile ("SF\\((..)=(..)(,.*?)?\\)|[0-9a-fA-F]{2}");
 
+  private int  fieldStart = -1;
+  private byte fieldStartCode = 0x00;
+
   /**
    * Decodes a single line from the raw screen buffer dump.
    */
   private char[] decode (String line, int y, List fields) {
     if (line.startsWith ("data: ")) line = line.substring(6);
     StringBuffer result = new StringBuffer();
-    byte[] bytes = new byte[1];
     int index = 0;
-    int fieldStart = -1;
-    byte fieldStartCode = 0x00;
     Matcher m = formattedCharPattern.matcher (line);
     while (m.find()) {
       String code = m.group();
@@ -196,13 +198,19 @@ public class S3270Screen extends AbstractScreen {
         result.append ((char)(Integer.parseInt (code, 16)));
       index++;
     }
-    // a field that extends past the end of the line --
-    // we'll consider it to end with the end of this line
+    // a field that extends past the end of the line
     if (fieldStart != -1) {
-      fields.add (createField (fieldStartCode, fieldStart, index, y,
-                               result.substring (fieldStart, index)));
-      fieldStart = -1;
-      fieldStartCode = 0x00;
+      if (fieldStart < index) {
+        // field started earlier on this line, consider it to end here
+        fields.add (createField (fieldStartCode, fieldStart, index, y,
+                                 result.substring (fieldStart, index)));
+        fieldStart = -1;
+        fieldStartCode = 0x00;
+      } else {
+        // opening attribute is the last character on this line,
+        // let the field begin in the next line
+        fieldStart = 0;
+      }
     }  
     return result.toString().toCharArray(); 
   }
@@ -221,7 +229,7 @@ public class S3270Screen extends AbstractScreen {
                               
   public static void main (String[] args) throws IOException {
     BufferedReader in = new BufferedReader 
-                          (new FileReader ("src/org/h3270/test/advantis.dump"));
+                          (new FileReader ("webapp/WEB-INF/dump/don.dump"));
     List lines = new ArrayList();
     while (true) {
       String line = in.readLine();

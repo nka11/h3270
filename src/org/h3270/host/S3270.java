@@ -253,7 +253,7 @@ public class S3270 implements Terminal {
   }
   
   public static void main (String[] args) {
-    Terminal terminal = new S3270Impl ("locis.loc.gov", "/home/spiegel/bin");
+    Terminal terminal = new S3270 ("locis.loc.gov", "/home/spiegel/bin");
     terminal.updateScreen();
     Screen s = terminal.getScreen();
     System.out.println (new TextRenderer().render(s)); 

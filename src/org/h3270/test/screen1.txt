@@ -1,0 +1,24 @@
+ CA Zeit: 17:33:37       **  K O N T O K O R R E N T **         Datum: 02/06/03 
+--------------------------------------------------------------------------------
+01 Funktion .........:{              4}           *** Auskunft ***              
+02 Kontonummer ......:{  6 400003 00 3}           Kurzbez. ...:{WEBERBK. PWC   }
+                                                                                
+-- Eröffnungsdatum ..:{        1.06.01}    -- Änderungsdatum ......:{   1.06.01}
+03 Kontogruppe ......:{062 Geldkonto  }    04 Kontosperre :{                   }
+05 Währung ..........:{            EUR}    06 LS-Einzug zulässig ? :{         N}
+07 Abschlußart ......:{             22}--> 3-MONATLICH                          
+08 Betreuer .........:{               }                                         
+09 Laufzeit alt / neu:{          0 / 0}--> täglich fällig   / täglich fällig    
+10 1. Hinweisschl. ..:{               }                                         
+11 2. Hinweisschl. ..:{               }                                         
+12 Grund Neuanl/Lösch:{        400}/{  ONLINE-BANK       }/{                   }
+13 frei .............:{               }    14 frei ................:{          }
+15 KAD (J/N) ........:{              N}    16 Firmenkonto (J/N) ...:{         N}
+17 Effektivzins .....:{               }    18 Tilgungssatz ........:{          }
+19 Schließfach-Nr. ..:{               }    20 Schließfach-Größe ...:{          }
+21 Mahnsperre .......:{              N}    22 Belegdruck (J/N) ....:{         N}
+23 Abschluß über Kto :{               }    24 Bilanzposition ......:{          }
+25 Versandart/Termin :{            503}    26 Duplikate ...........:{          }
+27 Zinsmethode ......:{1  > 360 Tage <}    28 Kreditprodukt .......:{          }
+--------------------------------------------------------------------------------
+Hinweis .....:{                       }       Eingaben O.K.?:{   }TC:{  }Fu:{  }

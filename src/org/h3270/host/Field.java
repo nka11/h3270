@@ -41,33 +41,34 @@ public class Field {
                                                | ATTR_DISP_1
                                                | ATTR_DISP_2;
 
-  private Screen screen;
+  protected Screen screen;
 
-  private int startx;
-  private int starty;
-  private int endx;
-  private int endy;
-  private String value;
-  private boolean isNumeric;
-  private boolean isHidden;
-  private boolean isFocused;
-  private boolean isRendered;
+  protected int startx;
+  protected int starty;
+  protected int endx;
+  protected int endy;
+  protected String value;
   
-  private boolean changed = false;
+  public static final int DISPLAY_NORMAL      = 0;
+  public static final int DISPLAY_INTENSIFIED = 1;
+  public static final int DISPLAY_HIDDEN      = 2;
   
-  public Field (Screen screen, 
-                int startx, int starty, int endx, int endy,
-                boolean isNumeric, boolean isHidden,
-                boolean isFocused, boolean isRendered) {
+  private int displayMode = DISPLAY_NORMAL;
+
+  public Field (Screen screen,
+                byte fieldCode,
+                int startx, int starty, int endx, int endy) {
     this.screen = screen;
     this.startx = startx;
     this.starty = starty;
     this.endx = endx;
     this.endy = endy;
-    this.isNumeric = isNumeric;
-    this.isHidden = isHidden;
-    this.isFocused = isFocused;
-    this.isRendered = isRendered;
+    if ((fieldCode & ATTR_DISP_1) == 0)
+      displayMode = DISPLAY_NORMAL;
+    else if ((fieldCode & ATTR_DISP_2) == 0)
+      displayMode = DISPLAY_INTENSIFIED;
+    else
+      displayMode = DISPLAY_HIDDEN; 
   }
 
   /**
@@ -120,50 +121,13 @@ public class Field {
     return value; 
   }
   
-  /**
-   * Sets the value of this Field.
-   */
-  public void setValue (String value) { 
-    if (value == null) getValue();
-    if (!value.equals (trim (this.value))) {
-      if (value.length() > getWidth())
-        this.value = value.substring (0, getWidth());
-      else
-        this.value = value;
-      changed = true;
-    }
+  public boolean isIntensified() {
+    return displayMode == DISPLAY_INTENSIFIED;
   }
 
-  /**
-   * Returns true if the value of this field has been changed to
-   * a different value.
-   */ 
-  public boolean isChanged() {
-    return changed;
-  }
-  
-  public boolean isNumeric()    { return isNumeric; }
-  public boolean isHidden()     { return isHidden; }
-  public boolean isFocused()    { return isFocused; }
-  public boolean isRendered()   { return isRendered; }
-
-  public void setFocused (boolean flag) {
-    this.isFocused = flag;
+  public boolean isHidden() {
+    return displayMode == DISPLAY_HIDDEN;
   }
 
-  private static Pattern trimPattern = 
-    Pattern.compile ("^[\\x00 _]*(.*?)[\\x00 _]*$", 0);
-
-  /**
-   * Returns a string that is the same as the argument, with leading
-   * and trailing ASCII NUL characters removed.
-   */
-  public static String trim (String value) {
-    Matcher m = trimPattern.matcher (value);
-    if (m.matches()) 
-      return m.group (1);
-    else
-      return value;
-  }
 
 }

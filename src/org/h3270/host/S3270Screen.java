@@ -21,11 +21,21 @@ package org.h3270.host;
  * MA 02111-1307 USA
  */
 
-import java.util.*;
-import java.io.*;
-import org.h3270.regex.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-import org.h3270.render.*;
+import org.h3270.regex.Matcher;
+import org.h3270.regex.Pattern;
+import org.h3270.render.TextRenderer;
 
 /**
  * An implementation of the Screen interface that is fed by the
@@ -123,6 +133,7 @@ public class S3270Screen extends AbstractScreen {
     fieldStartX = 0;
     fieldStartY = 0;
     fieldStartCode = (byte)0xe0;
+    
     for (int y=0; y<height; y++) {
       char[] line = decode ((String)bufferData.get(y), y, fields);
       if (line.length > width) width = line.length;
@@ -155,6 +166,7 @@ public class S3270Screen extends AbstractScreen {
   private static final Pattern FORMATTED_CHAR_PATTERN = 
     Pattern.compile ("SF\\((..)=(..)(,.*?)?\\)|[0-9a-fA-F]{2}");
 
+
   private int  fieldStartX = 0;
   private int  fieldStartY = 0;
   private byte fieldStartCode = (byte)0xe0;
@@ -166,10 +178,18 @@ public class S3270Screen extends AbstractScreen {
     if (line.startsWith ("data: ")) line = line.substring(6);
     StringBuffer result = new StringBuffer();
     int index = 0;
+
+	// workaround! delete all extended attributes in a line!
+	// must have, until h3270 supports extended attributes
+	// TODO:    
+    line = line.replaceAll("SA\\(..=..\\)", "");
+    
     Matcher m = FORMATTED_CHAR_PATTERN.matcher (line);
+    
     while (m.find()) {
       String code = m.group();
       if (code.startsWith ("SF")) {
+          
         if (!isFormatted)
           throw new RuntimeException 
             ("format information in unformatted screen");
@@ -183,6 +203,7 @@ public class S3270Screen extends AbstractScreen {
               fieldEndX = width-1;
               fieldEndY--;
             }
+            //if(!m.group(2).equals("c0"))
             fields.add (createField (fieldStartCode, 
                                      fieldStartX, fieldStartY,
                                      fieldEndX,   fieldEndY));

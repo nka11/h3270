@@ -72,13 +72,14 @@ public class Servlet extends AbstractServlet {
 
     private H3270Configuration h3270Configuration;
 
+    private Configuration s3270Config;
+    
     private String mainJSP = DEFAULT_JSP;
 
     public void init() throws ServletException {
         super.init();
 
         Configuration config = getConfiguration();
-
         
         Configuration styleConfig = config.getChild("style");
         
@@ -105,6 +106,8 @@ public class Servlet extends AbstractServlet {
             logger.debug("Set exec-path to " + execPath);
         }
 
+        s3270Config = config.getChild("s3270-options");
+        
         try {
             h3270Configuration = new AvalonConfiguration(config
                     .getChild("configuration"));
@@ -157,7 +160,7 @@ public class Servlet extends AbstractServlet {
                             hostname.substring(5)).toString();
                     state.terminal = new FileTerminal(new URL(filename));
                 } else {
-                    state.terminal = new S3270(hostname, execPath);
+                    state.terminal = new S3270(hostname, execPath, s3270Config );
                 }
 
                 state.setUseKeypad(false);

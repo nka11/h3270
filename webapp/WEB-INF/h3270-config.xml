@@ -4,9 +4,9 @@
 	<!-- path used to locate the s3270 executable -->
 	<!-- defaults to WEB-INF/bin                  -->
 	
-	<!--
+	
 		<exec-path>/usr/local/bin</exec-path> 
-	-->
+	
 	
 	<!-- path to style directory                               -->
 	<!-- it is assumed that the directory contains the files   -->
@@ -20,6 +20,10 @@
 		<style>h3270</style> 
 	-->
 	
+	<s3270-options>
+		<language>german</language>
+		<model>3</model>
+		</s3270-options>
 	
 	<configuration>
 		<!-- list of available fonts -->

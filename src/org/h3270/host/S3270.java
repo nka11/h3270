@@ -188,7 +188,7 @@ public class S3270 implements Terminal {
   public void submitScreen() {
     for (Iterator i = screen.getFields().iterator(); i.hasNext();) {
       Field f = (Field)i.next();
-      if (f.isChanged()) {
+      if ((f instanceof InputField) && ((InputField)f).isChanged()) {
         doCommand ("movecursor (" + f.getStartY() + ", " + f.getStartX() + ")");
         doCommand ("eraseeof");
         String value = f.getValue();

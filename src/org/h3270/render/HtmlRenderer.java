@@ -71,7 +71,7 @@ public class HtmlRenderer implements Renderer {
     result.append ("<pre>");
     for (int y = 0; y < screen.getHeight(); y++) {
       for (int x = 0; x < screen.getWidth(); x++) {
-        Field f = screen.getFieldAt (x, y);
+        Field f = screen.getInputFieldAt (x, y);
         if (f != null) {
           renderField (result, f);
           x += f.getWidth() - 1;  
@@ -106,13 +106,13 @@ public class HtmlRenderer implements Renderer {
   }
 
   protected void renderField (StringBuffer result, Field f) {
-    if (f.isRendered()) {
+    if (f instanceof InputField) {
       result.append ("<input ");
       result.append ("type=" + (f.isHidden() ? "password " : "text "));
       result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY() + "\" ");
       result.append ("class=cicsfield ");
       String value = f.getValue();
-      result.append ("value=\"" + Field.trim (value) + "\" ");
+      result.append ("value=\"" + InputField.trim (value) + "\" ");
       result.append ("maxlength=\"" + f.getWidth() + "\" ");
       result.append ("size=\"" + f.getWidth() + "\" ");
       result.append (">");

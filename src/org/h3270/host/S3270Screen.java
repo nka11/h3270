@@ -152,7 +152,7 @@ public class S3270Screen extends AbstractScreen {
     } 
   }
 
-  private static final Pattern formattedCharPattern = 
+  private static final Pattern FORMATTED_CHAR_PATTERN = 
     Pattern.compile ("SF\\((..)=(..)(,.*?)?\\)|[0-9a-fA-F]{2}");
 
   private int  fieldStartX = 0;
@@ -166,7 +166,7 @@ public class S3270Screen extends AbstractScreen {
     if (line.startsWith ("data: ")) line = line.substring(6);
     StringBuffer result = new StringBuffer();
     int index = 0;
-    Matcher m = formattedCharPattern.matcher (line);
+    Matcher m = FORMATTED_CHAR_PATTERN.matcher (line);
     while (m.find()) {
       String code = m.group();
       if (code.startsWith ("SF")) {

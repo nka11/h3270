@@ -85,8 +85,8 @@ public interface Screen {
   public List getFields();
   
   /**
-   * Returns a Field object representing the field at position (x,y).
-   * If there is no field at this position, this method returns null.  
+   * Returns a Field object representing the input field at position (x,y).
+   * If there is no input field at this position, this method returns null.  
    * A field begins with the character <i>after</i> the first control
    * character, and ends with the character <i>before</i> the terminating
    * control character.  Thus, for the positions of the control characters
@@ -94,20 +94,20 @@ public interface Screen {
    * 
    * x and y start in the upper left hand corner, which is position (0,0).
    */
-  public Field getFieldAt (int x, int y);
+  public InputField getInputFieldAt (int x, int y);
   
   /**
-   * Returns true if there is a field at position (x, y) on this screen.
+   * Returns true if there is an input field at position (x, y) on this screen.
    * Fields do not include the control characters that delimit them,
-   * see {@link #getFieldAt getFieldAt()}.
+   * see {@link #getInputFieldAt getFieldAt()}.
    */
-  public boolean isField (int x, int y);
+  public boolean isInputField (int x, int y);
 
   /**
-   * Gets the Field in which the cursor is currently, or null if
-   * the cursor is not in a Field.
+   * Gets the InputField in which the cursor is currently, or null if
+   * the cursor is not in an InputField.
    */
-  public Field getFocusedField();
+  public InputField getFocusedField();
   
   /**
    * Returns true if this Screen is formatted.

@@ -36,16 +36,6 @@ import org.h3270.render.*;
  */
 public class S3270Screen extends AbstractScreen {
 
-  private static final byte FIELD_ATTR_PROTECTED = 0x20;
-  private static final byte FIELD_ATTR_NUMERIC   = 0x10;
-  private static final byte FIELD_ATTR_DISP_1    = 0x08;
-  private static final byte FIELD_ATTR_DISP_2    = 0x04;
-  
-  // pseudo attribute for fields that should not appear on the screen at all
-  private static final byte FIELD_ATTR_NOT_RENDERED =   FIELD_ATTR_PROTECTED 
-                                                      | FIELD_ATTR_DISP_1
-                                                      | FIELD_ATTR_DISP_2;
-
   private List bufferData = null;
   private String status = null;
   
@@ -186,8 +176,8 @@ public class S3270Screen extends AbstractScreen {
             fieldStartCode = 0x00;
           }            
           byte fieldCode = (byte)Integer.parseInt (m.group(2), 16);
-          if (((fieldCode & FIELD_ATTR_PROTECTED) == 0) ||
-              ((fieldCode & FIELD_ATTR_NOT_RENDERED) == FIELD_ATTR_NOT_RENDERED))
+          if (((fieldCode & Field.ATTR_PROTECTED) == 0) ||
+              ((fieldCode & Field.ATTR_NOT_RENDERED) == Field.ATTR_NOT_RENDERED))
           {
             // unprotected or "unrendered" (invisible): a new field begins
             fieldStart = index + 1;
@@ -219,12 +209,12 @@ public class S3270Screen extends AbstractScreen {
                              int start, int end, int y,
                              String value) {
     return new Field (this, start, y, end, y, value,
-                      (startCode & FIELD_ATTR_NUMERIC) != 0,
-                          (startCode & FIELD_ATTR_DISP_1) != 0
-                       && (startCode & FIELD_ATTR_DISP_2) != 0,
+                      (startCode & Field.ATTR_NUMERIC) != 0,
+                          (startCode & Field.ATTR_DISP_1) != 0
+                       && (startCode & Field.ATTR_DISP_2) != 0,
                       false,
-                      (startCode & FIELD_ATTR_NOT_RENDERED) 
-                                         != FIELD_ATTR_NOT_RENDERED);
+                      (startCode & Field.ATTR_NOT_RENDERED) 
+                                         != Field.ATTR_NOT_RENDERED);
   }
                               
   public static void main (String[] args) throws IOException {

@@ -1,0 +1,24 @@
+SOURCE DATA SET = ADCD.ZOSV14S.VTAM.SOURCE(USSN)                                
+                                                                                
+                             W E L C O M E  T O                                 
+                                                                                
+                                                                                
+                ZZZZZZZZZ       //  OOOOOOO    SSSSSS                           
+                      ZZ       //  OO     OO   SS                               
+                     ZZ       //   OO     OO    SS                              
+                   ZZ        //    OO     OO     SSSS                           
+                  ZZ        //     OO     OO        SS                          
+                 ZZ        //      OO     OO         SS                         
+                ZZZZZZZZZ //        OOOOOOO    SSSSSS                           
+                                                                                
+                                                                                
+ TERMINAL NAME = SC0TCP12            NETWORK-QUALIFIED NAME =                   
+ SSCPNAME =                          NETWORK-ID =           217.231.167.179     
+                                                                                
+           ZOS APPLICATION DEVELOPMENT SYSTEM - RELEASE 1.4.0 Summer            
+                                                                                
+ ===> ENTER "LOGON" FOLLOWED BY THE TSO USERID. EXAMPLE "LOGON IBMUSER" OR      
+ ===> ENTER L FOLLOWED BY THE APPLID                                            
+ ===> EXAMPLES: "L TSO", "L CICS", "L IMS3270                                   
+                                                                               {
+                                                                               {

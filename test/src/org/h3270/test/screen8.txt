@@ -1,0 +1,32 @@
+[                                                                        [Menu 1
+]VTAM addr:[V07D200           [CUNY VM VTAM Menu              ]This VTAM:[NMT07 
+]                                                                               
+             You can select a node with the cursor and press[Enter].            
+                                                                                
+{ }HELP      { }BBMIS     { }BCMIS     { }BHMIS     { }BMACADM   { }BXCC        
+{ }BXMIS     { }CCMIS     { }CITYNET   { }CLMIS     { }CUNYPLUS  { }CUNYVM      
+{ }HCMIS     { }HOMIS     [ ]ILSTEST   { }JJMIS     { }KBCC      { }KBMIS       
+[ ]KIXCICS   { }LCMIS     { }LGMIS     { }MAI       { }MEMIS     { }NMT07       
+[ ]NOTISTRN  { }NYMIS     [ ]NYSDOL    [ ]NYSOSCA   [ ]NYSOSCP   { }QBCC        
+{ }QBMIS     { }QCMIS     [ ]RFCICS    { }SIMIS     { }T/BHMIS   [ ]T/CICS      
+{ }T/LCMIS   [ ]T/TELE    [ ]TELECOM   [ ]TESTVM    { }TESTVTAM  { }UAPC        
+{ }WYLBUR    { }YCMIS     { }EXIT                                               
+]                                                                               
+                                                                                
+[APPLICATION => {                                                               
+}-------------------------------------------------------------------------------
+[CUNY/CIS Help Desk will be closed on Fridays begining                          
+[Friday June 25, 2004 until Friday August 6, 2004.                              
+[                                                                               
+[                                                                               
+]                                                                               
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+[F01=CUNYVM   F02=WYLBUR  [F03=EXIT     F04=NMT07    F05=BHMIS                  
+[F07=BACKWARD F08=FORWARD  F09=CUNYPLUS                                         

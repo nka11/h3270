@@ -1,0 +1,24 @@
+ CD Zeit: 17:28:35       **  K O N T O K O R R E N T **          Datum: 02/06/03
+-------------------------------------------------------------- Version: 00.00 --
+01 Stammnummer .......:{          400003}  Kurzbez. :{ WEBERBK. PWC            }
+02 Kontonummer .......:{    6 400003 00 3}  Straße ..:{                        }
+                                          PLZ,Ort .:{     Im Hause/Hohenzollern}
+--------------------------------------------------------------------- EURO-Konto
+Kontogr. :{ Geldkonto       } Limit EXT.:{                                     }
+Vollmacht:{                                      } Kontosperre :{              }
+1.Hinweis:{                 } Gültig bis:{        } S a l d o ..:{         4.25}
+2.Hinweis:{                 } Gehalt ...:{                                     }
+EV-Scheck:{                 }                                                   
+--------------------------------------------------------------------------------
+    Datum   PN  Text          Valuta       U M S A T Z            S A L D O     
+--------------------------------------------------------------------------------
+ VORTRAG:                                                              4,11  EUR
+ 30.09.02  300  ZINSEN        30.09.02            0,02  EUR            4,13  EUR
+ 30.09.02  103  ZSABSCHLAG    30.09.02            0,01- EUR            4,12  EUR
+ 14.11.02  112  ÜBERWEISG.    14.11.02            0,10  EUR            4,22  EUR
+ 27.11.02  112  ÜBERWEISG.    27.11.02            0,01  EUR            4,23  EUR
+ 31.12.02  300  ZINSEN        31.12.02            0,01  EUR            4,24  EUR
+ 31.03.03  300  ZINSEN        31.03.03            0,01  EUR            4,25  EUR
+                                                                                
+--------------------------------------------------------------------------------
+Hinweis .....:{Taste unzulässig}               Blättern ?{       }TC:{   }Fu:{ }

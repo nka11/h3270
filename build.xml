@@ -139,7 +139,7 @@
     </target>
 
     <target name="release" depends="">
-        <property name="version" value="1.2" />
+        <property name="version" value="1.2.1" />
         <property name="name.release" value="h3270-${version}" />
         <property name="dir.release" value="release" />
 

@@ -24,7 +24,7 @@ package org.h3270.test;
 import junit.framework.*;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
  * @version $Id$
  */
 public class AllTest extends TestCase {
@@ -37,12 +37,11 @@ public class AllTest extends TestCase {
     
     TestSuite suite = new TestSuite ("All h3270 tests");
 
-    //suite.addTestSuite (FileScreenTest.class);
     suite.addTestSuite (S3270ScreenTest.class);
     suite.addTestSuite (RegexTest.class);
-    suite.addTestSuite(SessionStateTest.class);
-    suite.addTestSuite(Bug1063147Test.class);
-    suite.addTestSuite(BugRenderTest.class);
+    suite.addTestSuite (SessionStateTest.class);
+    suite.addTestSuite (Bug1063147Test.class);
+    suite.addTestSuite (BugRenderTest.class);
     
     return suite;
   }

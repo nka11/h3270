@@ -54,8 +54,6 @@ public class S3270 implements Terminal {
 
     private BufferedReader err = null;
 
-    //private List log = null;
-
     private S3270Screen screen = null;
 
     public S3270(String hostname, String path_to_s3270_binary) {

@@ -169,6 +169,7 @@ public class Servlet extends AbstractServlet {
             if (state.terminal != null)
                 state.terminal.disconnect();
             state.terminal = null;
+            state.setScreen (null);
         } else if (request.getParameter("refresh") != null) {
             state.terminal.updateScreen();
         } else if (request.getParameter("dumpfile") != null

@@ -47,6 +47,15 @@
         </javac>
     </target>
 
+    <target name="copy.test-resources" >
+        <copy todir="${dir.classes}">
+            <fileset dir="${basedir}/test/src">
+                <include name="**/*.dump" />
+                <include name="**/*.txt" />
+            </fileset>
+        </copy>
+    </target>
+    
     <target name="compile-regex" depends="init">
         <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
             <include name="org/h3270/regex/*.java" />

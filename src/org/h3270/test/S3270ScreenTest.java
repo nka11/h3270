@@ -101,6 +101,10 @@ public class S3270ScreenTest extends TestCase {
     screenTest ("src/org/h3270/test/screen5");
   }
 
+  public void test_screen_6() {
+    screenTest ("src/org/h3270/test/screen6");
+  }
+
   public static void main (String[] args) {
     junit.textui.TestRunner.run (S3270ScreenTest.class);
   }

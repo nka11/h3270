@@ -26,68 +26,66 @@ package org.h3270.render;
  * @version $Id$
  */
 public class SelectOptionBean {
-    private final static String SELECTED = "selected";
 
-    private final static String NOT_SELECTED = "";
+  private final static String SELECTED = "selected";
+  private final static String NOT_SELECTED = "";
 
-    private final String optionValue;
+  private final String optionValue;
+  private final String optionDescription;
 
-    private final String optionDescription;
+  private final boolean isOptionSelected;
 
-    private final boolean isOptionSelected;
-    
-    //private final String stringValue;
+  //private final String stringValue;
 
-    public SelectOptionBean(String description, 
-            String value,
-            boolean isSelected) {
-        super();
+  public SelectOptionBean (String description,
+                           String value, boolean isSelected) {
+    super();
 
-        this.optionValue = value;
-        this.optionDescription = description;
-        this.isOptionSelected = isSelected;
+    this.optionValue = value;
+    this.optionDescription = description;
+    this.isOptionSelected = isSelected;
+  }
+
+  public SelectOptionBean (String description, boolean isSelected) {
+    this(description, null, isSelected);
+  }
+
+  public String getOption() {
+    return optionValue;
+  }
+
+  public String getDescription() {
+    return optionDescription;
+  }
+
+  public String getSelected() {
+    return isOptionSelected ? SELECTED : NOT_SELECTED;
+  }
+
+  public String toString() {
+    return getStringValue();
+  }
+
+  private String getStringValue() {
+    StringBuffer buffer = new StringBuffer("<option");
+
+    if (isOptionSelected) {
+      buffer.append(" ");
+      buffer.append(getSelected());
+
     }
 
-    public SelectOptionBean(String description, boolean isSelected) {
-        this(description, null, isSelected);
+    if (optionValue != null) {
+      buffer.append(" ");
+      buffer.append("value=\"");
+      buffer.append(getOption());
+      buffer.append("\"");
     }
 
-    public String getOption() {
-        return optionValue;
-    }
+    buffer.append(">");
+    buffer.append(getDescription());
+    buffer.append("</option>");
 
-    public String getDescription() {
-        return optionDescription;
-    }
-
-    public String getSelected() {
-        return isOptionSelected ? SELECTED : NOT_SELECTED;
-    }
-
-    public String toString() {
-        return getStringValue();
-    }
-
-    private String getStringValue() {
-        StringBuffer buffer = new StringBuffer("<option");
-
-        if (isOptionSelected) {
-            buffer.append(" ");
-            buffer.append(getSelected());
-         
-        }
-        
-        if (optionValue != null) {
-            buffer.append(" ");
-            buffer.append("value=\"");
-            buffer.append(getOption());
-            buffer.append("\"");
-        }
-        
-        buffer.append(">");
-        buffer.append(getDescription());
-        buffer.append("</option>");
-
-        return buffer.toString();
-    }
+    return buffer.toString();
+  }
 }

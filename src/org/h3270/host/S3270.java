@@ -42,271 +42,265 @@ import org.apache.commons.logging.LogFactory;
  */
 public class S3270 implements Terminal {
 
-    private final static Log logger = LogFactory.getLog(S3270.class);
+  private final static Log logger = LogFactory.getLog(S3270.class);
 
-    private Process s3270 = null;
+  private Process s3270 = null;
 
-    private String hostname = null;
+  private String hostname = null;
 
-    private PrintWriter out = null;
+  private PrintWriter out = null;
+  private BufferedReader in = null;
+  private BufferedReader err = null;
 
-    private BufferedReader in = null;
+  private S3270Screen screen = null;
 
-    private BufferedReader err = null;
+  public S3270 (String hostname, String path_to_s3270_binary, 
+                Configuration config) {
+    final String charSet = config.getChild("charset").getValue("bracket");
+    final String model = config.getChild("model").getValue("3");
+    final String additional = config.getChild("additional").getValue("");
 
-    private S3270Screen screen = null;
+    try {
+      File s3270_binary = new File(path_to_s3270_binary, "s3270");
 
-    public S3270(String hostname, String path_to_s3270_binary,
-            Configuration config) {
-        final String charSet = config.getChild("charset").getValue("bracket");
-        final String model = config.getChild("model").getValue("3");
-        final String additional = config.getChild("additional").getValue("");
+      StringBuffer cmd = new StringBuffer(s3270_binary.toString());
+      cmd.append(" -model ");
+      cmd.append(model);
+      if (!charSet.equals("bracket")) {
+        cmd.append(" -charset ");
+        cmd.append(charSet);
+      }
 
+      if (additional.length() > 0) {
+        cmd.append(" ");
+        cmd.append(additional);
+      }
+
+      cmd.append(" ");
+      cmd.append(hostname);
+
+      logger.debug("Starting s3270: " + cmd.toString());
+
+      s3270 = Runtime.getRuntime().exec(cmd.toString());
+
+      out = new PrintWriter(new OutputStreamWriter(s3270.getOutputStream(),
+          "ISO-8859-1"));
+      in = new BufferedReader(new InputStreamReader(s3270.getInputStream(),
+          "ISO-8859-1"));
+      this.hostname = hostname;
+      screen = new S3270Screen();
+      waitFormat();
+    } catch (IOException ex) {
+      throw new RuntimeException("IO Exception when starting s3270: " + ex);
+    }
+  }
+
+  /**
+   * Represents the result of an s3270 command.
+   */
+  private class Result {
+    public final List data;
+    public final String status;
+
+    public Result (List data, String status) {
+      this.data = data;
+      this.status = status;
+    }
+  }
+
+  /**
+   * Perform an s3270 command. All communication with s3270 should go via this
+   * method.
+   */
+  private Result doCommand (String command) {
+    try {
+      out.println (command);
+      out.flush();
+      if (logger.isDebugEnabled()) {
+        logger.debug("---> " + command);
+      }
+
+      List lines = new ArrayList();
+      while (true) {
+        String line = in.readLine();
+        if (line == null) {
+          throw new EOFException("premature end of data");
+        }
+
+        if (logger.isDebugEnabled()) {
+          logger.debug("<--- " + line);
+        }
+
+        if (line.equals("ok")) {
+          break;
+        }
+        lines.add(line);
+      }
+      int size = lines.size();
+      if (size > 0) {
+        return new Result (lines.subList(0, size - 1), 
+                           (String) lines.get(size - 1));
+      } else {
+        throw new RuntimeException("no status received in command: " + command);
+      }
+    } catch (IOException ex) {
+      throw new RuntimeException("IOException during command: " + command
+          + ", " + ex);
+    }
+  }
+
+  /**
+   * waits for a formatted screen
+   */
+  private void waitFormat() {
+    try {
+      for (int i = 0; i < 50; i++) {
+        Result r = doCommand("");
+        if (r.status.startsWith("U F")) {
+          return;
+        }
+        Thread.sleep(100);
+      }
+    } catch (Exception e) {
+      // ignored
+    }
+  }
+
+  public void disconnect() {
+    out.println("quit");
+    out.flush();
+
+    new Thread(new Runnable() {
+      public void run() {
         try {
-            File s3270_binary = new File(path_to_s3270_binary, "s3270");
-
-            StringBuffer cmd = new StringBuffer(s3270_binary.toString());
-            cmd.append(" -model ");
-            cmd.append(model);
-            if (!charSet.equals("bracket")) {
-                cmd.append(" -charset ");
-                cmd.append(charSet);
-            }
-
-            if (additional.length() > 0) {
-                cmd.append(" ");
-                cmd.append(additional);
-            }
-
-            cmd.append(" ");
-            cmd.append(hostname);
-
-            logger.debug("Starting s3270: " + cmd.toString());
-
-            s3270 = Runtime.getRuntime().exec(cmd.toString());
-
-            out = new PrintWriter(new OutputStreamWriter(s3270
-                    .getOutputStream(), "ISO-8859-1"));
-            in = new BufferedReader(new InputStreamReader(s3270
-                    .getInputStream(), "ISO-8859-1"));
-            this.hostname = hostname;
-            screen = new S3270Screen();
-            waitFormat();
-        } catch (IOException ex) {
-            throw new RuntimeException("IO Exception when starting s3270: "
-                    + ex);
+          Thread.sleep(1000);
+          if (s3270 != null) {
+            s3270.destroy();
+          }
+        } catch (InterruptedException ex) {
+          if (s3270 != null) {
+            s3270.destroy();
+          }
         }
+      }
+    }).start();
+
+    try {
+      s3270.waitFor();
+    } catch (InterruptedException ex) { /* ignore */
     }
+    try {
+      in.close();
+    } catch (IOException ex) { /* ignore */
+    }
+    out.close();
+    in = null;
+    out = null;
+    s3270 = null;
+  }
 
-    /**
-     * Represents the result of an s3270 command.
-     */
-    private class Result {
-        public final List data;
+  public String getHostname() {
+    return hostname;
+  }
 
-        public final String status;
+  public void dumpScreen (String filename) {
+    screen.dump(filename);
+  }
 
-        public Result(List data, String status) {
-            this.data = data;
-            this.status = status;
+  /**
+   * Updates the screen object with s3270's buffer data.
+   */
+  public void updateScreen() {
+    while (true) {
+      Result r = doCommand ("readbuffer ascii");
+      if (r.data.size() > 0) {
+        String firstLine = (String) r.data.get(0);
+        if (firstLine.startsWith("data: Keyboard locked")) {
+          continue;
         }
+      }
+      screen.update(r.status, r.data);
+      break;
     }
+  }
 
-    /**
-     * Perform an s3270 command. All communication with s3270 should go via this
-     * method.
-     */
-    private Result doCommand(String command) {
-        try {
-            out.println(command);
-            out.flush();
-            if (logger.isDebugEnabled()) {
-                logger.debug("---> " + command);
-            }
+  public Screen getScreen() {
+    return screen;
+  }
 
-            List lines = new ArrayList();
-            while (true) {
-                String line = in.readLine();
-                if (line == null) {
-                    throw new EOFException("premature end of data");
-                }
-                    
-                if (logger.isDebugEnabled()) {
-                    logger.debug("<--- " + line);
-                }
-
-                if (line.equals("ok")) {
-                    break;
-                }
-                lines.add(line);
-            }
-            int size = lines.size();
-            if (size > 0) {
-                return new Result(lines.subList(0, size - 1), (String) lines
-                        .get(size - 1));
-            } else {
-                throw new RuntimeException("no status received in command: "
-                        + command);
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException("IOException during command: " + command
-                    + ", " + ex);
+  /**
+   * Writes all changed fields back to s3270.
+   */
+  public void submitScreen() {
+    for (Iterator i = screen.getFields().iterator(); i.hasNext();) {
+      Field f = (Field) i.next();
+      if ((f instanceof InputField) && ((InputField) f).isChanged()) {
+        doCommand("movecursor (" + f.getStartY() + ", " + f.getStartX() + ")");
+        doCommand("eraseeof");
+        String value = f.getValue();
+        for (int j = 0; j < value.length(); j++) {
+          char ch = value.charAt(j);
+          if (ch == '\n') {
+            doCommand("newline");
+          } else if (!Integer.toHexString(ch).equals("0")) {
+            doCommand("key (0x" + Integer.toHexString(ch) + ")");
+          }
         }
+      }
     }
+  }
 
-    /**
-     * waits for a formatted screen
-     */
-    private void waitFormat() {
-        try {
-            for (int i = 0; i < 50; i++) {
-                Result r = doCommand("");
-                if (r.status.startsWith("U F")) {
-                    return;
-                }
-                Thread.sleep(100);
-            }
-        } catch (Exception e) {
-            // ignored
+  public void submitUnformatted (String data) {
+    int index = 0;
+    for (int y = 0; y < screen.getHeight(); y++) {
+      for (int x = 0; x < screen.getWidth(); x++) {
+        char newCh = data.charAt(index);
+        if (newCh != screen.charAt(x, y)) {
+          doCommand ("movecursor (" + y + ", " + x + ")");
+          if (!Integer.toHexString(newCh).equals("0")) {
+            doCommand ("key (0x" + Integer.toHexString(newCh) + ")");
+          }
         }
+        index++;
+      }
+      index++; // skip newline
     }
+  }
 
-    public void disconnect() {
-        out.println("quit");
-        out.flush();
+  // s3270 actions below this line
 
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                    if (s3270 != null) {
-                        s3270.destroy();
-                    }
-                } catch (InterruptedException ex) {
-                    if (s3270 != null) {
-                        s3270.destroy();
-                    }
-                }
-            }
-        }).start();
+  public void clear() {
+    doCommand("clear");
+  }
 
-        try {
-            s3270.waitFor();
-        } catch (InterruptedException ex) { /* ignore */
-        }
-        try {
-            in.close();
-        } catch (IOException ex) { /* ignore */
-        }
-        out.close();
-        in = null;
-        out = null;
-        s3270 = null;
-    }
+  public void enter() {
+    doCommand("enter");
+    waitFormat();
+  }
 
-    public String getHostname() {
-        return hostname;
-    }
+  public void eraseEOF() {
+    doCommand("eraseEOF");
+  }
 
-    public void dumpScreen(String filename) {
-        screen.dump(filename);
-    }
+  public void pa (int number) {
+    doCommand("pa(" + number + ")");
+    waitFormat();
+  }
 
-    /**
-     * Updates the screen object with s3270's buffer data.
-     */
-    public void updateScreen() {
-        while (true) {
-            Result r = doCommand("readbuffer ascii");
-            if (r.data.size() > 0) {
-                String firstLine = (String) r.data.get(0);
-                if (firstLine.startsWith("data: Keyboard locked")) {
-                    continue;
-                }
-            }
-            screen.update(r.status, r.data);
-            break;
-        }
-    }
+  public void pf (int number) {
+    doCommand("pf(" + number + ")");
+    waitFormat();
+  }
 
-    public Screen getScreen() {
-        return screen;
-    }
+  public void reset() {
+    doCommand("reset");
+  }
 
-    /**
-     * Writes all changed fields back to s3270.
-     */
-    public void submitScreen() {
-        for (Iterator i = screen.getFields().iterator(); i.hasNext();) {
-            Field f = (Field) i.next();
-            if ((f instanceof InputField) && ((InputField) f).isChanged()) {
-                doCommand("movecursor (" + f.getStartY() + ", " + f.getStartX()
-                        + ")");
-                doCommand("eraseeof");
-                String value = f.getValue();
-                for (int j = 0; j < value.length(); j++) {
-                    char ch = value.charAt(j);
-                    if (ch == '\n') {
-                        doCommand("newline");
-                    } else if (!Integer.toHexString(ch).equals("0")) {
-                        doCommand("key (0x" + Integer.toHexString(ch) + ")");
-                    }
-                }
-            }
-        }
-    }
+  public void sysReq() {
+    doCommand("sysReq");
+  }
 
-    public void submitUnformatted(String data) {
-        int index = 0;
-        for (int y = 0; y < screen.getHeight(); y++) {
-            for (int x = 0; x < screen.getWidth(); x++) {
-                char newCh = data.charAt(index);
-                if (newCh != screen.charAt(x, y)) {
-                    doCommand("movecursor (" + y + ", " + x + ")");
-                    if (!Integer.toHexString(newCh).equals("0")) {
-                        doCommand("key (0x" + Integer.toHexString(newCh) + ")");
-                    }
-                }
-                index++;
-            }
-            index++; // skip newline
-        }
-    }
-
-    // s3270 actions below this line
-
-    public void clear() {
-        doCommand("clear");
-    }
-
-    public void enter() {
-        doCommand("enter");
-        waitFormat();
-    }
-
-    public void eraseEOF() {
-        doCommand("eraseEOF");
-    }
-
-    public void pa(int number) {
-        doCommand("pa(" + number + ")");
-        waitFormat();
-    }
-
-    public void pf(int number) {
-        doCommand("pf(" + number + ")");
-        waitFormat();
-    }
-
-    public void reset() {
-        doCommand("reset");
-    }
-
-    public void sysReq() {
-        doCommand("sysReq");
-    }
-
-    public void attn() {
-        doCommand("attn");
-    }
+  public void attn() {
+    doCommand("attn");
+  }
 }

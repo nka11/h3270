@@ -29,15 +29,12 @@ import java.util.Map;
  * @version $Id$
  */
 public interface H3270Configuration {
-    public abstract boolean getDefaultUseRenderer();
+                
+  public abstract boolean getDefaultUseRenderer();
+  public abstract String getDefaultFontname();
+  public abstract String getDefaultColorscheme();
+  public abstract List getColorSchemes();
+  public abstract ColorScheme getColorScheme(String name);
+  public abstract Map getValidFonts();
 
-    public abstract String getDefaultFontname();
-
-    public abstract String getDefaultColorscheme();
-
-    public abstract List getColorSchemes();
-
-    public abstract ColorScheme getColorScheme(String name);
-
-    public abstract Map getValidFonts();
 }

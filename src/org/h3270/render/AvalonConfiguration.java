@@ -32,7 +32,8 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
  * Represents the various configuration options of h3270 which can be set for a
- * particular user session. The Configuration is read from an Avalon Configuration.
+ * particular user session. The Configuration is read from an Avalon
+ * Configuration.
  * 
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
  * @author Alphonse Bendt
@@ -41,91 +42,88 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  */
 public class AvalonConfiguration implements H3270Configuration {
 
-    private String defaultColorScheme;
-    
-    private String defaultFont;
-    
-    private final boolean defaultUseRenderer = true;
+  private String defaultColorScheme;
+  private String defaultFont;
+  private final boolean defaultUseRenderer = true;
 
-    private final List colorSchemes = new ArrayList();
+  private final List colorSchemes = new ArrayList();
+  private final Map validFonts = new HashMap();
 
-    private final Map validFonts = new HashMap();
+  public AvalonConfiguration(Configuration config)
+      throws ConfigurationException {
+    createDefaultColorSchemes(config.getChild("colorschemes"));
 
-    public AvalonConfiguration(Configuration config) throws ConfigurationException {
-        createDefaultColorSchemes(config.getChild("colorschemes"));
+    createValidFonts(config.getChild("fonts"));
+  }
 
-        createValidFonts(config.getChild("fonts"));
+  public boolean getDefaultUseRenderer() {
+    return defaultUseRenderer;
+  }
+
+  public String getDefaultFontname() {
+    return defaultFont;
+  }
+
+  public String getDefaultColorscheme() {
+    return defaultColorScheme;
+  }
+
+  public List getColorSchemes() {
+    return colorSchemes;
+  }
+
+  public ColorScheme getColorScheme(String name) {
+    for (Iterator i = colorSchemes.iterator(); i.hasNext();) {
+      ColorScheme cs = (ColorScheme) i.next();
+      if (cs.getName().equals(name))
+        return cs;
+    }
+    return null;
+  }
+
+  public Map getValidFonts() {
+    return validFonts;
+  }
+
+  private void createValidFonts(Configuration config)
+      throws ConfigurationException {
+    Configuration[] fonts = config.getChildren();
+
+    for (int x = 0; x < fonts.length; ++x) {
+      String fontName = fonts[x].getAttribute("name");
+      String fontDescription = fonts[x].getAttribute("description", fontName);
+
+      validFonts.put(fontName, fontDescription);
+
+      defaultFont = fontName;
     }
 
-    public boolean getDefaultUseRenderer() {
-        return defaultUseRenderer;
-    }
+    defaultFont = config.getAttribute("default", defaultFont);
+  }
 
-    public String getDefaultFontname() {
-        return defaultFont;
-    }
+  private void createDefaultColorSchemes(Configuration config)
+      throws ConfigurationException {
+    Configuration[] cs = config.getChildren();
 
-    public String getDefaultColorscheme() {
-        return defaultColorScheme;
+    for (int x = 0; x < cs.length; ++x) {
+      ColorScheme scheme = new ColorScheme (
+        cs[x].getAttribute("name"),
+        cs[x].getAttribute("pnfg"),
+        cs[x].getAttribute("pnbg"),
+        cs[x].getAttribute("pifg"),
+        cs[x].getAttribute("pibg"),
+        cs[x].getAttribute("phfg"),
+        cs[x].getAttribute("phbg"),
+        cs[x].getAttribute("unfg"),
+        cs[x].getAttribute("unbg"),
+        cs[x].getAttribute("uifg"),
+        cs[x].getAttribute("uibg"),
+        cs[x].getAttribute("uhfg"),
+        cs[x].getAttribute("uhbg")
+      );
+      colorSchemes.add(scheme);
+      defaultColorScheme = scheme.getName();
     }
-
-    public List getColorSchemes() {
-        return colorSchemes;
-    }
-
-    public ColorScheme getColorScheme(String name) {
-        for (Iterator i = colorSchemes.iterator(); i.hasNext();) {
-            ColorScheme cs = (ColorScheme) i.next();
-            if (cs.getName().equals(name))
-                return cs;
-        }
-        return null;
-    }
-
-    public Map getValidFonts() {
-        return validFonts;
-    }
-
-    private void createValidFonts(Configuration config) throws ConfigurationException {
-        Configuration[] fonts = config.getChildren();
-
-        for (int x = 0; x < fonts.length; ++x) {
-            String fontName = fonts[x].getAttribute("name");
-            String fontDescription = fonts[x].getAttribute("description",
-                    fontName);
-                       
-            validFonts.put(fontName, fontDescription);
-            
-            defaultFont = fontName;
-        }
-        
-        defaultFont = config.getAttribute("default", defaultFont);
-    }
-
-    private void createDefaultColorSchemes(Configuration config) throws ConfigurationException {
-        Configuration[] cs = config.getChildren();
-        
-        for (int x=0; x< cs.length; ++x) {
-            ColorScheme scheme = new ColorScheme(
-                    cs[x].getAttribute("name"),
-                    cs[x].getAttribute("pnfg"),
-                    cs[x].getAttribute("pnbg"),
-                    cs[x].getAttribute("pifg"),
-                    cs[x].getAttribute("pibg"),
-                    cs[x].getAttribute("phfg"),
-                    cs[x].getAttribute("phbg"),
-                    cs[x].getAttribute("unfg"),
-                    cs[x].getAttribute("unbg"),
-                    cs[x].getAttribute("uifg"),
-                    cs[x].getAttribute("uibg"),
-                    cs[x].getAttribute("uhfg"),
-                    cs[x].getAttribute("uhbg")
-                    );
-            
-            colorSchemes.add(scheme);
-            
-            defaultColorScheme = scheme.getName();
-        }
-        defaultColorScheme = config.getAttribute("default", defaultColorScheme);
-    }
+    defaultColorScheme = config.getAttribute("default", defaultColorScheme);
+  }
 }

@@ -74,8 +74,14 @@ public class RegexRenderer extends HtmlRenderer {
     return m.find();
   }
   
+  /**
+   * Pattern that finds placeholders such as #1, #2, #3 within
+   * template pages.  Mind the negative lookbehind at the beginning,
+   * because we don't want HTML character references (&#xxx;) to count
+   * as placeholders!
+   */
   private static Pattern placeholderPattern =
-    Pattern.compile ("#([0-9]+)(?:\\{(.*?)\\})?");
+    Pattern.compile ("(?<!&)#([0-9]+)(?:\\{(.*?)\\})?");
 
   public String render (Screen s) {
     ScreenCharSequence screenSeq = new ScreenCharSequence(s);

@@ -22,6 +22,7 @@ package org.h3270.web;
  */
 
 import org.h3270.host.*;
+import org.h3270.render.*;
 
 /**
  * 
@@ -30,8 +31,9 @@ import org.h3270.host.*;
  */
 public class SessionState {
 
-  public Terminal terminal    = null;
-  public boolean  useKeypad    = false;
-  public boolean  useRenderers = true;
+  public Terminal      terminal      = null;
+  public boolean       useKeypad     = false;
+  public boolean       useRenderers  = true;
+  public Configuration configuration = new Configuration();
   
 }

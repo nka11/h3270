@@ -1,7 +1,16 @@
 package org.h3270.test;
 
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.h3270.host.FileTerminal;
+import org.h3270.host.Screen;
+import org.h3270.host.Terminal;
+import org.h3270.render.HtmlRenderer;
+
 /*
- * Copyright (C) 2003, 2004 it-frameworksolutions
+ * Copyright (C) 2004 it-frameworksolutions
  *
  * This file is part of h3270.
  *
@@ -21,33 +30,19 @@ package org.h3270.test;
  * MA 02111-1307 USA
  */
 
-import junit.framework.*;
-
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Alphonse Bendt
  * @version $Id$
  */
-public class AllTest extends TestCase {
-
-  public AllTest(String name) {
-    super(name);
-  }
-
-  public static Test suite() {
+public class Bug1063147Test extends TestCase {
     
-    TestSuite suite = new TestSuite ("All h3270 tests");
-
-    //suite.addTestSuite (FileScreenTest.class);
-    suite.addTestSuite (S3270ScreenTest.class);
-    suite.addTestSuite (RegexTest.class);
-    suite.addTestSuite(SessionStateTest.class);
-    suite.addTestSuite(Bug1063147Test.class);
-    
-    return suite;
-  }
-
-  public static void main(String[] args) {
-    junit.textui.TestRunner.run(AllTest.class);
-  }
-
+    public void testBug() throws Exception {
+        URL url = getClass().getResource("/org/h3270/test/1063147.dump");
+        
+        Terminal terminal = new FileTerminal(url);
+        terminal.updateScreen();
+        Screen s = terminal.getScreen();
+        assertNotNull(new HtmlRenderer().render(s));
+        terminal.submitScreen();
+    }
 }

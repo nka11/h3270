@@ -79,6 +79,12 @@
         <copy file="${file.war}" todir="${dir.deploy}" />
     </target>
 
+    <target name="undeploy">
+        <delete>
+            <fileset dir="${dir.deploy}" includes="${file.war}" />
+        </delete>
+    </target>
+
     <target name="clean">
         <delete dir="${dir.classes}" />
         <delete file="${file.war}" />
@@ -86,6 +92,8 @@
 
     <target name="test.init" depends="init">
         <path id="cp.test">
+            <path refid="cp.base" />
+            
             <fileset dir="${dir.j2ee}" includes="*.jar" />
 
             <pathelement location="${dir.test}/lib/xmlParserAPIs.jar" />
@@ -97,8 +105,7 @@
             <pathelement location="${dir.test}/lib/nekohtml.jar" />
             <pathelement location="${dir.test}/lib/js.jar" />
             <pathelement location="${dir.test}/lib/httpunit.jar" />
-
-            <path refid="cp.base" />
+			<pathelement location="${dir.test}/lib/easymock.jar" />
         </path>
 
         <!-- add test sources so resources can be found -->

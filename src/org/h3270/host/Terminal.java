@@ -21,7 +21,6 @@ package org.h3270.host;
  * MA 02111-1307 USA
  */
 
-import java.util.List;
 
 /**
  * Represents a terminal line connected to the host.
@@ -34,9 +33,6 @@ public interface Terminal {
   public abstract void disconnect();
   public abstract String getHostname();
   public abstract void dumpScreen(String filename);
-  public abstract void startLogging();
-  public abstract List getLog();
-  public abstract void stopLogging();
   public abstract void updateScreen();
   public abstract Screen getScreen();
   public abstract void submitScreen();

@@ -110,18 +110,7 @@ public class Servlet extends HttpServlet {
                 && !request.getParameter("dumpfile").equals("")) {
             String filename = new File(getRealPath("/WEB-INF/dump"), request
                     .getParameter("dumpfile")).toString();
-            state.terminal.dumpScreen(filename);
-        } else if (request.getParameter("log") != null) {
-            if (state.terminal.getLog() == null) {
-                state.terminal.startLogging();
-            } else {
-                getServletContext().log("*** COMMUNICATION LOG ***");
-                for (Iterator i = state.terminal.getLog().iterator(); i
-                        .hasNext();) {
-                    getServletContext().log(i.next().toString());
-                }
-                state.terminal.stopLogging();
-            }
+            state.terminal.dumpScreen(filename); 
         } else if (request.getParameter("keypad") != null) {
             state.setUseKeypad(!state.isUseKeypad());
         } else if (state.terminal != null) {
@@ -262,9 +251,7 @@ public class Servlet extends HttpServlet {
     private SessionState getSessionState(HttpServletRequest request)
             throws IOException {
         HttpSession session = request.getSession();
-        
-        logger.debug("got Session new? " + session.isNew());
-        
+                
         SessionState result = (SessionState) session
                 .getAttribute("sessionState");
         if (result == null) {

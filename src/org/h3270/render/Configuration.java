@@ -34,6 +34,8 @@ public class Configuration {
   private List        colorSchemes;
   private ColorScheme activeColorScheme;
   
+  private String fontName = "courier";
+  
   public Configuration() {
     colorSchemes = new ArrayList();
     createDefaultColorSchemes();
@@ -62,6 +64,14 @@ public class Configuration {
       activeColorScheme = cs;
   }
 
+  public String getFontName() {
+    return fontName;
+  }
+  
+  public void setFontName (String fontName) {
+    this.fontName = fontName;
+  }
+  
   private void createDefaultColorSchemes() {
     colorSchemes.add (new ColorScheme(
       "White Background",
@@ -76,17 +86,17 @@ public class Configuration {
       "cyan",  "black",
       "white", "black",
       "black", "black",
-      "lime",  "black",
-      "red",   "black",
-      "red",   "black"));
+      "lime",  "#282828",
+      "red",   "#282828",
+      "red",   "#282828"));
     colorSchemes.add (new ColorScheme(
       "Amber",
       "orange", "black",
-      "orange", "black",
-      "black", "black",
-      "white", "black",
-      "orange", "black",
-      "orange", "black"));
+      "white",  "black",
+      "black",  "black",
+      "white",  "#282828",
+      "red",    "#282828",
+      "orange", "#282828"));
     colorSchemes.add (new ColorScheme(
       "Black and White",
       "black", "white",

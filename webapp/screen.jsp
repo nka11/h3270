@@ -37,6 +37,7 @@ pre, pre input, textarea {
   function handleKeyDownEvent(eventObj) {
     var keyCode = eventObj.keyCode;
     if (keyCode == 13) {
+      cancelKeyEvent(eventObj);
       sendFormWithKey("enter");
     } else if ((!(eventObj.altKey)) 
             && (!(eventObj.ctrlKey))

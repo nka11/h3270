@@ -106,15 +106,19 @@ public class HtmlRenderer implements Renderer {
   }
 
   protected void renderField (StringBuffer result, Field f) {
-    result.append ("<input ");
-    result.append ("type=" + (f.isHidden() ? "password " : "text "));
-    result.append ("name=\"field_" + f.getX() + "_" + f.getY() + "\" ");
-    result.append ("class=cicsfield ");
-    String value = f.getValue();
-    result.append ("value=\"" + Field.trim (value) + "\" ");
-    result.append ("maxlength=\"" + f.getWidth() + "\" ");
-    result.append ("size=\"" + f.getWidth() + "\" ");
-    result.append (">");
+    if (f.isRendered()) {
+      result.append ("<input ");
+      result.append ("type=" + (f.isHidden() ? "password " : "text "));
+      result.append ("name=\"field_" + f.getX() + "_" + f.getY() + "\" ");
+      result.append ("class=cicsfield ");
+      String value = f.getValue();
+      result.append ("value=\"" + Field.trim (value) + "\" ");
+      result.append ("maxlength=\"" + f.getWidth() + "\" ");
+      result.append ("size=\"" + f.getWidth() + "\" ");
+      result.append (">");
+    } else {
+      for (int i=0; i<f.getWidth(); i++) result.append(' ');
+    }
   }
 
 }

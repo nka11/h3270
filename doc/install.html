@@ -104,7 +104,11 @@
         and <code>cygwin1.dll</code>
         into <code>$H3270_HOME/webapp/WEB-INF/bin</code>.  (There may
         be other ways to do it, but the above is the procedure we
-        actually verified.)
+        actually verified.). Alternatively you can put s3270 somewhere on your path and add the
+        following entry to the configuration file:
+        <pre>
+            &lt;exec-path&gt;/path/to/s3270/&lt;/exec-path&gt; 
+        </pre>
 
         <li>Go to the <code>$H3270_HOME</code> directory and
         type <code>ant</code> to build the program.  This requires

@@ -20,7 +20,7 @@
 
 <body>
 
-<table width=100%>
+<table style="width:50em;">
   <tr>
  
  <td>

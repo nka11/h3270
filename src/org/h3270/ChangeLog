@@ -1,3 +1,68 @@
+2004-07-26  Andre Spiegel  <spiegel@gnu.org>
+
+	* h3270 version 1.2-pre1 released.
+
+2004-07-23  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/Configuration.java (fontName): New field and accessor methods.
+	(createDefaultColorSchemes): Prettify.
+
+	* web/Servlet.java (doGet): Include CSS font configuration in output.
+	(handlePreferences): New method.
+	(doPost): Call it.
+
+	* host/S3270.java (doCommand): When no status has been received,
+	throw exception rather than return a dummy result.
+
+2004-07-05  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270Screen.java (statusPattern): Add a crucial dot in the
+	final field (time elapsed).
+
+	* host/AbstractScreen.java (getInputFieldAt): Rewritten not to use
+	Field.getWidth().
+
+	* host/InputField.java: (setValue(String)): Refuse to be called
+	for multiline fields.
+	(setValue(int, String)): Fix prefix bug.
+
+2004-06-25  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/ColorScheme.java (name, getName): New field and accessor
+	method.
+	(c'tor): New monster constructor.  Update no-arg c'tor.
+
+	* web/SessionState.java (configuration): New field.
+
+	* web/Servlet.java (doGet): Pass attribute "style" to the JSP.
+	(doPost): Handle "colorscheme" and "render" attributes
+	from Preferences dialog.
+	(submitScreen): Handle multi-line fields.
+
+	* render/HtmlRenderer.java (createHtmlInput): New method.
+	(renderInputField): Use it, allow multi-line fields.
+	(render, renderFormatted, renderUnformatted): Updated.
+
+	* host/S3270.java (doCommand): Return a dummy Result object if we get a
+	single "ok" from s3270.
+	(submitScreen): Handle multiline fields.
+
+	* host/InputField.java (linePattern): New field.
+	(setValue (int, String)): New method.
+	(setValue): Rename variable to fix scoping problem.
+	(trim): Improve javadoc.
+
+	* host/Field.java (getHeight, getValue(int), isEmpty,
+	isMultiline): New methods.
+	(linePattern): New field.
+	(getText, getValue): Improve javadoc.
+
+	* render/Configuration.java: Initial revision.
+
+2004-06-21  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/ColorScheme.java: Initial revision.
+
 2004-06-20  Andre Spiegel  <spiegel@gnu.org>
 
 	* Version.java, web/Servlet.java, web/SessionState.java,

@@ -95,7 +95,7 @@
     <target name="test.init" depends="init">
         <path id="cp.test">
             <path refid="cp.base" />
-            
+
             <fileset dir="${dir.j2ee}" includes="*.jar" />
 
             <pathelement location="${dir.test}/lib/xmlParserAPIs.jar" />
@@ -107,7 +107,7 @@
             <pathelement location="${dir.test}/lib/nekohtml.jar" />
             <pathelement location="${dir.test}/lib/js.jar" />
             <pathelement location="${dir.test}/lib/httpunit.jar" />
-			<pathelement location="${dir.test}/lib/easymock.jar" />
+            <pathelement location="${dir.test}/lib/easymock.jar" />
         </path>
 
         <!-- add test sources so resources can be found -->
@@ -119,7 +119,7 @@
 
     <target name="test.run" depends="test.init">
         <property name="dir" value="${basedir}" />
-     
+
         <junit showoutput="true" printsummary="true" fork="true" dir="${dir}">
             <classpath refid="cp.run-test" />
             <test name="${testname}" />
@@ -136,5 +136,71 @@
             <param name="testname" value="org.h3270.test.PreferencesTest" />
             <param name="dir" value="${dir.webapp}" />
         </antcall>
+    </target>
+
+    <target name="release" depends="">
+        <property name="version" value="1.2" />
+        <property name="name.release" value="h3270-${version}" />
+        <property name="dir.release" value="release" />
+
+        <mkdir dir="${dir.release}" />
+        <mkdir dir="${dir.release}/${name.release}" />
+
+        <copy todir="${dir.release}/${name.release}">
+            <fileset dir="${basedir}">
+                <include name="ChangeLog" />
+                <include name="LICENSE" />
+                <include name="README" />
+                <include name="h3270w.war" />
+                <include name="doc/**" />
+                <include name="webapp/**" />
+                <exclude name="**/CVS/* " />
+                <exclude name="**/test/**" />
+                <exclude name="**/classes/com/**" />
+            </fileset>
+        </copy>
+
+        <tar destfile="h3270-${version}.tar.gz" compression="gzip">
+            <tarfileset dir="${dir.release}">
+                <include name="${name.release}/**" />
+            </tarfileset>
+        </tar>
+
+        <zip destfile="h3270-${version}.zip">
+            <zipfileset dir="${dir.release}">
+                <include name="${name.release}/**" />
+            </zipfileset>
+        </zip>
+
+        <delete dir="${dir.release}/${name.release}" />
+        <mkdir dir="${dir.release}/${name.release}" />
+
+        <copy todir="${dir.release}/${name.release}" >
+            <fileset dir="${basedir}">
+                <include name="ChangeLog" />
+                <include name="LICENSE" />
+                <include name="README" />
+                <include name="build.xml" />
+                <include name="build.properties.example" />
+                <include name="doc/**" />
+                <include name="webapp/**" />
+                <include name="src/**" />
+                <include name="test/**" />
+                <exclude name="**/CVS/* " />
+                <exclude name="**/classes/**" />                
+            </fileset>
+        </copy>
+        
+        <tar destfile="h3270-${version}-src.tar.gz" compression="gzip">
+            <tarfileset dir="${dir.release}">
+                <include name="${name.release}/**" />
+            </tarfileset>
+        </tar>
+
+        <zip destfile="h3270-${version}-src.zip">
+            <zipfileset dir="${dir.release}">
+                <include name="${name.release}/**" />
+            </zipfileset>
+        </zip>
     </target>
 </project>

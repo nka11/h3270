@@ -30,8 +30,8 @@ import org.h3270.host.*;
  */
 public class SessionState {
 
-  public S3270   s3270        = null;
-  public boolean useKeypad    = false;
-  public boolean useRenderers = true;
+  public Terminal terminal    = null;
+  public boolean  useKeypad    = false;
+  public boolean  useRenderers = true;
   
 }

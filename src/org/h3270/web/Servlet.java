@@ -166,10 +166,11 @@ public class Servlet extends HttpServlet {
     if (s.isFormatted()) {
       for (Iterator i = s.getFields().iterator(); i.hasNext();) {
         Field f = (Field)i.next();
+        if (!(f instanceof InputField)) continue;
         String value = request.getParameter ("field_" + f.getStartX() 
                                                 + "_" + f.getStartY());
         if (value != null) {
-          f.setValue (value);
+          ((InputField)f).setValue (value);
         }
       }
       state.terminal.submitScreen();

@@ -12,13 +12,13 @@
   <!-- it is assumed that the directory contains the files   -->
   <!-- head.jsp, navbar.jsp and stylesheet.jsp               -->
   <!-- uncomment the following property as example and check -->
-  <!-- the contents of WEB-INF/h3270                         -->
-  <!-- try "it-fws" as a different example                   -->
+  <!-- the contents of webapp/it-fws                         -->
+  <!-- try "h3270" as a different example                    -->
   <!-- defaults to NO style                                  -->
 
 
   <!--
-      <style>h3270</style> 
+      <style>it-fws</style> 
   -->
         
   <!--

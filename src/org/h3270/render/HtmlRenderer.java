@@ -41,7 +41,7 @@ public class HtmlRenderer implements Renderer {
   public String render (Screen screen) {
     StringBuffer result = new StringBuffer();
     
-    result.append ("<form name=\"screen\" action=\"\" method=\"POST\" class=\"cicsform\">\n");
+    result.append ("<form name=\"screen\" action=\"\" method=\"POST\" class=\"h3270-form\">\n");
     if (screen.isFormatted())
       renderFormatted (screen, result);
     else
@@ -83,7 +83,10 @@ public class HtmlRenderer implements Renderer {
         if (f.getEndX() == screen.getWidth()-1 && f.getEndY() >= f.getStartY())
           result.append ("\n");
       } else {
-        if (f.isIntensified()) result.append ("<font color=blue>");
+        if (f.isIntensified()) 
+          result.append ("<span class=\"h3270-intensified\">");
+        else if (f.isHidden())
+          result.append ("<span class=\"h3270-hidden\">");
         String text = f.getText();
         for (int j=0; j<text.length(); j++) {
           char ch = text.charAt(j);
@@ -92,14 +95,15 @@ public class HtmlRenderer implements Renderer {
           else
             result.append (ch);
         }
-        if (f.isIntensified()) result.append ("</font>");
+        if (f.isIntensified() || f.isHidden()) result.append ("</span>");
       }
     }
     result.append ("</pre>");
   }
 
   private void renderUnformatted (Screen screen, StringBuffer result) {
-    result.append ("<textarea name=field class=cicsfield "
+    result.append ("<textarea name=field class=\"h3270-input\" "
+                   + "cursor=lime "
                    + "rows=" + screen.getHeight()
                    + " cols=" + screen.getWidth() + ">\n");
     for (int y = 0; y < screen.getHeight(); y++) {
@@ -112,20 +116,49 @@ public class HtmlRenderer implements Renderer {
       }
       result.append ("\n");
     }
-    result.append ("</textarea>\n");  
+    result.append ("</textarea>\n");
+    result.append ("<script>\n");
+    result.append ("  document.screen.field.focus();\n");
+    result.append ("</script>\n");
+    
   }
 
   protected void renderInputField (StringBuffer result, InputField f) {
-    result.append ("<input ");
-    result.append ("type=" + (f.isHidden() ? "password " : "text "));
-    result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY() + "\" ");
-    result.append ("class=cicsfield ");
-    String value = f.getValue();
-    result.append ("value=\"" + InputField.trim (value) + "\" ");
-    result.append ("maxlength=\"" + f.getWidth() + "\" ");
-    result.append ("size=\"" + f.getWidth() + "\" ");
-    if (f.isIntensified()) result.append ("style=\"color:red;\" ");
-    result.append (">");
+    if (!f.isMultiline()) {
+      createHtmlInput (result, f, f.getValue(), 
+                       -1, f.getEndX() - f.getStartX() + 1);
+    } else {
+      createHtmlInput (result, f, f.getValue(0), 0, 
+                       f.getScreen().getWidth() - f.getStartX());
+      result.append ("\n");
+      for (int i=1; i < f.getHeight() - 2; i++) {
+        createHtmlInput (result, f, f.getValue(i), i, f.getScreen().getWidth());
+        result.append ("\n");
+      }
+      int lastLine = f.getHeight() - 1;
+      createHtmlInput (result, f, f.getValue(lastLine), lastLine,
+                       f.getEndX());
+    }
   }
 
+  protected void createHtmlInput (StringBuffer result, InputField f,
+                                  String value, int lineNumber, int width) {
+    result.append ("<input ");
+    result.append ("type=" + (f.isHidden() ? "password " : "text "));
+    result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY());
+    if (lineNumber != -1)
+      result.append ("_" + lineNumber);
+    result.append ("\" ");
+    if (f.isIntensified()) 
+      result.append ("class=\"h3270-input-intensified\" ");
+    else if (f.isHidden())
+      result.append ("class=\"h3270-input-hidden\" ");
+    else
+      result.append ("class=\"h3270-input\" ");
+    result.append ("value=\"" + InputField.trim (value) + "\" ");
+    result.append ("maxlength=\"" + width + "\" ");
+    result.append ("size=\"" + width + "\" ");
+    result.append (">");
+  }
+     
 }

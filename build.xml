@@ -5,7 +5,7 @@
     <property file="${basedir}/build.properties" />
 
     <property name="dir.lib" value="${basedir}/webapp/WEB-INF/lib" />
-    <property name="file.war" value="h3270w.war" />
+    <property name="file.war" value="h3270.war" />
     <property name="dir.webapp" value="${basedir}/webapp" />
     <property name="dir.classes" value="${dir.webapp}/WEB-INF/classes" />
     <property name="dir.test" value="${basedir}/test" />
@@ -37,7 +37,7 @@
         </condition>
     </target>
 
-    <target name="all" depends="war" />
+    <target name="all" depends="compile" />
 
     <target name="compile" depends="init">
         <javac srcdir="${basedir}/src" destdir="${dir.classes}" debug="true">
@@ -85,11 +85,13 @@
         </javac>
     </target>
 
-    <target name="war" depends="compile, test" description="Build the WAR">
+    <target name="war" depends="compile" description="Build the WAR">
         <war destfile="${file.war}" basedir="${dir.webapp}" webxml="${dir.webapp}/WEB-INF/web.xml">
             <exclude name="WEB-INF/web.xml" />
             <exclude name="WEB-INF/classes/**/test/**" />
             <exclude name="WEB-INF/classes/com/**" />
+        	<exclude name="WEB-INF/bin/**"/>
+        	<exclude name="WEB-INF/bin-win/**"/>
         </war>
     </target>
 
@@ -176,7 +178,7 @@
                 <include name="ChangeLog" />
                 <include name="LICENSE" />
                 <include name="README" />
-                <include name="h3270w.war" />
+                <include name="h3270.war" />
                 <include name="doc/**" />
                 <include name="webapp/**" />
                 <exclude name="**/CVS/* " />

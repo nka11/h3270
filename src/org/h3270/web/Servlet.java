@@ -58,8 +58,12 @@ public class Servlet extends HttpServlet {
         request.setAttribute ("screen", basicRenderer.render(s));
       request.setAttribute ("hostname", state.terminal.getHostname());
       request.setAttribute ("keypad", state.useKeypad ? "on" : null);
-      request.setAttribute ("style", 
-                            state.configuration.getActiveColorScheme().toCSS());
+      String style = "pre, pre input, textarea {\n"
+	           + "  font-family: "
+	           + state.configuration.getFontName() + ";\n"
+                   + "}\n"
+                   + state.configuration.getActiveColorScheme().toCSS();
+      request.setAttribute ("style", style); 
     }
     getServletContext().getRequestDispatcher ("/screen.jsp")
                        .forward (request, response);
@@ -71,16 +75,10 @@ public class Servlet extends HttpServlet {
 
     SessionState state = getSessionState(request);
 
-    if (request.getParameter("colorscheme") != null)
-      state.configuration.setActiveColorScheme(request.getParameter("colorscheme"));
-    if (request.getParameter("render") != null) {
-      if (request.getParameter("render").equals("true"))
-        state.useRenderers = true;
-      else if (request.getParameter("render").equals("false"))
-        state.useRenderers = false;
-      if (state.useRenderers)
-        engine = new Engine (getRealPath("/WEB-INF/templates"));
-    }
+    boolean prevRendering = state.useRenderers;
+    handlePreferences (state, request);
+    if (state.useRenderers && !prevRendering)
+      engine = new Engine (getRealPath("/WEB-INF/templates"));
 
     if (request.getParameter ("connect") != null) {
       String hostname = request.getParameter("hostname");
@@ -125,6 +123,29 @@ public class Servlet extends HttpServlet {
     doGet (request, response);
   }
 
+  private void handlePreferences (SessionState state,
+                                  HttpServletRequest request) {
+
+    String colorscheme = request.getParameter ("colorscheme");
+    String render      = request.getParameter ("render");
+    String font        = request.getParameter ("font");
+    
+    if (colorscheme != null)
+      state.configuration.setActiveColorScheme(colorscheme);
+    
+    if (render != null) {
+      if (render.equals("true"))
+        state.useRenderers = true;
+      else if (render.equals("false"))
+        state.useRenderers = false;
+    }
+    
+    if (font != null && !font.equals("")) {
+      state.configuration.setFontName (font);
+    }
+    
+  }
+  
   /**
    * Convenience method, to save some typing.
    */

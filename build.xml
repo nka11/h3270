@@ -12,7 +12,8 @@
 
     <target name="init">
         <mkdir dir="${dir.classes}" />
-
+		<mkdir dir="${dir.webapp}/WEB-INF/bin" />
+		    
         <path id="cp.base">
             <pathelement location="${dir.classes}" />
             <fileset dir="${dir.lib}" includes="*.jar" />
@@ -27,6 +28,12 @@
 
         <condition property="jdk.regex.available">
             <available classname="java.util.regex.Pattern" />
+        </condition>
+        
+        <condition property="test.skip">
+            <not>
+                <isset property="dir.j2ee"/>
+            </not>
         </condition>
     </target>
 
@@ -47,7 +54,7 @@
         </javac>
     </target>
 
-    <target name="copy.test-resources" >
+    <target name="test.copy-resources" >
         <copy todir="${dir.classes}">
             <fileset dir="${basedir}/test/src">
                 <include name="**/*.dump" />
@@ -136,7 +143,16 @@
         </junit>
     </target>
 
-    <target name="test" description="Run All h3270 Unit Tests" depends="test.compile" unless="test.skip">
+    <target name="test.check" if="test.skip" >
+        <echo>
+            The JUnit Tests were skipped. This may have 2 reasons:
+            1) The property dir.j2ee was not set. Some of the Tests depend on the J2EE libs. This
+               property should point to the lib subdir of the J2EE installation.
+            2) You set the property test.skip manually.
+        </echo>
+    </target>
+    
+    <target name="test" description="Run All h3270 Unit Tests" depends="test.check, test.compile" unless="test.skip">
         <antcall target="test.run">
             <param name="testname" value="org.h3270.test.AllTest" />
         </antcall>

@@ -40,16 +40,10 @@
         <!-- end include navbar -->
     </td>
     
-    <td width=80% valign=top>
-        <br>
+    <td valign=top>
         <%@ include file="common/h3270-screen.jsp" %>
     </td>
-    
-    <td width="10%" valign="top">   
-         <% if (sessionState.isUseKeypad()) { %>    
-               <jsp:include page="keys.html" flush="true"/>
-         <% } %>
-     </td>
+
   </tr>
 </table>
 </body>

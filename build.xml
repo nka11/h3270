@@ -41,7 +41,7 @@
         <antcall target="compile-regex" />
     </target>
 
-    <target name="test.compile" depends="test.init">
+    <target name="test.compile" depends="test.init" unless="test.skip">
         <javac srcdir="${basedir}/test/src" destdir="${dir.classes}">
             <classpath refid="cp.test" />
         </javac>
@@ -101,7 +101,7 @@
         <delete file="${file.war}" />
     </target>
 
-    <target name="test.init" depends="init">
+    <target name="test.init" depends="init" unless="test.skip">
         <path id="cp.test">
             <path refid="cp.base" />
 
@@ -136,7 +136,7 @@
         </junit>
     </target>
 
-    <target name="test" description="Run All h3270 Unit Tests" depends="test.compile">
+    <target name="test" description="Run All h3270 Unit Tests" depends="test.compile" unless="test.skip">
         <antcall target="test.run">
             <param name="testname" value="org.h3270.test.AllTest" />
         </antcall>

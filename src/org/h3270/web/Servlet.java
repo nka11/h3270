@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -154,7 +155,7 @@ public class Servlet extends AbstractServlet {
                 if (hostname.startsWith("file:")) {
                     String filename = new File(getRealPath("/WEB-INF/dump"),
                             hostname.substring(5)).toString();
-                    state.terminal = new FileTerminal(filename);
+                    state.terminal = new FileTerminal(new URL(filename));
                 } else {
                     state.terminal = new S3270(hostname, execPath);
                 }

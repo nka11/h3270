@@ -5,6 +5,11 @@
   <servlet>
     <servlet-name>servlet</servlet-name>
     <servlet-class>org.h3270.web.Servlet</servlet-class>
+    
+    <init-param>
+		<param-name>path.s3270</param-name>
+		<param-value>/usr/local/bin</param-value>
+	</init-param>
   </servlet>
 
   <servlet-mapping>

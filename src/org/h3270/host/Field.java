@@ -104,7 +104,7 @@ public class Field {
    * This does not include the control characters that delimit the Field.
    * @deprecated this method will disappear soon
    */
-  public int getWidth() { return endx - startx; } 
+  public int getWidth() { return endx - startx + 1; } 
   
   /**
    * Returns the Screen of which this Field is a part.

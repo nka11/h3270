@@ -10,7 +10,7 @@
 
   * copy into export area
 
-      cp -r -p ~/projects/h3270/cvs .
+      cp -r -p ~/projects/h3270/cvs/* .
 
   * within export area: 
       
@@ -39,6 +39,8 @@
       rm -rf webapp/WEB-INF/lib/*
 
   * apply CVS tag from work area
+
+      cvs tag H3270_1_0
 
   * bundle
 

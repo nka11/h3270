@@ -27,7 +27,7 @@ import org.h3270.regex.*;
  * Represents a Field that allows user input.
  * 
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
- * @version 2003-07-07
+ * @version $Id$
  */
 public class Field {
 
@@ -40,12 +40,13 @@ public class Field {
   private boolean isNumeric;
   private boolean isHidden;
   private boolean isFocused;
+  private boolean isRendered;
   
   private boolean changed = false;
   
   public Field (Screen screen, int x, int y, int width,
                 String value, boolean isNumeric, boolean isHidden,
-                boolean isFocused) {
+                boolean isFocused, boolean isRendered) {
     this.screen = screen;
     this.x = x;
     this.y = y;
@@ -54,6 +55,7 @@ public class Field {
     this.isNumeric = isNumeric;
     this.isHidden = isHidden;
     this.isFocused = isFocused;
+    this.isRendered = isRendered;
   }
 
   /**
@@ -110,6 +112,7 @@ public class Field {
   public boolean isNumeric()    { return isNumeric; }
   public boolean isHidden()     { return isHidden; }
   public boolean isFocused()    { return isFocused; }
+  public boolean isRendered()   { return isRendered; }
 
   public void setFocused (boolean flag) {
     this.isFocused = flag;

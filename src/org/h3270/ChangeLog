@@ -1,3 +1,31 @@
+2004-03-08  Andre Spiegel  <spiegel@gnu.org>
+
+	Changes to handle invisible fields, suggested by
+	Michael Ervin <symphyl@yahoo.com>:
+	
+	* host/Field.java (isRendered): New field and accessor method.
+	(c'tor): Add new parameter to set it.
+
+	* host/S3270Screen.java (FIELD_ATTR_NOT_RENDERED): New pseudo
+	attribute.
+	(createField, decode): Detect the above case and handle it.
+
+	* render/HtmlRenderer.java (renderField): If the Field is not
+	rendered, just print spaces.
+
+	* host/FileScreen.java (readField): Use new Field constructor.
+
+2004-03-02  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/HtmlRenderer.java (renderField): Don't call JavaScript
+	handler() method, which no longer exists.
+
+2003-12-16  Andre Spiegel  <spiegel@gnu.org>
+
+	* render/HtmlRenderer.java (renderField): Add maxlength attribute.
+	(renderFormatted): Use pre instead of nbsp.
+	Changes suggested by Eiffel.
+
 2003-12-11  Andre Spiegel  <spiegel@gnu.org>
 
 	* h3270 version 1.0 released.

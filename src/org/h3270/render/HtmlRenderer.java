@@ -46,9 +46,25 @@ public class HtmlRenderer implements Renderer {
     else
       renderUnformatted (screen, result);
     result.append ("<input type=hidden name=key>\n");
-    result.append ("</form>"); 
+    result.append ("</form>\n");
+    
+    appendFocus (screen, result);
     
     return result.toString();
+  }
+
+  /**
+   * If screen has a focused field, append Javascript code to buffer 
+   * so that this field gets the focus in the client browser.
+   */
+  protected void appendFocus (Screen screen, StringBuffer buffer) {
+    Field f = screen.getFocusedField();
+    if (f != null) {
+      buffer.append ("<script>\n");
+      buffer.append ("  document.screen.field_" + f.getX() + "_" + f.getY() +
+                     ".focus()\n");
+      buffer.append ("</script>\n");
+    }
   }
 
   private void renderFormatted (Screen screen, StringBuffer result) {
@@ -90,7 +106,8 @@ public class HtmlRenderer implements Renderer {
   protected void renderField (StringBuffer result, Field f) {
     result.append ("<input ");
     result.append ("type=" + (f.isHidden() ? "password " : "text "));
-    result.append ("onKeyDown=\"handler()\" ");    result.append ("name=\"field_" + f.getX() + "_" + f.getY() + "\" ");
+    result.append ("onKeyDown=\"handler()\" ");
+    result.append ("name=\"field_" + f.getX() + "_" + f.getY() + "\" ");
     result.append ("class=cicsfield ");
     String value = f.getValue();
     result.append ("value=\"" + Field.trim (value) + "\" ");

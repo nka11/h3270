@@ -1,64 +1,65 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE h3270 SYSTEM "etc/h3270-config.dtd">
 <h3270>
-	<!-- path used to locate the s3270 executable -->
-	<!-- defaults to WEB-INF/bin                  -->
-	
-	<!--
-		<exec-path>/usr/local/bin</exec-path> 
-	-->
-	
-	<!-- path to style directory                               -->
-	<!-- it is assumed that the directory contains the files   -->
-	<!-- head.jsp, navbar.jsp and stylesheet.jsp               -->
-	<!-- uncomment the following property as example and check -->
-	<!-- the contents of WEB-INF/h3270                         -->
-	<!-- try "it-fws" as a different example                   -->
-	<!-- defaults to NO style                                  -->
+  <!-- path used to locate the s3270 executable -->
+  <!-- defaults to WEB-INF/bin                  -->
+        
+  <!--
+      <exec-path>/usr/local/bin</exec-path> 
+  -->
+        
+  <!-- path to style directory                               -->
+  <!-- it is assumed that the directory contains the files   -->
+  <!-- head.jsp, navbar.jsp and stylesheet.jsp               -->
+  <!-- uncomment the following property as example and check -->
+  <!-- the contents of WEB-INF/h3270                         -->
+  <!-- try "it-fws" as a different example                   -->
+  <!-- defaults to NO style                                  -->
 
-	<!-- 
-		<style>h3270</style> 
-	-->
-	
-	<!--
-	<s3270-options>
-		<language>german</language>
-		<model>3</model>
-	</s3270-options>
-	-->
-	
-	<configuration>
-		<!-- list of available fonts -->
-		<fonts default="courier">
-			<font name="courier" description="Courier" />
-			<font name="freemono" description="Free Mono" />
-			<font name="terminal" description="Terminal" />
-			<font name="couriernew" description="Courier New" />
-			<font name="monospace" description="Monospace" />
-		</fonts>
-		
-		<!-- list of available colorschemes                       -->
-		<!-- {p|u}: protected/unprotected                         -->
-		<!-- {n|i|h}: normal/intensified/hidden                   -->
-		<!-- {fg|bg}: foreground/background                       -->
-		<!-- example: pifg means protected intensified foreground -->
-		<colorschemes default="White Background">
-			<scheme name="White Background" pnfg="black" pnbg="white" 
-				pifg="blue" pibg="white" phfg="white" phbg="white" unfg="green" 
-				unbg="lightgrey" uifg="red" uibg="lightgrey" uhfg="red" 
-				uhbg="lightgrey" />
-			<scheme name="Dark Background" pnfg="cyan" pnbg="black" 
-				pifg="white" pibg="black" phfg="black" phbg="black" unfg="lime" 
-				unbg="#282828" uifg="red" uibg="#282828" uhfg="red" 
-				uhbg="#282828" />
-			<scheme name="Amber" pnfg="orange" pnbg="black" pifg="white" 
-				pibg="black" phfg="black" phbg="black" unfg="white" 
-				unbg="#282828" uifg="red" uibg="#282828" uhfg="orange" 
-				uhbg="#282828" />
-			<scheme name="Black and White" pnfg="black" pnbg="white" 
-				pifg="black" pibg="white" phfg="white" phbg="white" 
-				unfg="black" unbg="lightgrey" uifg="black" uibg="lightgrey" 
-				uhfg="black" uhbg="lightgrey" />
-		</colorschemes>
-	</configuration>
+
+  <!--
+      <style>h3270</style> 
+  -->
+        
+  <!--
+      <s3270-options>
+        <language>german</language>
+        <model>3</model>
+      </s3270-options>
+  -->
+        
+  <configuration>
+    <!-- list of available fonts -->
+    <fonts default="courier">
+      <font name="courier" description="Courier" />
+      <font name="freemono" description="Free Mono" />
+      <font name="terminal" description="Terminal" />
+      <font name="couriernew" description="Courier New" />
+      <font name="monospace" description="Monospace" />
+    </fonts>
+                
+    <!-- list of available colorschemes                       -->
+    <!-- {p|u}: protected/unprotected                         -->
+    <!-- {n|i|h}: normal/intensified/hidden                   -->
+    <!-- {fg|bg}: foreground/background                       -->
+    <!-- example: pifg means protected intensified foreground -->
+    <colorschemes default="White Background">
+      <scheme name="White Background" pnfg="black" pnbg="white" 
+              pifg="blue" pibg="white" phfg="white" phbg="white" unfg="green" 
+              unbg="lightgrey" uifg="red" uibg="lightgrey" uhfg="red" 
+              uhbg="lightgrey" />
+      <scheme name="Dark Background" pnfg="cyan" pnbg="black" 
+              pifg="white" pibg="black" phfg="black" phbg="black" unfg="lime" 
+              unbg="#282828" uifg="red" uibg="#282828" uhfg="red" 
+              uhbg="#282828" />
+      <scheme name="Amber" pnfg="orange" pnbg="black" pifg="white" 
+              pibg="black" phfg="black" phbg="black" unfg="white" 
+              unbg="#282828" uifg="red" uibg="#282828" uhfg="orange" 
+              uhbg="#282828" />
+      <scheme name="Black and White" pnfg="black" pnbg="white" 
+              pifg="black" pibg="white" phfg="white" phbg="white" 
+              unfg="black" unbg="lightgrey" uifg="black" uibg="lightgrey" 
+              uhfg="black" uhbg="lightgrey" />
+    </colorschemes>
+  </configuration>
 </h3270>

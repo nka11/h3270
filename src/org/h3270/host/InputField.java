@@ -23,6 +23,12 @@ package org.h3270.host;
 
 import org.h3270.regex.*;
 
+/**
+ * Represents a Field that allows user input.
+ * 
+ * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @version $Id$
+ */
 public class InputField extends Field {
 
   protected boolean isNumeric;
@@ -59,13 +65,44 @@ public class InputField extends Field {
   /**
    * Sets the value of this Field.
    */
-  public void setValue (String value) { 
-    if (value == null) getValue();
-    if (!value.equals (trim (this.value))) {
-      if (value.length() > getWidth())
-        this.value = value.substring (0, getWidth());
+  public void setValue (String newValue) { 
+    if (this.value == null) getValue();
+    if (!newValue.equals (trim (this.value))) {
+      if (newValue.length() > getWidth())
+        this.value = newValue.substring (0, getWidth());
       else
-        this.value = value;
+        this.value = newValue;
+      changed = true;
+    }
+  }
+
+  private static Pattern linePattern =
+    Pattern.compile (".*\n", Pattern.MULTILINE);
+
+  /**
+   * Sets the value of one of the lines in a multi-line field.
+   * 
+   * @param lineNumber the number of the line to be changed, starting at zero
+   * @param newValue The new value for this line.  It is not supposed to have
+   *                 a trailing newline.
+   */
+  public void setValue (int lineNumber, String newValue) {
+    if (this.value == null) getValue();
+    StringBuffer result = new StringBuffer();
+    Matcher m = linePattern.matcher (this.value);
+    for (int i=0; i < lineNumber-1; i++) {
+      m.find();
+      result.append (m.group(0));
+    }
+    result.append (trim (newValue));
+    if (lineNumber < getHeight()-1) {
+      result.append ("\n");
+      m.find();
+      result.append (this.value.substring (m.end()));
+    }
+    String val = result.toString();
+    if (!val.equals(this.value)) {
+      this.value = val;
       changed = true;
     }
   }
@@ -75,7 +112,7 @@ public class InputField extends Field {
 
   /**
    * Returns a string that is the same as the argument, with leading
-   * and trailing ASCII NUL characters removed.
+   * and trailing ASCII NUL characters, blanks and underscores removed.
    */
   public static String trim (String value) {
     Matcher m = trimPattern.matcher (value);

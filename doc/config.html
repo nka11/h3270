@@ -14,7 +14,7 @@
     </td>
   <tr>
 </table>
-<table width=100%>
+<table border=0 width=100%>
   <tr height=100%>
     <td class=menu width=160px valign=top>
       <a href="index.html">Home</a><br>
@@ -42,11 +42,8 @@
     </td>
     <td class=content valign=top>
       <h1>Configuration</h1> 
-      <h2>Available Color Schemes and Fonts</h2>
-      You can modify the available color schemes and fonts by editing <code>WEB-INF/h3270-config.xml</code>.
-      
       <h2>Rendering Engine</h2>
-      This page explains how to configure h3270's rendering engine,
+      This section explains how to configure h3270's rendering engine,
       which allows you to transform your host applications from a
       character-based layout to the look and feel of a web
       application.  The rendering engine uses regular expressions as
@@ -181,6 +178,52 @@
       example, the above <code>ParagraphFilter</code> finds empty
       lines within the text and replaces them with HTML &lt;p&gt;
       tags.
+      
+           <h2>Available Color Schemes and Fonts</h2>
+      You can modify the available color schemes and fonts by editing <code>WEB-INF/h3270-config.xml</code>.
+      You can add a custom color scheme by placing a <code>scheme</code> tag inside the <code>colorschemes</code>
+      tag. Each scheme has the following mandatory attributes:
+      <table>
+      <tr><th>Attribute</th><th>Description</th></tr>
+      <tr><td>name</td><td>Name of the color scheme.</td></tr>
+      <tr><td>pnfg</td><td>Protected Normal Foreground</td></tr>
+      <tr><td>pnbg</td><td>Protected Normal Background</td></tr>
+      <tr><td>pifg</td><td>Protected Intensified Foreground</td></tr>
+      <tr><td>pibg</td><td>Protected Intensified Background</td></tr>
+      <tr><td>phfg</td><td>Protected Hidden Foreground</td></tr>
+      <tr><td>phbg</td><td>Protected Hidden Background</td></tr>
+      
+      <tr><td>unfg</td><td>Unprotected Normal Foreground</td></tr>
+      <tr><td>unbg</td><td>Unprotected Normal Background</td></tr>
+      <tr><td>uifg</td><td>Unprotected Intensified Foreground</td></tr>
+      <tr><td>uibg</td><td>Unprotected Intensified Background</td></tr>
+      <tr><td>uhfg</td><td>Unprotected Hidden Foreground</td></tr>
+      <tr><td>uhbg</td><td>Unprotected Hidden Background</td></tr>
+      </table>
+     <p> 
+      Each color attribute must contain a HTML color code like <code>red</code> or <code>#282828</code>.
+      
+     <br>
+     The available fonts are also configured in the configuration file. Edit the <code>fonts</code> and add or remove <code>font</code> entries. 
+     This configuration option controls which fonts are available in the h3270-Preferences dialogue.
+   
+   <h2>Layout</h2>
+   By default the simple JSP page <code>webapp/simple-screen.jsp</code> is used to display the h3270 screen. <br>
+   The configuration option <code>style</code> allows to use a simple table-based layout:
+   <p>
+   <table border=1>
+    <tr><td colspan="3" align="center">include head bar from file <code>style/head.jsp</code></td></tr>
+    <tr><td width=20%>include navigation bar from file <code>style/navbar.jsp</code></td><td>display h3270 screen</td><td width=20%>display keypad</td></tr>
+   </table>
+   <p> 
+   The value can be set to a directory which must contain the files head.jsp and navbar.jsp. These files are included and displayed by h3270.
+   The distribution contains two examples of this feature:
+   <ul>
+   <li>h3270
+   <li>it-fws
+   </ul>
+   Uncomment <code>style</code> in the configuration file, set it to one of these values and look at the directories <code>webapp/h3270</code> and <code>webapp/it-fws</code>.
+   
     </td>
   </tr>
 </table>

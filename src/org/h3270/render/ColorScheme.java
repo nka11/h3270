@@ -32,6 +32,8 @@ import java.util.*;
  */
 public class ColorScheme {
 
+  private String name = null;
+
   private TextStyle protectedNormalStyle = null;
   private TextStyle protectedIntensifiedStyle = null;
   private TextStyle protectedHiddenStyle = null;
@@ -41,9 +43,47 @@ public class ColorScheme {
   private TextStyle unprotectedHiddenStyle = null;
   
   public ColorScheme() {
+    name = "White Background";
     protectedNormalStyle = new TextStyle ("black", "white");
     protectedIntensifiedStyle = new TextStyle ("blue", "white");
+    unprotectedNormalStyle = new TextStyle ("green", "lightgrey");
+    unprotectedHiddenStyle = new TextStyle ("red", "lightgrey");
     completeStyles();
+  }
+
+  /**
+   * Monster constructor.
+   */  
+  public ColorScheme (String name,
+                      String protectedNormalForeground,
+                      String protectedNormalBackground,
+                      String protectedIntensifiedForeground,
+                      String protectedIntensifiedBackground,
+                      String protectedHiddenForeground,
+                      String protectedHiddenBackground,
+                      String unprotectedNormalForeground,
+                      String unprotectedNormalBackground,
+                      String unprotectedIntensifiedForeground,
+                      String unprotectedIntensifiedBackground,
+                      String unprotectedHiddenForeground,
+                      String unprotectedHiddenBackground) {
+    this.name = name;
+    protectedNormalStyle = new TextStyle (protectedNormalForeground,
+                                          protectedNormalBackground);
+    protectedIntensifiedStyle = new TextStyle (protectedIntensifiedForeground,
+                                               protectedNormalBackground);
+    protectedHiddenStyle = new TextStyle (protectedHiddenForeground,
+                                          protectedHiddenBackground);
+    unprotectedNormalStyle = new TextStyle (unprotectedNormalForeground,
+                                            unprotectedNormalBackground);
+    unprotectedIntensifiedStyle = new TextStyle (unprotectedIntensifiedForeground,
+                                                 unprotectedIntensifiedBackground);
+    unprotectedHiddenStyle = new TextStyle (unprotectedHiddenForeground,
+                                            unprotectedHiddenBackground);
+  }
+  
+  public String getName() {
+    return this.name;
   }
   
   private void completeStyles() {

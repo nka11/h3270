@@ -57,8 +57,10 @@ public class TextRenderer implements Renderer {
         setChar (s, result, s.getWidth()-1, f.getStartY()-1, '{');
       else
         setChar (s, result, f.getStartX()-1, f.getStartY(), '{');
-      if (f.getStartX() + f.getWidth() < s.getWidth())
-        setChar (s, result, f.getStartX()+f.getWidth(), f.getStartY(), '}');
+      if (f.getEndX() == s.getWidth()-1)
+        setChar (s, result, 0, f.getEndY() + 1, '}');
+      else
+        setChar (s, result, f.getEndX() + 1, f.getEndY(), '}');
     }
     return result.toString();
   }

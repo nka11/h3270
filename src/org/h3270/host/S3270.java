@@ -61,7 +61,7 @@ public class S3270 implements Terminal {
         final String charSet = config.getChild("charset").getValue("bracket");
         final String model = config.getChild("model").getValue("3");
         final String additional = config.getChild("additional").getValue("");
-        
+
         try {
             File s3270_binary = new File(path_to_s3270_binary, "s3270");
 
@@ -72,9 +72,8 @@ public class S3270 implements Terminal {
                 cmd.append(" -charset ");
                 cmd.append(charSet);
             }
-            
-            if (additional.length() > 0)
-            {
+
+            if (additional.length() > 0) {
                 cmd.append(" ");
                 cmd.append(additional);
             }
@@ -128,15 +127,17 @@ public class S3270 implements Terminal {
             List lines = new ArrayList();
             while (true) {
                 String line = in.readLine();
-                if (line == null)
+                if (line == null) {
                     throw new EOFException("premature end of data");
-
+                }
+                    
                 if (logger.isDebugEnabled()) {
                     logger.debug("<--- " + line);
                 }
 
-                if (line.equals("ok"))
+                if (line.equals("ok")) {
                     break;
+                }
                 lines.add(line);
             }
             int size = lines.size();
@@ -160,8 +161,9 @@ public class S3270 implements Terminal {
         try {
             for (int i = 0; i < 50; i++) {
                 Result r = doCommand("");
-                if (r.status.startsWith("U F"))
+                if (r.status.startsWith("U F")) {
                     return;
+                }
                 Thread.sleep(100);
             }
         } catch (Exception e) {
@@ -177,11 +179,13 @@ public class S3270 implements Terminal {
             public void run() {
                 try {
                     Thread.sleep(1000);
-                    if (s3270 != null)
+                    if (s3270 != null) {
                         s3270.destroy();
+                    }
                 } catch (InterruptedException ex) {
-                    if (s3270 != null)
+                    if (s3270 != null) {
                         s3270.destroy();
+                    }
                 }
             }
         }).start();
@@ -216,8 +220,9 @@ public class S3270 implements Terminal {
             Result r = doCommand("readbuffer ascii");
             if (r.data.size() > 0) {
                 String firstLine = (String) r.data.get(0);
-                if (firstLine.startsWith("data: Keyboard locked"))
+                if (firstLine.startsWith("data: Keyboard locked")) {
                     continue;
+                }
             }
             screen.update(r.status, r.data);
             break;
@@ -241,10 +246,11 @@ public class S3270 implements Terminal {
                 String value = f.getValue();
                 for (int j = 0; j < value.length(); j++) {
                     char ch = value.charAt(j);
-                    if (ch == '\n')
+                    if (ch == '\n') {
                         doCommand("newline");
-                    else if (!Integer.toHexString(ch).equals("0"))
+                    } else if (!Integer.toHexString(ch).equals("0")) {
                         doCommand("key (0x" + Integer.toHexString(ch) + ")");
+                    }
                 }
             }
         }

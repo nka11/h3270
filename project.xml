@@ -1,0 +1,217 @@
+<project>
+    <pomVersion>3</pomVersion>
+    <artifactId>h3270</artifactId>
+    <name>h3270</name>
+    <groupId>h3270</groupId>
+    <currentVersion>1.2pre-1</currentVersion>
+    <organization>
+        <name>it-frameworksolutions GmbH</name>
+        <url>http://www.it-fws.de</url>
+        <logo>/images/it-fws-logo.png</logo>
+    </organization>
+    <inceptionYear>2003</inceptionYear>
+    <package>org.h3270</package>
+    <logo>/images/h3270-logo.png</logo>
+    <description>
+h3270 is a program that allows you to  use IBM 3270 hosts from within a web
+browser. It is different  from other, similar systems because of its highly
+configurable  layout engine that is based on regular expressions.
+  </description>
+    <shortDescription>h3270 Terminal Emulation</shortDescription>
+    <url>http://www.h3270.org</url>
+    <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=95795</issueTrackingUrl>
+    <siteAddress>www.h3270.org</siteAddress>
+    <siteDirectory>/www/maven.apache.org/</siteDirectory>
+    <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-turbine-maven/</distributionDirectory>
+    <repository>
+        <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/h3270:</connection>
+        <url>http://cvs.sourceforge.net/viewcvs.py/h3270/h3270/</url>
+    </repository>
+    <mailingLists>
+        <mailingList>
+            <name>Announcements of new h3270 releases</name>
+            <subscribe>
+http://lists.sourceforge.net/mailman/listinfo/h3270-announce
+      </subscribe>
+            <unsubscribe>
+http://lists.sourceforge.net/mailman/listinfo/h3270-announce
+      </unsubscribe>
+            <archive>
+http://sourceforge.net/mailarchive/forum.php?forum_id=41480
+      </archive>
+        </mailingList>
+        <mailingList>
+            <name>Forum for developers using h3270</name>
+            <subscribe>
+http://lists.sourceforge.net/mailman/listinfo/h3270-devel
+      </subscribe>
+            <unsubscribe>
+http://lists.sourceforge.net/mailman/listinfo/h3270-devel
+      </unsubscribe>
+            <archive>
+	http://sourceforge.net/mailarchive/forum.php?forum_id=37062
+      </archive>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <name>Andre Spiegel</name>
+            <id>spiegel</id>
+            <email>spiegel@users.sourceforge.net</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Alphonse Bendt</name>
+            <id>bendt</id>
+            <email>bendt@users.sourceforge.net</email>
+            <organization>it-frameworksolutions GmbH</organization>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Peter Belkner</name>
+            <id>pbelkner</id>
+            <email>pbelkner@users.sourceforge.net</email>
+            <organization>it-frameworksolutions GmbH</organization>
+            <roles/>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Paul Mattes</name>
+            <roles/>
+        </contributor>
+        <contributor>
+            <name>Berrin Ileri</name>
+            <organization>it-frameworksolutions GmbH</organization>
+            <roles/>
+        </contributor>
+    </contributors>
+    <dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.3</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/codec</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>httpunit</groupId>
+            <artifactId>httpunit</artifactId>
+            <version>1.5.4</version>
+            <type>jar</type>
+            <url>http://httpunit.sourceforge.net/</url>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>0.9.3</version>
+            <type>jar</type>
+            <url>http://www.apache.org/~andyc/neko/doc/html/</url>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>nekohtml</groupId>
+            <artifactId>nekohtmlXni</artifactId>
+            <version>0.9.3</version>
+            <type>jar</type>
+            <url>http://www.apache.org/~andyc/neko/doc/html/</url>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>rhino</groupId>
+            <artifactId>js</artifactId>
+            <version>1.5R4.1_1</version>
+            <type>jar</type>
+            <url>http://www.mozilla.org/rhino/</url>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>j2ee</groupId>
+            <artifactId>j2ee</artifactId>
+            <version>1.3</version>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>jregex</groupId>
+            <artifactId>jregex</artifactId>
+            <version>1.2_01</version>
+            <type>jar</type>
+            <url>http://jregex.sourceforge.net</url>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.6.2</version>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>2.6.2</version>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+            <version>2.6.2</version>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>resolver</artifactId>
+            <version>2.6.2</version>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+            <version>1.0.4</version>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+    </dependencies>
+    <build>
+        <nagEmailAddress>dev@maven.apache.org</nagEmailAddress>
+        <sourceDirectory>src</sourceDirectory>
+        <unitTestSourceDirectory>test/src</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/RepositoryTest.java</exclude>
+                <exclude>**/AllTest.java</exclude>
+                <exclude>**/Abstract*.java</exclude>
+                <exclude>**/FileScreenTest.java</exclude>
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>${basedir}/test/src</directory>
+                    <includes>
+                        <include>**/*.txt</include>
+                        <include>**/*.dump</include>
+                    </includes>
+                    <filtering>false</filtering>
+                </resource>
+                <resource>
+                    <directory>${basedir}/webapp</directory>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <filtering>false</filtering>
+                </resource>
+            </resources>
+        </unitTest>
+    </build>
+    <properties/>
+</project>

@@ -22,185 +22,196 @@ package org.h3270.render;
  */
 
 import org.h3270.host.Field;
-import java.util.*;
 
 /**
  * Represents a color scheme for an h3270 terminal.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
  * @version $Id$
  */
 public class ColorScheme {
 
-  private String name = null;
+    private String name = null;
 
-  private TextStyle protectedNormalStyle = null;
-  private TextStyle protectedIntensifiedStyle = null;
-  private TextStyle protectedHiddenStyle = null;
+    private TextStyle protectedNormalStyle = null;
 
-  private TextStyle unprotectedNormalStyle = null;
-  private TextStyle unprotectedIntensifiedStyle = null;
-  private TextStyle unprotectedHiddenStyle = null;
-  
-  public ColorScheme() {
-    name = "White Background";
-    protectedNormalStyle = new TextStyle ("black", "white");
-    protectedIntensifiedStyle = new TextStyle ("blue", "white");
-    unprotectedNormalStyle = new TextStyle ("green", "lightgrey");
-    unprotectedHiddenStyle = new TextStyle ("red", "lightgrey");
-    completeStyles();
-  }
+    private TextStyle protectedIntensifiedStyle = null;
 
-  /**
-   * Monster constructor.
-   */  
-  public ColorScheme (String name,
-                      String protectedNormalForeground,
-                      String protectedNormalBackground,
-                      String protectedIntensifiedForeground,
-                      String protectedIntensifiedBackground,
-                      String protectedHiddenForeground,
-                      String protectedHiddenBackground,
-                      String unprotectedNormalForeground,
-                      String unprotectedNormalBackground,
-                      String unprotectedIntensifiedForeground,
-                      String unprotectedIntensifiedBackground,
-                      String unprotectedHiddenForeground,
-                      String unprotectedHiddenBackground) {
-    this.name = name;
-    protectedNormalStyle = new TextStyle (protectedNormalForeground,
-                                          protectedNormalBackground);
-    protectedIntensifiedStyle = new TextStyle (protectedIntensifiedForeground,
-                                               protectedNormalBackground);
-    protectedHiddenStyle = new TextStyle (protectedHiddenForeground,
-                                          protectedHiddenBackground);
-    unprotectedNormalStyle = new TextStyle (unprotectedNormalForeground,
-                                            unprotectedNormalBackground);
-    unprotectedIntensifiedStyle = new TextStyle (unprotectedIntensifiedForeground,
-                                                 unprotectedIntensifiedBackground);
-    unprotectedHiddenStyle = new TextStyle (unprotectedHiddenForeground,
-                                            unprotectedHiddenBackground);
-  }
-  
-  public String getName() {
-    return this.name;
-  }
-  
-  private void completeStyles() {
-    if (protectedNormalStyle == null)
-      protectedNormalStyle = new TextStyle ("black", "white");
-    
-    if (protectedIntensifiedStyle == null)
-      protectedIntensifiedStyle = new TextStyle (protectedNormalStyle);
-    else
-      protectedIntensifiedStyle.completeFrom (protectedNormalStyle);
-      
-    if (protectedHiddenStyle == null) {
-      protectedHiddenStyle = new TextStyle (protectedNormalStyle);
-      protectedHiddenStyle.foregroundColor = 
-        protectedHiddenStyle.backgroundColor;
-    } else {
-      protectedHiddenStyle.completeFrom (protectedNormalStyle); 
-    }
+    private TextStyle protectedHiddenStyle = null;
 
-    if (unprotectedNormalStyle == null)
-      unprotectedNormalStyle = new TextStyle ("black", "lightgrey");
+    private TextStyle unprotectedNormalStyle = null;
 
-    if (unprotectedIntensifiedStyle == null)
-      unprotectedIntensifiedStyle = new TextStyle (unprotectedNormalStyle);
-    else
-      unprotectedIntensifiedStyle.completeFrom (unprotectedNormalStyle);
-      
-    if (unprotectedHiddenStyle == null)
-      unprotectedHiddenStyle = new TextStyle (unprotectedNormalStyle);
+    private TextStyle unprotectedIntensifiedStyle = null;
 
-  }
+    private TextStyle unprotectedHiddenStyle = null;
 
-  public TextStyle getFieldStyle (int fieldCode) {
-    if ((fieldCode & Field.ATTR_PROTECTED) != 0) { // protected
-      if ((fieldCode & Field.ATTR_DISP_1) == 0)
-        return protectedNormalStyle;
-      else if ((fieldCode & Field.ATTR_DISP_2) == 0)
-        return protectedIntensifiedStyle;
-      else
-        return protectedHiddenStyle;
-    } else {                                       // unprotected
-      if ((fieldCode & Field.ATTR_DISP_1) == 0)
-        return protectedNormalStyle;
-      else if ((fieldCode & Field.ATTR_DISP_2) == 0)
-        return protectedIntensifiedStyle;
-      else
-        return protectedHiddenStyle;
-    }
-  }
-
-  public String getFieldForegroundColor (int fieldCode) {
-    return getFieldStyle(fieldCode).foregroundColor;
-  }
-
-  public String toCSS() {
-    StringBuffer result = new StringBuffer();
-    result.append (".h3270-form {\n");
-    result.append (protectedNormalStyle.toCSS());
-    result.append ("}\n");
-
-    result.append (".h3270-intensified {\n");
-    result.append (protectedIntensifiedStyle.toCSS());
-    result.append ("}\n");
-    
-    result.append (".h3270-hidden {\n");
-    result.append (protectedHiddenStyle.toCSS());
-    result.append ("}\n");
-    
-    result.append (".h3270-input {\n");
-    result.append (unprotectedNormalStyle.toCSS());
-    result.append ("}\n");
-    
-    result.append (".h3270-input-intensified {\n");
-    result.append (unprotectedIntensifiedStyle.toCSS());
-    result.append ("}\n");
-
-    result.append (".h3270-input-hidden {\n");
-    result.append (unprotectedHiddenStyle.toCSS());
-    result.append ("}\n");
-    
-    return result.toString();
-  }
-
-  private class TextStyle {
-
-    public String foregroundColor;
-    public String backgroundColor;
-
-    public TextStyle() {}
-    
-    public TextStyle (TextStyle other) {
-      this.foregroundColor = other.foregroundColor; 
-      this.backgroundColor = other.backgroundColor;
-    }
-
-    public TextStyle (String fg, String bg) {
-      foregroundColor = fg;
-      backgroundColor = bg;
+    public ColorScheme() {
+        name = "White Background";
+        protectedNormalStyle = new TextStyle("black", "white");
+        protectedIntensifiedStyle = new TextStyle("blue", "white");
+        unprotectedNormalStyle = new TextStyle("green", "lightgrey");
+        unprotectedHiddenStyle = new TextStyle("red", "lightgrey");
+        completeStyles();
     }
     
-    public void completeFrom (TextStyle other) {
-      if (this.foregroundColor == null)
-        this.foregroundColor = other.foregroundColor;
-      if (this.backgroundColor == null)
-        this.backgroundColor = other.backgroundColor;
+    public boolean equals(Object o) {
+        if (o instanceof ColorScheme) {
+            ColorScheme other = (ColorScheme)o;
+            
+            return name.equals(other.name); // TODO Compare TextStyles?
+        } else {
+            return false;
+        } 
     }
-    
+
+    /**
+     * Monster constructor.
+     */
+    public ColorScheme(String name, String protectedNormalForeground,
+            String protectedNormalBackground,
+            String protectedIntensifiedForeground,
+            String protectedIntensifiedBackground,
+            String protectedHiddenForeground, String protectedHiddenBackground,
+            String unprotectedNormalForeground,
+            String unprotectedNormalBackground,
+            String unprotectedIntensifiedForeground,
+            String unprotectedIntensifiedBackground,
+            String unprotectedHiddenForeground,
+            String unprotectedHiddenBackground) {
+        this.name = name;
+        protectedNormalStyle = new TextStyle(protectedNormalForeground,
+                protectedNormalBackground);
+        protectedIntensifiedStyle = new TextStyle(
+                protectedIntensifiedForeground, protectedNormalBackground);
+        protectedHiddenStyle = new TextStyle(protectedHiddenForeground,
+                protectedHiddenBackground);
+        unprotectedNormalStyle = new TextStyle(unprotectedNormalForeground,
+                unprotectedNormalBackground);
+        unprotectedIntensifiedStyle = new TextStyle(
+                unprotectedIntensifiedForeground,
+                unprotectedIntensifiedBackground);
+        unprotectedHiddenStyle = new TextStyle(unprotectedHiddenForeground,
+                unprotectedHiddenBackground);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    private void completeStyles() {
+        if (protectedNormalStyle == null)
+            protectedNormalStyle = new TextStyle("black", "white");
+
+        if (protectedIntensifiedStyle == null)
+            protectedIntensifiedStyle = new TextStyle(protectedNormalStyle);
+        else
+            protectedIntensifiedStyle.completeFrom(protectedNormalStyle);
+
+        if (protectedHiddenStyle == null) {
+            protectedHiddenStyle = new TextStyle(protectedNormalStyle);
+            protectedHiddenStyle.foregroundColor = protectedHiddenStyle.backgroundColor;
+        } else {
+            protectedHiddenStyle.completeFrom(protectedNormalStyle);
+        }
+
+        if (unprotectedNormalStyle == null)
+            unprotectedNormalStyle = new TextStyle("black", "lightgrey");
+
+        if (unprotectedIntensifiedStyle == null)
+            unprotectedIntensifiedStyle = new TextStyle(unprotectedNormalStyle);
+        else
+            unprotectedIntensifiedStyle.completeFrom(unprotectedNormalStyle);
+
+        if (unprotectedHiddenStyle == null)
+            unprotectedHiddenStyle = new TextStyle(unprotectedNormalStyle);
+
+    }
+
+    public TextStyle getFieldStyle(int fieldCode) {
+        if ((fieldCode & Field.ATTR_PROTECTED) != 0) { // protected
+            if ((fieldCode & Field.ATTR_DISP_1) == 0)
+                return protectedNormalStyle;
+            else if ((fieldCode & Field.ATTR_DISP_2) == 0)
+                return protectedIntensifiedStyle;
+            else
+                return protectedHiddenStyle;
+        } else { // unprotected
+            if ((fieldCode & Field.ATTR_DISP_1) == 0)
+                return protectedNormalStyle;
+            else if ((fieldCode & Field.ATTR_DISP_2) == 0)
+                return protectedIntensifiedStyle;
+            else
+                return protectedHiddenStyle;
+        }
+    }
+
+    public String getFieldForegroundColor(int fieldCode) {
+        return getFieldStyle(fieldCode).foregroundColor;
+    }
+
     public String toCSS() {
-      StringBuffer result = new StringBuffer();
-      if (backgroundColor != null)
-        result.append ("  background-color:" + backgroundColor + ";\n");
-      if (foregroundColor != null)
-        result.append ("  color:" + foregroundColor + ";\n");
-      return result.toString();
+        StringBuffer result = new StringBuffer();
+        result.append(".h3270-form {\n");
+        result.append(protectedNormalStyle.toCSS());
+        result.append("}\n");
+
+        result.append(".h3270-intensified {\n");
+        result.append(protectedIntensifiedStyle.toCSS());
+        result.append("}\n");
+
+        result.append(".h3270-hidden {\n");
+        result.append(protectedHiddenStyle.toCSS());
+        result.append("}\n");
+
+        result.append(".h3270-input {\n");
+        result.append(unprotectedNormalStyle.toCSS());
+        result.append("}\n");
+
+        result.append(".h3270-input-intensified {\n");
+        result.append(unprotectedIntensifiedStyle.toCSS());
+        result.append("}\n");
+
+        result.append(".h3270-input-hidden {\n");
+        result.append(unprotectedHiddenStyle.toCSS());
+        result.append("}\n");
+
+        return result.toString();
     }
-  }
 
+    private class TextStyle {
 
+        public String foregroundColor;
+
+        public String backgroundColor;
+
+        public TextStyle() {
+        }
+
+        public TextStyle(TextStyle other) {
+            this.foregroundColor = other.foregroundColor;
+            this.backgroundColor = other.backgroundColor;
+        }
+
+        public TextStyle(String fg, String bg) {
+            foregroundColor = fg;
+            backgroundColor = bg;
+        }
+
+        public void completeFrom(TextStyle other) {
+            if (this.foregroundColor == null)
+                this.foregroundColor = other.foregroundColor;
+            if (this.backgroundColor == null)
+                this.backgroundColor = other.backgroundColor;
+        }
+
+        public String toCSS() {
+            StringBuffer result = new StringBuffer();
+            if (backgroundColor != null)
+                result.append("  background-color:" + backgroundColor + ";\n");
+            if (foregroundColor != null)
+                result.append("  color:" + foregroundColor + ";\n");
+            return result.toString();
+        }
+    }
 
 }

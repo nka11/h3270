@@ -26,8 +26,10 @@
       <% String screen = (String)request.getAttribute ("screen");
          if (screen != null)
            out.println (screen);
-         else
-           out.println ("not connected");
+         else {
+           out.println ("<b>h3270 version " + org.h3270.Version.value + "</b>");
+           out.println ("<br><br>not connected");
+         }
        %>
     </td>
     <% if (request.getAttribute("keypad") != null) { %>

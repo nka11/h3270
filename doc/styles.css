@@ -15,7 +15,15 @@ h3 {font-size: 13px;}
 
 .content { padding-top:30px;
            padding-right:30px; }
-           
+
+.codex { border-style: solid;
+         border-width: 1px;
+         padding: 10px;
+         font-family: monospace;
+         text-align: left;
+         font-size: 13px; }
+         
+.key { color: red; }
 
 a  {font-size: 13px; text-decoration: none; font-weight : bold;}
 a:link    {color:#ff8c00}

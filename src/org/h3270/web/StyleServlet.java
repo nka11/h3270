@@ -36,14 +36,14 @@ import org.apache.avalon.framework.configuration.Configuration;
 public class StyleServlet extends AbstractServlet {
 
     private String styleDirectory;
-    private final static String DEFAULT_STYLE = "it-fws";
+    private final static String DEFAULT_STYLE = "h3270";
     
     public void init() throws ServletException {
         super.init();  
         
         Configuration config = getConfiguration();
         
-        Configuration dirConfig = config.getChild("style-directory");
+        Configuration dirConfig = config.getChild("style");
         
         styleDirectory = dirConfig.getValue(DEFAULT_STYLE);
         

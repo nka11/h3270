@@ -57,6 +57,10 @@ public class Servlet extends AbstractServlet {
     private static final Pattern FUNCTION_KEY_PATTERN = Pattern
             .compile("p(f|a)([0-9]{1,2})");
 
+    private static final String STYLE_JSP = "/screen.jsp";
+
+    private static final String DEFAULT_JSP = "/simple-screen.jsp";
+
     private String execPath;
 
     private String templateDir;
@@ -67,17 +71,23 @@ public class Servlet extends AbstractServlet {
 
     private H3270Configuration h3270Configuration;
 
-    private String mainJSP = "/screen.jsp";
-    
+    private String mainJSP;
+
     public void init() throws ServletException {
         super.init();
-        
+
         Configuration config = getConfiguration();
-        
+
+        if (config.getChild("style") != null) {
+            mainJSP = STYLE_JSP;
+        } else {
+            mainJSP = DEFAULT_JSP;
+        }
+
         Configuration dirConfig = config.getChild("template-dir");
-        
+
         templateDir = getRealPath(dirConfig.getValue("/WEB-INF/templates"));
-        
+
         engine = new Engine(templateDir);
 
         execPath = config.getChild("exec-path").getValue(
@@ -112,8 +122,8 @@ public class Servlet extends AbstractServlet {
                 state.setScreen(basicRenderer.render(s));
             }
         }
-        getServletContext().getRequestDispatcher(mainJSP).forward(
-                request, response);
+        getServletContext().getRequestDispatcher(mainJSP).forward(request,
+                response);
     }
 
     protected void doPost(HttpServletRequest request,

@@ -21,10 +21,11 @@ package org.h3270.render;
  * MA 02111-1307 USA
  */
 
-import java.util.*;
+import java.util.Iterator;
 
-import org.h3270.host.*;
-import java.io.*;
+import org.h3270.host.Field;
+import org.h3270.host.InputField;
+import org.h3270.host.Screen;
 
 /**
  * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>

@@ -56,7 +56,7 @@ public abstract class AbstractScreen implements Screen {
     Field f = getFieldAt (x, y);
     if (f != null) {
       String value = f.getValue();
-      return value.charAt (x - f.getX()); 
+      return value.charAt (x - f.getStartX()); 
     } else {
       char[] line = buffer[y];
       if (x >= line.length)
@@ -73,8 +73,8 @@ public abstract class AbstractScreen implements Screen {
   public Field getFieldAt(int x, int y) {
     for (Iterator i = fields.iterator(); i.hasNext();) {
       Field f = (Field)i.next();
-      if (y == f.getY()) {
-        int fx = f.getX();
+      if (y == f.getStartY()) {
+        int fx = f.getStartX();
         if (x == fx || (x > fx && x < fx + f.getWidth()))
           return f;
       }

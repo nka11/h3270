@@ -1,7 +1,7 @@
 <%@ page import="java.util.*,org.h3270.web.*,org.h3270.render.*" %>
 
 <script>
-  function doSubmit() {
+  function doApply() {
 
     opener.document.control.colorscheme.value 
       = document.prefs.colorscheme.value;
@@ -12,6 +12,10 @@
       opener.document.control.render.value = "false";
     }
     opener.document.control.submit();
+  }
+
+  function doSubmit() {
+    doApply();
     window.close();
   }
 </script>
@@ -94,6 +98,8 @@ td { font-family:freesans,arial,helvetica; }
       <td colspan=3 align=right  style="padding-top:1em;">
         <input type=button name=prefs-ok value=OK
                onClick="doSubmit();">
+        <input type=button name=prefs-apply value=Apply
+               onClick="doApply();">
         <input type=submit name=prefs-cancel value=Cancel 
                onClick="window.close();">
       </td>

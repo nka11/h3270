@@ -1,3 +1,13 @@
+2004-07-26  Andre Spiegel  <spiegel@gnu.org>
+
+	* h3270 version 1.2-pre1 released.
+
+	The character-based terminal emulation has been improved.
+	It now supports colors and true multi-line fields.  The Web GUI
+	has a new "Preferences" dialog that allows you to choose between
+	several predefined color schemes, choose a font, and control
+	the regex rendering engine.
+
 2004-04-13  Andre Spiegel  <spiegel@gnu.org>
 
 	* h3270 version 1.1 released.

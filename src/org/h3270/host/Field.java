@@ -38,11 +38,6 @@ public class Field {
   public static final byte ATTR_DISP_1    = 0x08;
   public static final byte ATTR_DISP_2    = 0x04;
 
-  // pseudo attribute for fields that should not appear on the screen at all
-  public static final byte ATTR_NOT_RENDERED = ATTR_PROTECTED 
-                                             | ATTR_DISP_1
-                                             | ATTR_DISP_2;
-
   protected Screen screen;
 
   protected int startx;

@@ -53,6 +53,7 @@ public class TextRenderer implements Renderer {
     }
     for (Iterator i = s.getFields().iterator(); i.hasNext();) {
       Field f = (Field)i.next();
+      if (!(f instanceof InputField)) continue;
       if (f.getStartX() == 0)
         setChar (s, result, s.getWidth()-1, f.getStartY()-1, '{');
       else

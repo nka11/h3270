@@ -1,3 +1,20 @@
+2004-04-13  Andre Spiegel  <spiegel@gnu.org>
+
+	Handle the case when a field starts in the last column of
+	the previous line (as it happens on the standard z/OS login
+	screen...)
+
+2004-03-08  Andre Spiegel  <spiegel@gnu.org>
+
+	Changes to handle invisible fields, suggested by
+	Michael Ervin <symphyl@yahoo.com>.
+
+2003-12-16  Andre Spiegel  <spiegel@gnu.org>
+
+	Pass all function keys through to h3270.
+	Use HTML pre tag to render in text mode, not nbsp.
+	(Changes suggested by Eiffel.)
+	
 2003-12-11  Andre Spiegel  <spiegel@gnu.org>
 
 	* h3270 version 1.0 released.

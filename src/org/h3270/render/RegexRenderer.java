@@ -21,10 +21,16 @@ package org.h3270.render;
  * MA 02111-1307 USA
  */
 
-import java.io.*;
-import org.h3270.regex.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
-import org.h3270.host.*;
+import org.h3270.host.InputField;
+import org.h3270.host.S3270Screen;
+import org.h3270.host.Screen;
+import org.h3270.host.ScreenCharSequence;
+import org.h3270.regex.Matcher;
+import org.h3270.regex.Pattern;
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
@@ -36,7 +42,7 @@ public class RegexRenderer extends HtmlRenderer {
   private Pattern matchPattern  = null;
   private String  htmlTemplate  = null;
 
-  private static Pattern filePattern =
+  private static final Pattern FILE_PATTERN =
     Pattern.compile (  "^<!-- accept\\n(.*?)\\n^-->\\s+"
                      + "^<!-- match\\n(.*?)\\n^-->\\s+"
                      + "(.*)",
@@ -52,7 +58,7 @@ public class RegexRenderer extends HtmlRenderer {
         contents.append (line);
         contents.append ("\n");
       }
-      Matcher m = filePattern.matcher (contents);
+      Matcher m = FILE_PATTERN.matcher (contents);
       if (m.find()) {
         acceptPattern = Pattern.compile (m.group(1));
         matchPattern  = Pattern.compile (m.group(2), Pattern.DOTALL);
@@ -80,7 +86,7 @@ public class RegexRenderer extends HtmlRenderer {
    * because we don't want HTML character references (&#xxx;) to count
    * as placeholders!
    */
-  private static Pattern placeholderPattern =
+  private static final Pattern PLACEHOLDER_PATTERN =
     Pattern.compile ("(?<!&)#([0-9]+)(?:\\{(.*?)\\})?");
 
   public String render (Screen s) {
@@ -91,7 +97,7 @@ public class RegexRenderer extends HtmlRenderer {
       // in the template with matches from the matchPattern.
       StringBuffer result = new StringBuffer();
       result.append ("<form name=\"screen\" action=\"\" method=\"POST\">\n");
-      Matcher placeholder = placeholderPattern.matcher (htmlTemplate);
+      Matcher placeholder = PLACEHOLDER_PATTERN.matcher (htmlTemplate);
       int index = 0;
       while (placeholder.find()) {
         result.append (htmlTemplate.substring (index, placeholder.start()));

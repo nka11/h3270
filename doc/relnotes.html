@@ -42,6 +42,35 @@
     </td>
     <td class=content valign=top>
       <h1>Release Notes</h1>
+      <font color="#ff8c00"><b>h3270 version 1.2-pre1</b></font> is a
+      pre-release of the upcoming version 1.2.
+      <p>
+      The most important change is that the character-based emulation
+      mode now supports <b>colors and multi-line input fields</b>.
+      The color model is implied by the basic field attributes: There
+      can be a different color for protected/unprotected, and
+      normal/intensified/hidden fields, leading to six different
+      combinations.  There is a new Preference dialog that allows you
+      to choose between different color schemes.  At the moment, we
+      have defined four of them (<i>White Background</i>
+      (default), <i>Dark Background</i>, <i>Amber</i>, and <i>Black
+      and White</i>).  You could also define your own color schemes,
+      but that has to be done in the code for now
+      (see <code>org.h3270.render.Configuration</code>).
+      <p>
+      Since the data model inside h3270 changed quite a bit for these
+      new features, we're making it available as a pre-release first,
+      to give people of chance of checking it out and report any
+      problems back to us.
+      <p>
+      Apart from these changes, a few important bugs were fixed.  The
+      most critical one of those was a problem under Internet
+      Explorer, which would send two identical requests in a row when
+      ENTER was pressed.  Depending on the timing of the connection,
+      this could cause h3270 to throw
+      an <code>IllegalArgumentException</code>.  This has now been
+      fixed.
+      <p>
       <font color="#ff8c00"><b>h3270 version 1.1</b></font> is a
       maintenance release that contains the following new features:
       <ul>

@@ -16,6 +16,9 @@ import java.lang.reflect.Constructor;
  */
 public abstract class Pattern implements java.io.Serializable {
 
+  /** When this is true, we use JRegex even if JDK regexes are available. */
+  private static boolean useJRegex = false; 
+
   public static final int UNIX_LINES = 0x01;
   public static final int CASE_INSENSITIVE = 0x02;
   public static final int COMMENTS = 0x04;
@@ -55,6 +58,17 @@ public abstract class Pattern implements java.io.Serializable {
   }
 
   /**
+   * Set whether we should use JRegex rather than JDK Regex.
+   */
+  public static void useJRegex (boolean flag) {
+    if (flag != useJRegex) {
+      useJRegex = flag;
+      patternConstructor = null;
+      patternClass = null;
+    }       
+  }
+
+  /**
    * Returns the constructor for (String, int) for the class that is
    * returned by getPatternClass().  Using this constructor to create a
    * Pattern object is a JDK-independent way to use regular expressions.
@@ -84,7 +98,7 @@ public abstract class Pattern implements java.io.Serializable {
   private static Class getPatternClass() {
     if (patternClass == null) {
       String version = System.getProperty("java.version");
-      if (version.startsWith("1.2") || version.startsWith("1.3"))
+      if (useJRegex || version.startsWith("1.2") || version.startsWith("1.3"))
         patternClass = loadClass ("org.h3270.regex.JRegexPattern");
       else
         patternClass = loadClass ("org.h3270.regex.JDKPattern");

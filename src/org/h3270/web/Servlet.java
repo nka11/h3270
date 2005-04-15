@@ -61,6 +61,7 @@ public class Servlet extends AbstractServlet {
   private static final String STYLE_JSP = "/screen.jsp";
   private static final String DEFAULT_JSP = "/simple-screen.jsp";
 
+  private String targetHost;
   private String execPath;
   private String templateDir;
 
@@ -86,6 +87,7 @@ public class Servlet extends AbstractServlet {
       logger.info("Set main jsp to default");
     }
 
+    targetHost = config.getChild("target-host").getValue(null);
     Configuration dirConfig = config.getChild("template-dir");
     templateDir = getRealPath(dirConfig.getValue("/WEB-INF/templates"));
     engine = new Engine(templateDir);
@@ -140,7 +142,9 @@ public class Servlet extends AbstractServlet {
       engine = new Engine(templateDir);
 
     if (request.getParameter("connect") != null) {
-      String hostname = request.getParameter("hostname");
+      String hostname = (targetHost == null)
+                        ? request.getParameter("hostname")
+                        : targetHost;
 
       // TODO message to user if no hostname specified
       if (!hostname.equals("")) {
@@ -303,6 +307,13 @@ public class Servlet extends AbstractServlet {
       session = request.getSession();
     }
 
+    if (this.targetHost != null) {
+      String targetHost = (String)session.getAttribute("targetHost");
+      if (targetHost == null) {
+        session.setAttribute ("targetHost", this.targetHost);
+      }
+    }
+    
     SessionState result = (SessionState) session.getAttribute("sessionState");
     if (result == null) {
       String savedState = getSavedSessionState(request);

@@ -27,6 +27,12 @@
         <model>3</model>
       </s3270-options>
   -->
+
+  <!-- Use this to let users connect only to a single host -->
+
+  <!--
+      <target-host>your.host.here</target-host>
+  -->
         
   <configuration>
     <!-- list of available fonts -->

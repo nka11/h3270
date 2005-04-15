@@ -4,10 +4,17 @@
                   action="<%= response.encodeURL("servlet") %>"
                   method=POST>
             <td width=30% align=left>
-              <% if (!sessionState.isConnected()) { %>
-                 Host:&nbsp;<input type=text
-                                   style="background-color:lightgrey;"
-                                   name=hostname>
+              <% if (!sessionState.isConnected()) {
+                   String targetHost = 
+                     (String)session.getAttribute("targetHost");
+                   if (targetHost == null) { %>
+                     Host:&nbsp;<input type=text
+                                       style="background-color:lightgrey;"
+                                       name=hostname>
+                 <% } else { %>
+                     Host: <b><%= targetHost %></b>
+                     <input type=hidden value=<%= targetHost %> name=hostname>
+                 <% } %>
             </td>
             <td width=70% align=right>
                  <input type=submit name=connect value="Connect">

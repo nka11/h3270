@@ -17,6 +17,7 @@
       find . -name CVS -type d | xargs rm -rf
       find . -name "*~" | xargs rm
       find . -name ".?*" | xargs rm -rf
+      rm h3270.war
       rm release-checklist.txt
       rm src/org/h3270/test/*.dump
       rm src/org/h3270/test/*.txt

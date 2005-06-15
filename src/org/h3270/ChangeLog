@@ -1,3 +1,21 @@
+2005-06-15  Andre Spiegel  <spiegel@gnu.org>
+
+	* Version.java: Version 1.2.3 released.
+
+2005-04-15  Andre Spiegel  <spiegel@gnu.org>
+
+	* web/Servlet.java (targetHost): New field.
+	(init): Initialize it from the configuration.
+	(getSessionState): Put a "targetHost" attribute into the
+	session if a target-host has been defined in the
+	configuration.
+	(doPost): If a target-host has been defined, don't
+	connect to anything else.
+
+2004-12-11  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270.java (c'tor): Log s3270 command at info level, not debug.
+
 2004-12-01  Andre Spiegel  <spiegel@gnu.org>
 
 	* Version.java: Version 1.2.2 released.

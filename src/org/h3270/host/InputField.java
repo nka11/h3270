@@ -121,7 +121,7 @@ public class InputField extends Field {
   public static String trim (String value) {
     Matcher m = TRIM_PATTERN.matcher (value);
     if (m.matches()) 
-      return m.group (1);
+      return m.group(1).replace((char)0, ' ');
     else
       return value;
   }

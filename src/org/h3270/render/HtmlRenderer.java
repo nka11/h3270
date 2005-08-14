@@ -131,13 +131,13 @@ public class HtmlRenderer implements Renderer {
       createHtmlInput (result, f, f.getValue(0), 0, 
                        f.getScreen().getWidth() - f.getStartX());
       result.append ("\n");
-      for (int i=1; i < f.getHeight() - 2; i++) {
+      for (int i=1; i < f.getHeight() - 1; i++) {
         createHtmlInput (result, f, f.getValue(i), i, f.getScreen().getWidth());
         result.append ("\n");
       }
       int lastLine = f.getHeight() - 1;
       createHtmlInput (result, f, f.getValue(lastLine), lastLine,
-                       f.getEndX());
+                       f.getEndX()+1);
     }
   }
 

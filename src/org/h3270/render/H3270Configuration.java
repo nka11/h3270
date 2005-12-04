@@ -1,5 +1,6 @@
 package org.h3270.render;
 
+import java.util.*;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +25,82 @@ import java.util.Map;
  * MA 02111-1307 USA
  */
 
+import java.io.*;
+import org.apache.avalon.framework.configuration.*;
+
 /**
  * @author Alphonse Bendt
  * @version $Id$
  */
-public interface H3270Configuration {
-                
-  public abstract boolean getDefaultUseRenderer();
-  public abstract String getDefaultFontname();
-  public abstract String getDefaultColorscheme();
-  public abstract List getColorSchemes();
-  public abstract ColorScheme getColorScheme(String name);
-  public abstract Map getValidFonts();
+public class H3270Configuration 
+  extends org.apache.avalon.framework.configuration.DefaultConfiguration {
 
+  private final List colorSchemes = new ArrayList();
+  private final Map validFonts = new HashMap();
+
+  private H3270Configuration (Configuration data) throws ConfigurationException {
+    super(data);
+    createColorSchemes(data.getChild("colorschemes"));
+    createValidFonts(data.getChild("fonts"));
+  }
+  
+  public List getColorSchemes() {
+    return colorSchemes;
+  }
+  
+  public ColorScheme getColorScheme (String name) {
+    for (Iterator i = colorSchemes.iterator(); i.hasNext();) {
+      ColorScheme cs = (ColorScheme)i.next();
+      if (cs.getName().equals(name))
+        return cs;
+    }
+    return null;
+  }
+
+  public Map getValidFonts() {
+    return validFonts;
+  }
+
+  private void createColorSchemes(Configuration config) throws ConfigurationException {
+    Configuration[] cs = config.getChildren();
+    for (int x = 0; x < cs.length; ++x) {
+      ColorScheme scheme = new ColorScheme (
+        cs[x].getAttribute("name"),
+        cs[x].getAttribute("pnfg"),
+        cs[x].getAttribute("pnbg"),
+        cs[x].getAttribute("pifg"),
+        cs[x].getAttribute("pibg"),
+        cs[x].getAttribute("phfg"),
+        cs[x].getAttribute("phbg"),
+        cs[x].getAttribute("unfg"),
+        cs[x].getAttribute("unbg"),
+        cs[x].getAttribute("uifg"),
+        cs[x].getAttribute("uibg"),
+        cs[x].getAttribute("uhfg"),
+        cs[x].getAttribute("uhbg")
+      );
+      colorSchemes.add(scheme);
+    }
+  }
+  
+  private void createValidFonts(Configuration config)
+    throws ConfigurationException {
+    Configuration[] fonts = config.getChildren();
+    for (int x = 0; x < fonts.length; ++x) {
+      String fontName = fonts[x].getAttribute("name");
+      String fontDescription = fonts[x].getAttribute("description", fontName);
+      validFonts.put(fontName, fontDescription);
+    }
+  }
+
+  public static H3270Configuration create (String filename) {
+    try {
+      DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+      Configuration data = builder.buildFromFile(new File(filename));
+      return new H3270Configuration(data);
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+  
 }

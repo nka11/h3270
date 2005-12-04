@@ -46,4 +46,7 @@ public interface Terminal {
   public abstract void reset();
   public abstract void sysReq();
   public abstract void attn();
+  
+  public abstract void doKey(String key);
+  
 }

@@ -29,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
  * MA 02111-1307 USA
  */
 
+import org.h3270.render.H3270Configuration;
+
 /**
  * @author Alphonse Bendt
  * @version $Id$
@@ -40,7 +42,7 @@ public abstract class AbstractServlet extends HttpServlet {
   private static final String FILE_CONFIGURATION = "file.configuration";
   private static final String FILE_CONFIGURATION_DEFAULT = "/WEB-INF/h3270-config.xml";
 
-  private Configuration configuration;
+  private H3270Configuration configuration;
 
   public void init() throws ServletException {
     super.init();
@@ -49,20 +51,10 @@ public abstract class AbstractServlet extends HttpServlet {
     if (configFile == null) {
       configFile = FILE_CONFIGURATION_DEFAULT;
     }
-
-    DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
-
-    try {
-      configuration = configurationBuilder.build(getRealPath(configFile));
-    } catch (Exception e) {
-      logger.fatal("Please check that the Configuration file " + configFile
-          + " exists and is valid", e);
-
-      throw new ServletException("Error reading Configuration " + configFile, e);
-    }
+    configuration = H3270Configuration.create (getRealPath(configFile));
   }
 
-  protected Configuration getConfiguration() {
+  protected H3270Configuration getConfiguration() {
     return configuration;
   }
 

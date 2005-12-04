@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.h3270.regex.*;
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
@@ -54,39 +56,31 @@ public class S3270 implements Terminal {
 
   private S3270Screen screen = null;
 
-  public S3270 (String hostname, String path_to_s3270_binary, 
-                Configuration config) {
-    final String charSet = config.getChild("charset").getValue("bracket");
-    final String model = config.getChild("model").getValue("3");
-    final String additional = config.getChild("additional").getValue("");
-
+  public S3270 (String hostname, Configuration configuration) {
+    String execPath = configuration.getChild("exec-path").getValue("/usr/local/bin");
+    Configuration s3270_options = configuration.getChild("s3270-options");
+    String charset    = s3270_options.getChild("charset").getValue("bracket");
+    String model      = s3270_options.getChild("model").getValue("3");
+    String additional = s3270_options.getChild("additional").getValue("");
+      
     try {
-      File s3270_binary = new File(path_to_s3270_binary, "s3270");
-
+      File s3270_binary = new File(execPath, "s3270");
       StringBuffer cmd = new StringBuffer(s3270_binary.toString());
-      cmd.append(" -model ");
-      cmd.append(model);
-      if (!charSet.equals("bracket")) {
-        cmd.append(" -charset ");
-        cmd.append(charSet);
-      }
-
-      if (additional.length() > 0) {
-        cmd.append(" ");
-        cmd.append(additional);
-      }
-
-      cmd.append(" ");
-      cmd.append(hostname);
+      cmd.append(" -model " + model);
+      if (!charset.equals("bracket")) cmd.append(" -charset " + charset);
+      if (additional.length() > 0)    cmd.append(" " + additional);
+      cmd.append(" " + hostname);
 
       logger.info("Starting s3270: " + cmd.toString());
 
       s3270 = Runtime.getRuntime().exec(cmd.toString());
 
-      out = new PrintWriter(new OutputStreamWriter(s3270.getOutputStream(),
-          "ISO-8859-1"));
-      in = new BufferedReader(new InputStreamReader(s3270.getInputStream(),
-          "ISO-8859-1"));
+      out = new PrintWriter (
+        new OutputStreamWriter (s3270.getOutputStream(), "ISO-8859-1")
+      );
+      in = new BufferedReader (
+        new InputStreamReader (s3270.getInputStream(), "ISO-8859-1")
+      );
       this.hostname = hostname;
       screen = new S3270Screen();
       waitFormat();
@@ -303,4 +297,36 @@ public class S3270 implements Terminal {
   public void attn() {
     doCommand("attn");
   }
+  
+  private static final Pattern FUNCTION_KEY_PATTERN =
+    Pattern.compile("p(f|a)([0-9]{1,2})");
+  
+  public void doKey (String key) {
+    Matcher m = FUNCTION_KEY_PATTERN.matcher(key);
+    if (m.matches()) { // function key
+      int number = Integer.parseInt(m.group(2));
+      if (m.group(1).equals("f"))
+        this.pf(number);
+      else
+        this.pa(number);
+    } else if (key.equals("")) {
+      // use ENTER as a default action if the actual key got lost
+      this.enter();
+    } else { // other key: find a parameterless method of the same name
+      try {
+        Class c = this.getClass();
+        Method method = c.getMethod(key, new Class[] {});
+        method.invoke(this, new Object[] {});
+      } catch (NoSuchMethodException ex) {
+        throw new RuntimeException("no s3270 method for key: " + key);
+      } catch (IllegalAccessException ex) {
+        throw new RuntimeException("illegal s3270 method access for key: "
+            + key);
+      } catch (InvocationTargetException ex) {
+        throw new RuntimeException("error invoking s3270 for key: " + key
+            + ", exception: " + ex.getTargetException());
+      }
+    }
+  }
+
 }

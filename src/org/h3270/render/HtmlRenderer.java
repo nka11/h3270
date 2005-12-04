@@ -25,11 +25,34 @@ import java.util.*;
 import org.h3270.host.*;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
  * @version $Id$
  */
 public class HtmlRenderer implements Renderer {
 
+  /**
+   * If set, contains the URL to be placed into the screen form's ACTION
+   * field.  This is used when rendering for a Portlet.
+   */
+  private String actionURL = "";
+  
+  /**
+   * Constructs an HtmlRenderer with an empty actionURL, suitable
+   * for rendering by a Servlet.  When rendering for a Portlet, use
+   * the constructor that takes an actionURL parameter.
+   */
+  public HtmlRenderer() {
+  }
+
+  /**
+   * Constructs an HtmlRenderer with a given actionURL, suitable for rendering
+   * by a Portlet.
+   * @param actionURL the URL to be used in the screen form's ACTION field
+   */
+  public HtmlRenderer (String actionURL) {
+    this.actionURL = actionURL;
+  }
+  
   public boolean canRender (Screen s) {
     return true;
   }
@@ -41,7 +64,7 @@ public class HtmlRenderer implements Renderer {
   public String render (Screen screen) {
     StringBuffer result = new StringBuffer();
     
-    result.append ("<form name=\"screen\" action=\"\" method=\"POST\" class=\"h3270-form\">\n");
+    result.append ("<form name=\"screen\" action=\"" + actionURL + "\" method=\"POST\" class=\"h3270-form\">\n");
     if (screen.isFormatted())
       renderFormatted (screen, result);
     else

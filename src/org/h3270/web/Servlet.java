@@ -23,8 +23,6 @@ package org.h3270.web;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -44,7 +42,6 @@ import org.h3270.host.Screen;
 import org.h3270.host.Terminal;
 import org.h3270.regex.Matcher;
 import org.h3270.regex.Pattern;
-import org.h3270.render.AvalonConfiguration;
 import org.h3270.render.Engine;
 import org.h3270.render.H3270Configuration;
 import org.h3270.render.HtmlRenderer;
@@ -68,16 +65,15 @@ public class Servlet extends AbstractServlet {
   private final HtmlRenderer basicRenderer = new HtmlRenderer();
   private Engine engine = null;
 
-  private H3270Configuration h3270Configuration;
-  private Configuration s3270Config;
+  private H3270Configuration configuration;
 
   private String mainJSP = DEFAULT_JSP;
 
   public void init() throws ServletException {
     super.init();
 
-    Configuration config = getConfiguration();
-    Configuration styleConfig = config.getChild("style");
+    configuration = getConfiguration();
+    Configuration styleConfig = configuration.getChild("style");
 
     try {
       if (styleConfig.getValue() != null) {
@@ -87,28 +83,17 @@ public class Servlet extends AbstractServlet {
       logger.info("Set main jsp to default");
     }
 
-    targetHost = config.getChild("target-host").getValue(null);
-    Configuration dirConfig = config.getChild("template-dir");
+    targetHost = configuration.getChild("target-host").getValue(null);
+    Configuration dirConfig = configuration.getChild("template-dir");
     templateDir = getRealPath(dirConfig.getValue("/WEB-INF/templates"));
     engine = new Engine(templateDir);
 
-    execPath = config.getChild("exec-path").getValue(
-        getRealPath("/WEB-INF/bin"));
+    execPath = configuration.getChild("exec-path").getValue("/usr/local/bin");
 
     if (logger.isDebugEnabled()) {
       logger.debug("Using main JSP: " + mainJSP);
       logger.debug("Set template-dir to " + templateDir);
       logger.debug("Set exec-path to " + execPath);
-    }
-
-    s3270Config = config.getChild("s3270-options");
-
-    try {
-      h3270Configuration = new AvalonConfiguration(config
-          .getChild("configuration"));
-    } catch (ConfigurationException e) {
-      logger.fatal("Could not access configuration", e);
-      throw new ServletException(e);
     }
   }
 
@@ -157,7 +142,7 @@ public class Servlet extends AbstractServlet {
                                       hostname.substring(5)).toString();
           state.terminal = new FileTerminal(new URL("file:" + filename));
         } else {
-          state.terminal = new S3270(hostname, execPath, s3270Config);
+          state.terminal = new S3270(hostname, configuration);
         }
 
         state.setUseKeypad(false);
@@ -180,7 +165,7 @@ public class Servlet extends AbstractServlet {
       submitScreen(request);
       String key = request.getParameter("key");
       if (key != null)
-        performKeyAction(state.terminal, key);
+        state.terminal.doKey(key);
     }
     doGet(request, response);
   }
@@ -225,37 +210,6 @@ public class Servlet extends AbstractServlet {
       cookie.setMaxAge(Integer.MAX_VALUE);
 
       response.addCookie(cookie);
-    }
-  }
-
-  /**
-   * Perform the s3270 action that is specified by the given key name.
-   */
-  private void performKeyAction(Terminal terminal, String key) {
-    Matcher m = FUNCTION_KEY_PATTERN.matcher(key);
-    if (m.matches()) { // function key
-      int number = Integer.parseInt(m.group(2));
-      if (m.group(1).equals("f"))
-        terminal.pf(number);
-      else
-        terminal.pa(number);
-    } else if (key.equals("")) {
-      // use ENTER as a default action if the actual key got lost
-      terminal.enter();
-    } else { // other key: find a parameterless method of the same name
-      try {
-        Class c = terminal.getClass();
-        Method method = c.getMethod(key, new Class[] {});
-        method.invoke(terminal, new Object[] {});
-      } catch (NoSuchMethodException ex) {
-        throw new RuntimeException("no s3270 method for key: " + key);
-      } catch (IllegalAccessException ex) {
-        throw new RuntimeException("illegal s3270 method access for key: "
-            + key);
-      } catch (InvocationTargetException ex) {
-        throw new RuntimeException("error invoking s3270 for key: " + key
-            + ", exception: " + ex.getTargetException());
-      }
     }
   }
 
@@ -318,7 +272,7 @@ public class Servlet extends AbstractServlet {
     if (result == null) {
       String savedState = getSavedSessionState(request);
 
-      result = new SessionState(h3270Configuration, savedState);
+      result = new SessionState(configuration, savedState);
       session.setAttribute("sessionState", result);
     }
     return result;

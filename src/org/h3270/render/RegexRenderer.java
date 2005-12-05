@@ -36,7 +36,7 @@ import org.h3270.regex.Pattern;
  * @version $Id$
  */
 public class RegexRenderer extends HtmlRenderer {
-
+  
   private Pattern acceptPattern = null;
   private Pattern matchPattern  = null;
   private String  htmlTemplate  = null;
@@ -88,14 +88,14 @@ public class RegexRenderer extends HtmlRenderer {
   private static final Pattern PLACEHOLDER_PATTERN =
     Pattern.compile ("(?<!&)#([0-9]+)(?:\\{(.*?)\\})?");
 
-  public String render (Screen s) {
+  public String render (Screen s, String actionURL) {
     ScreenCharSequence screenSeq = new ScreenCharSequence(s);
     Matcher m = matchPattern.matcher(screenSeq.toString());
     if (m.find()) {
       // Generate HTML page from template, replacing placeholders
       // in the template with matches from the matchPattern.
       StringBuffer result = new StringBuffer();
-      result.append ("<form name=\"screen\" action=\"\" method=\"POST\">\n");
+      result.append ("<form name=\"screen\" action=\"" + actionURL + "\" method=\"POST\">\n");
       Matcher placeholder = PLACEHOLDER_PATTERN.matcher (htmlTemplate);
       int index = 0;
       while (placeholder.find()) {
@@ -120,6 +120,10 @@ public class RegexRenderer extends HtmlRenderer {
       return result.toString();
     } else
       return "no match";
+  }
+  
+  public String render (Screen s) {
+    return this.render (s, "");
   }
   
   private Filter getFilter (String name) {

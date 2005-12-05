@@ -68,13 +68,17 @@ public class Engine implements Renderer {
   }
 
   public String render (Screen s) {
-    String screenText = new TextRenderer().render(s);
+    return this.render (s, "");
+  }
+  
+  public String render (Screen s, String actionURL) {
+    String screenText = new TextRenderer().render(s, actionURL);
     for (Iterator i = renderers.iterator(); i.hasNext();) {
       Renderer r = (Renderer)i.next();
       if (r.canRender (screenText))
-        return r.render(s);
+        return r.render(s, actionURL);
     }
-    return fallback.render(s);
+    return fallback.render(s, actionURL);
   }
 
   private Renderer getRenderer (Screen s) {

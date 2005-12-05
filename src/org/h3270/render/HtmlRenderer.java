@@ -30,29 +30,6 @@ import org.h3270.host.*;
  */
 public class HtmlRenderer implements Renderer {
 
-  /**
-   * If set, contains the URL to be placed into the screen form's ACTION
-   * field.  This is used when rendering for a Portlet.
-   */
-  private String actionURL = "";
-  
-  /**
-   * Constructs an HtmlRenderer with an empty actionURL, suitable
-   * for rendering by a Servlet.  When rendering for a Portlet, use
-   * the constructor that takes an actionURL parameter.
-   */
-  public HtmlRenderer() {
-  }
-
-  /**
-   * Constructs an HtmlRenderer with a given actionURL, suitable for rendering
-   * by a Portlet.
-   * @param actionURL the URL to be used in the screen form's ACTION field
-   */
-  public HtmlRenderer (String actionURL) {
-    this.actionURL = actionURL;
-  }
-  
   public boolean canRender (Screen s) {
     return true;
   }
@@ -61,7 +38,7 @@ public class HtmlRenderer implements Renderer {
     return true;
   }
 
-  public String render (Screen screen) {
+  public String render (Screen screen, String actionURL) {
     StringBuffer result = new StringBuffer();
     
     result.append ("<form name=\"screen\" action=\"" + actionURL + "\" method=\"POST\" class=\"h3270-form\">\n");
@@ -77,6 +54,10 @@ public class HtmlRenderer implements Renderer {
     return result.toString();
   }
 
+  public String render (Screen screen) {
+    return this.render (screen, "");
+  }
+  
   /**
    * If screen has a focused field, append Javascript code to buffer 
    * so that this field gets the focus in the client browser.

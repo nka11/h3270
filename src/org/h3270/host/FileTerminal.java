@@ -93,6 +93,10 @@ public class FileTerminal implements Terminal {
 
   }
 
+  public void newline() {
+    
+  }
+  
   public void eraseEOF() {
     // TODO Auto-generated method stub
 

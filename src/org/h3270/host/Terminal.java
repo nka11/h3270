@@ -40,6 +40,7 @@ public interface Terminal {
 
   public abstract void clear();
   public abstract void enter();
+  public abstract void newline();
   public abstract void eraseEOF();
   public abstract void pa(int number);
   public abstract void pf(int number);
@@ -47,6 +48,10 @@ public interface Terminal {
   public abstract void sysReq();
   public abstract void attn();
   
+  /**
+   * Invokes a key, based on its textual representation.
+   * @throws IllegalArgumentException when there is no such key defined
+   */
   public abstract void doKey(String key);
   
 }

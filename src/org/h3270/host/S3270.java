@@ -271,6 +271,11 @@ public class S3270 implements Terminal {
     doCommand("enter");
     waitFormat();
   }
+  
+  public void newline() {
+    doCommand("newline");
+    waitFormat();
+  }
 
   public void eraseEOF() {
     doCommand("eraseEOF");
@@ -318,7 +323,7 @@ public class S3270 implements Terminal {
         Method method = c.getMethod(key, new Class[] {});
         method.invoke(this, new Object[] {});
       } catch (NoSuchMethodException ex) {
-        throw new RuntimeException("no s3270 method for key: " + key);
+        throw new IllegalArgumentException("no such key: " + key);
       } catch (IllegalAccessException ex) {
         throw new RuntimeException("illegal s3270 method access for key: "
             + key);

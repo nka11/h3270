@@ -4,9 +4,7 @@
   <!-- path used to locate the s3270 executable -->
   <!-- defaults to WEB-INF/bin                  -->
         
-  <!--
-      <exec-path>/usr/local/bin</exec-path> 
-  -->
+  <exec-path>/home/spiegel/projects/h3270/cvs/webapp/WEB-INF/bin</exec-path> 
         
   <!-- path to style directory                               -->
   <!-- it is assumed that the directory contains the files   -->
@@ -15,7 +13,6 @@
   <!-- the contents of webapp/it-fws                         -->
   <!-- try "h3270" as a different example                    -->
   <!-- defaults to NO style                                  -->
-
 
   <!--
       <style>it-fws</style> 
@@ -33,39 +30,38 @@
   <!--
       <target-host>your.host.here</target-host>
   -->
-        
-  <configuration>
-    <!-- list of available fonts -->
-    <fonts default="courier">
-      <font name="courier" description="Courier" />
-      <font name="freemono" description="Free Mono" />
-      <font name="terminal" description="Terminal" />
-      <font name="couriernew" description="Courier New" />
-      <font name="monospace" description="Monospace" />
-    </fonts>
+
+  <!-- list of available fonts -->
+  <fonts default="courier">
+    <font name="courier" description="Courier" />
+    <font name="freemono" description="Free Mono" />
+    <font name="terminal" description="Terminal" />
+    <font name="couriernew" description="Courier New" />
+    <font name="monospace" description="Monospace" />
+  </fonts>
                 
-    <!-- list of available colorschemes                       -->
-    <!-- {p|u}: protected/unprotected                         -->
-    <!-- {n|i|h}: normal/intensified/hidden                   -->
-    <!-- {fg|bg}: foreground/background                       -->
-    <!-- example: pifg means protected intensified foreground -->
-    <colorschemes default="White Background">
-      <scheme name="White Background" pnfg="black" pnbg="white" 
-              pifg="blue" pibg="white" phfg="white" phbg="white" unfg="green" 
-              unbg="lightgrey" uifg="red" uibg="lightgrey" uhfg="red" 
-              uhbg="lightgrey" />
-      <scheme name="Dark Background" pnfg="cyan" pnbg="black" 
-              pifg="white" pibg="black" phfg="black" phbg="black" unfg="lime" 
-              unbg="#282828" uifg="red" uibg="#282828" uhfg="red" 
-              uhbg="#282828" />
-      <scheme name="Amber" pnfg="orange" pnbg="black" pifg="white" 
-              pibg="black" phfg="black" phbg="black" unfg="white" 
-              unbg="#282828" uifg="red" uibg="#282828" uhfg="orange" 
-              uhbg="#282828" />
-      <scheme name="Black and White" pnfg="black" pnbg="white" 
-              pifg="black" pibg="white" phfg="white" phbg="white" 
-              unfg="black" unbg="lightgrey" uifg="black" uibg="lightgrey" 
-              uhfg="black" uhbg="lightgrey" />
-    </colorschemes>
-  </configuration>
+  <!-- list of available colorschemes                       -->
+  <!-- {p|u}: protected/unprotected                         -->
+  <!-- {n|i|h}: normal/intensified/hidden                   -->
+  <!-- {fg|bg}: foreground/background                       -->
+  <!-- example: pifg means protected intensified foreground -->
+  <colorschemes default="White Background">
+    <scheme name="White Background" pnfg="black" pnbg="white" 
+            pifg="blue" pibg="white" phfg="white" phbg="white" unfg="green" 
+            unbg="lightgrey" uifg="red" uibg="lightgrey" uhfg="red" 
+            uhbg="lightgrey" />
+    <scheme name="Dark Background" pnfg="cyan" pnbg="black" 
+            pifg="white" pibg="black" phfg="black" phbg="black" unfg="lime" 
+            unbg="#282828" uifg="red" uibg="#282828" uhfg="red" 
+            uhbg="#282828" />
+    <scheme name="Amber" pnfg="orange" pnbg="black" pifg="white" 
+            pibg="black" phfg="black" phbg="black" unfg="white" 
+            unbg="#282828" uifg="red" uibg="#282828" uhfg="orange" 
+            uhbg="#282828" />
+    <scheme name="Black and White" pnfg="black" pnbg="white" 
+            pifg="black" pibg="white" phfg="white" phbg="white" 
+            unfg="black" unbg="lightgrey" uifg="black" uibg="lightgrey" 
+            uhfg="black" uhbg="lightgrey" />
+  </colorschemes>
+
 </h3270>

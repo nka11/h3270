@@ -33,5 +33,6 @@ public interface Renderer {
   public boolean canRender (String screenText);
   
   public String render (Screen s);
+  public String render (Screen s, String actionURL);
 
 }

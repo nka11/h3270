@@ -22,7 +22,7 @@
     <portlet-preferences>
       <preference>
         <name>target-host</name>
-        <value>your.host.here</value>
+        <value></value>
       </preference>
       <preference>
         <name>color-scheme</name>

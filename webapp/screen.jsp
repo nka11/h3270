@@ -18,6 +18,15 @@
 
 <script type="text/javascript" >
  <%@ include file="common/keyboard.js" %>
+
+   function openPrefs() {
+    prefsWindow = window.open ("<%= response.encodeURL("prefs.jsp") %>",
+                               "Preferences",
+                               "width=280,height=170,left=500,top=300");
+    if (prefsWindow.opener == null)
+      prefsWindow.opener = self;
+  }
+
 </script>
 
 </head>

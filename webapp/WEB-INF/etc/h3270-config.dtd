@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!ELEMENT h3270 (exec-path?,template-dir?,style?,s3270-options?,target-host?,configuration)>
+<!ELEMENT h3270 (exec-path?,template-dir?,style?,s3270-options?,target-host?,fonts?,colorschemes?)>
 <!ELEMENT scheme EMPTY>
 
 <!ELEMENT exec-path (#PCDATA)>
@@ -18,8 +18,6 @@
 <!ELEMENT additional (#PCDATA) >
 
 <!ELEMENT target-host (#PCDATA)>
-
-<!ELEMENT configuration (fonts,colorschemes)>
 
 <!ELEMENT fonts (font+)>
 <!ATTLIST fonts default CDATA #REQUIRED>

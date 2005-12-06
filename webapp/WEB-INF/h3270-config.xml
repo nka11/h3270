@@ -2,9 +2,7 @@
 <!DOCTYPE h3270 SYSTEM "etc/h3270-config.dtd">
 <h3270>
   <!-- path used to locate the s3270 executable -->
-  <!-- defaults to WEB-INF/bin                  -->
-        
-  <exec-path>/home/spiegel/projects/h3270/cvs/webapp/WEB-INF/bin</exec-path> 
+  <exec-path>WEB-INF/bin</exec-path> 
         
   <!-- path to style directory                               -->
   <!-- it is assumed that the directory contains the files   -->
@@ -13,7 +11,6 @@
   <!-- the contents of webapp/it-fws                         -->
   <!-- try "h3270" as a different example                    -->
   <!-- defaults to NO style                                  -->
-
   <!--
       <style>it-fws</style> 
   -->
@@ -26,7 +23,6 @@
   -->
 
   <!-- Use this to let users connect only to a single host -->
-
   <!--
       <target-host>your.host.here</target-host>
   -->

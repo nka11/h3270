@@ -8,6 +8,11 @@ function handleKey (key) {
   document.screen.key.value = key;
   document.screen.submit();
 }
+
+function noSuchKey (key) {
+  window.alert("Sorry, this key is not yet implemented.");
+}
+
 </script>
 
 <table border=0 style="border-spacing:0px;">
@@ -47,18 +52,18 @@ function handleKey (key) {
     <!-- cursor/pa block -->
     <tr>
       <td></td>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=up>U</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=up>U</button></td>
       <td></td>
     </tr>
     <tr>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=left>L</button></td>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=home>Home</button></td>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=right>R</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=left>L</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=home>Home</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=right>R</button></td>
     </tr>
     <tr>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=xxx>x</button></td>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=down>D</button></td>
-      <td><button onClick="handleKey(this.name);" type=button class=smallkey name=xxy>x</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=xxx>x</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=down>D</button></td>
+      <td><button onClick="noSuchKey(this.name);" type=button class=smallkey name=xxy>x</button></td>
     </tr>
     <tr >
       <td><button onClick="handleKey(this.name);" type=button class=smallkey name=pa1>PA1</button></td>
@@ -73,8 +78,8 @@ function handleKey (key) {
   <!-- large keys -->
   <table width=100%>
     <tr>
-      <td style="padding-top:0px" align=left ><button onClick="handleKey(this.name);" type=button class=largekey name=pos1>Pos1</button></td>
-      <td style="padding-top:0px" align=right ><button onClick="handleKey(this.name);" type=button class=largekey name=end>End</button></td>
+      <td style="padding-top:0px" align=left ><button onClick="noSuchKey(this.name);" type=button class=largekey name=pos1>Pos1</button></td>
+      <td style="padding-top:0px" align=right ><button onClick="noSuchKey(this.name);" type=button class=largekey name=end>End</button></td>
     </tr>
     <tr>
       <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=clear>Clear</button></td>
@@ -82,22 +87,22 @@ function handleKey (key) {
     </tr>
     <tr>
       <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=eraseEOF>Erase EOF</button></td>
-      <td align=right><button onClick="handleKey(this.name);" type=button class=largekey name=eraseInput>Erase Input</button></td>
+      <td align=right><button onClick="noSuchKey(this.name);" type=button class=largekey name=eraseInput>Erase Input</button></td>
     </tr>
     <tr>
-      <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=dup>Dup</button></td>
-      <td align=right><button onClick="handleKey(this.name);" type=button class=largekey name=fieldMark>Field Mark</button></td>
+      <td align=left><button onClick="noSuchKey(this.name);" type=button class=largekey name=dup>Dup</button></td>
+      <td align=right><button onClick="noSuchKey(this.name);" type=button class=largekey name=fieldMark>Field Mark</button></td>
     </tr>
     <tr>
       <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=sysReq>Sys Req</button></td>
-      <td align=right><button onClick="handleKey(this.name);" type=button class=largekey name=cursorSelect>Cursor Select</button></td>
+      <td align=right><button onClick="noSuchKey(this.name);" type=button class=largekey name=cursorSelect>Cursor Select</button></td>
     </tr>
     <tr>
       <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=attn>Attn</button></td>
-      <td align=right><button onClick="handleKey(this.name);" type=button class=largekey name=compose>Compose</button></td>
+      <td align=right><button onClick="noSuchKey(this.name);" type=button class=largekey name=compose>Compose</button></td>
     </tr>
     <tr>
-      <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=return>Return</button></td>
+      <td align=left><button onClick="handleKey(this.name);" type=button class=largekey name=newline>Newline</button></td>
       <td align=right><button onClick="handleKey(this.name);" type=button class=largekey name=enter>Enter</button></td>
     </tr>
   </table>

@@ -18,6 +18,7 @@
             <pathelement location="${dir.classes}" />
             <fileset dir="${dir.lib}" includes="*.jar" />
             <pathelement location="${servlet.jar}" />
+            <pathelement location="${portlet-api.jar}" />
         </path>
 
         <condition property="jregex.available">
@@ -28,6 +29,12 @@
 
         <condition property="jdk.regex.available">
             <available classname="java.util.regex.Pattern" />
+        </condition>
+
+        <condition property="portlet.available">
+          <available classname="javax.portlet.Portlet">
+            <classpath refid="cp.base"/>
+          </available>
         </condition>
         
         <condition property="test.skip">
@@ -43,9 +50,11 @@
         <javac srcdir="${basedir}/src" destdir="${dir.classes}" debug="true">
             <classpath refid="cp.base" />
             <exclude name="org/h3270/regex/*.java" />
+            <exclude name="org/h3270/web/Portlet.java" />
         </javac>
 
         <antcall target="compile-regex" />
+        <antcall target="compile-portlet" />
     </target>
 
     <target name="test.compile" depends="test.init" unless="test.skip">
@@ -83,6 +92,14 @@
         <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
             <include name="org/h3270/regex/JRegex*.java" />
         </javac>
+    </target>
+
+    <target name="compile-portlet" if="portlet.available">
+      <javac srcdir="${basedir}/src" destdir="${dir.classes}"
+             extdirs="${dir.lib}">
+        <classpath refid="cp.base"/>
+        <include name="org/h3270/web/Portlet.java"/>
+      </javac>
     </target>
 
     <target name="war" depends="compile" description="Build the WAR">

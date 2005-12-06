@@ -29,6 +29,11 @@ import org.h3270.render.H3270Configuration;
 import org.h3270.web.SessionState;
 
 /**
+ * TODO: These tests don't currently work, because H3270Configuration is
+ *       now a class rather than an interface.  Can be solved by using
+ *       the easymock classextension API, but I cannot figure out the
+ *       details right now.  AS.
+ * 
  * @author Alphonse Bendt
  * @version $Id$
  */
@@ -45,15 +50,9 @@ public class SessionStateTest extends TestCase {
         
         mock = (H3270Configuration)control.getMock();
         
-        mock.getDefaultColorscheme();
-        control.setDefaultReturnValue("Blank");
-        
         colorScheme = new ColorScheme();
         mock.getColorScheme("Blank");
         control.setDefaultReturnValue(colorScheme);
-        
-        mock.getDefaultFontname();
-        control.setDefaultReturnValue("nofont");
         
         control.replay();
         

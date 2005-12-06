@@ -26,6 +26,7 @@ import java.util.Map;
  */
 
 import java.io.*;
+import java.util.regex.*;
 import org.apache.avalon.framework.configuration.*;
 
 /**
@@ -38,10 +39,23 @@ public class H3270Configuration
   private final List colorSchemes = new ArrayList();
   private final Map validFonts = new HashMap();
 
+  private static final Pattern FILENAME_PATTERN = 
+    Pattern.compile ("file:(.*?)/WEB-INF/h3270-config\\.xml.*");
+  
   private H3270Configuration (Configuration data) throws ConfigurationException {
     super(data);
     createColorSchemes(data.getChild("colorschemes"));
     createValidFonts(data.getChild("fonts"));
+    // If exec-path points into WEB-INF, convert it into an absolute path now.
+    DefaultConfiguration c = (DefaultConfiguration)data.getChild("exec-path");
+    String execPath = c.getValue("");
+    if (execPath.startsWith("WEB-INF")) {
+      Matcher m = FILENAME_PATTERN.matcher(getLocation());
+      if (m.find()) {
+        execPath = m.group(1) + "/" + execPath;
+        c.setValue (execPath);
+      }
+    }
   }
   
   public List getColorSchemes() {

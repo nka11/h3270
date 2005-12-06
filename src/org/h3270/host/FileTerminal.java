@@ -39,6 +39,10 @@ public class FileTerminal implements Terminal {
     // TODO Auto-generated method stub
 
   }
+  
+  public boolean isConnected() {
+    return true;
+  }
 
   public String getHostname() {
     return "&lt;file&gt;";

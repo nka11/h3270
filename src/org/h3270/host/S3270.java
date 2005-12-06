@@ -33,10 +33,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.h3270.regex.*;
+import org.h3270.render.*;
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
@@ -192,6 +193,25 @@ public class S3270 implements Terminal {
     out = null;
     s3270 = null;
   }
+  
+  public boolean isConnected() {
+    if (s3270 == null || in == null || out == null)
+      return false;
+    else {
+      Result r = doCommand("");
+      if (r.status.matches(". . . C.*"))
+        return true;
+      else {
+        out.println("quit");
+        out.flush();
+        s3270.destroy();
+        s3270 = null;
+        in = null;
+        out = null;
+        return false;
+      }
+    }
+  }
 
   public String getHostname() {
     return hostname;
@@ -333,5 +353,11 @@ public class S3270 implements Terminal {
       }
     }
   }
-
+  
+  public static void main(String[] args) throws Exception {
+    DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+    Configuration configuration = H3270Configuration.create("/home/spiegel/projects/h3270/cvs/webapp/WEB-INF/h3270-config.xml");
+    S3270 s3270 = new S3270("locis.loc.gov", configuration);
+    System.out.println(s3270.isConnected());
+  }
 }

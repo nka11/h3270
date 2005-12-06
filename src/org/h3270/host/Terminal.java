@@ -31,6 +31,7 @@ package org.h3270.host;
 public interface Terminal {
 
   public abstract void disconnect();
+  public abstract boolean isConnected();
   public abstract String getHostname();
   public abstract void dumpScreen(String filename);
   public abstract void updateScreen();

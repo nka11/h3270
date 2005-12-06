@@ -1,0 +1,4 @@
+The file h3270pdk.par contains code that we used to run h3270 as an
+IView on the SAP Enterprise Portal Server.  If you want to use it, you
+will need to adapt it to the current version of h3270.  It may still
+be a useful starting point.

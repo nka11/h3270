@@ -25,6 +25,10 @@
         <value></value>
       </preference>
       <preference>
+        <name>auto-connect</name>
+        <value>false</value>
+      </preference>
+      <preference>
         <name>color-scheme</name>
         <value>White Background</value>
       </preference>

@@ -1,3 +1,70 @@
+2005-12-06  Andre Spiegel  <spiegel@gnu.org>
+
+	* Version.java: Version 1.3 released.
+
+	* host/FileTerminal.java, host/S3270.java,
+	host/Terminal.java (isConnected): New method.
+
+	* web/Portlet.java: Initial revision.
+
+	* render/H3270Configuration.java (c'tor): If exec-path points into
+	WEB-INF, convert it into an absolute path.
+
+2005-12-05  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/FileTerminal.java, host/S3270.java,
+	host/Terminal.java (newline): New method.
+
+	* render/Engine.java, render/TextRenderer.java,
+	render/RegexRenderer.java (render): Add overloaded version that
+	takes an actionURL parameter.
+
+	* render/HtmlRenderer.java (c'tor): Don't pass the actionURL in.
+	(render): Add overloaded version that takes an actionURL parameter.
+
+	* render/Renderer.java (render): New method that takes an
+	actionURL parameter.
+
+2005-12-04  Andre Spiegel  <spiegel@gnu.org>
+
+	* web/Servlet.java: Adapt to new configuration infrastructure.
+
+	* web/SessionState.java (c'tor, getFontName, isUseRenderers):
+	Don't get the defaults from the configuration, they will be
+	handled in a different mechanism.
+
+	* render/HtmlRenderer.java (actionURL): New field.
+	(c'tor): Provide two c'tors, one with an actionURL an one without.
+	(render): Insert the actionURL if present.
+
+	* host/S3270.java (c'tor): Remove execPath parameter. Use the full
+	H3270Configuration.
+	(doKey): New method, moved here from the Servlet class.
+
+	* host/Terminal.java (doKey): New method.
+
+	* host/FileTerminal.java (doKey): Provide empty implementation.
+
+	* web/AbstractServlet.java (configuration): Change type to
+	H3270Configuration.
+	(getConfiguration): Dito.
+	(init): Initialize the configuration properly.
+
+	* render/AvalonConfiguration.java: Removed, this class has been
+	merged into H3270Configuration.
+
+	* render/H3270Configuration.java: Changed into a real class,
+	inheriting from Avalon's Configuration.  An object of this class
+	stores the entire application-wide configuration of h3270.
+
+2005-08-14  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/InputField.java (trim): Replace NUL characters with spaces
+	in the result.  This is part of the fix for bug #1234207.
+
+	* render/HtmlRenderer.java (renderInputField): Fix bug #1234207,
+	rendering of multi-line input fields.
+
 2005-06-15  Andre Spiegel  <spiegel@gnu.org>
 
 	* Version.java: Version 1.2.3 released.

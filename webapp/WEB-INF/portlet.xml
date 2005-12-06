@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app id="h3270" version="1.2.3">
+
+  <portlet id="H3270Portlet">
+    <portlet-name>H3270Portlet</portlet-name>
+    <display-name>h3270 Portlet</display-name>
+    <description></description>
+    <portlet-class>org.h3270.web.Portlet</portlet-class>
+    <expiration-cache>1</expiration-cache>
+
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+      <portlet-mode>edit</portlet-mode>
+    </supports>
+
+    <portlet-info>
+      <title>h3270 Portlet</title>
+      <short-title>h3270</short-title>
+    </portlet-info>
+
+    <portlet-preferences>
+      <preference>
+        <name>target-host</name>
+        <value>your.host.here</value>
+      </preference>
+      <preference>
+        <name>color-scheme</name>
+        <value>White Background</value>
+      </preference>
+      <preference>
+        <name>font</name>
+        <value>couriernew</value>
+      </preference>
+    </portlet-preferences>
+
+  </portlet>
+
+</portlet-app>

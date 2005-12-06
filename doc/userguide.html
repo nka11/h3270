@@ -43,6 +43,11 @@
     <td class=content valign=top>
       <h1>User Guide</h1>
 
+      h3270 is available as both a stand-alone web application (a
+      servlet) and a portlet for use in a portlet container.  We will
+      first describe how to use the stand-alone web application, then
+      how the portlet interface differs from this.
+      <p>
       By default, h3270 provides a generic terminal emulation
       interface.  You can use it to connect to any host that is
       reachable from the machine on which h3270 runs via TCP/IP.  In
@@ -180,6 +185,23 @@
           Toggles the auxiliary HTML keypad (see above).
         </dd>
       </dl>
+      <h2>Using the Portlet</h2>
+        The h3270 portlet is very similar to the stand-alone web
+        application.  To use it, you (or an administrator) needs to
+        place the portlet onto a portal page first (the name of the
+        portlet is "H3270Portlet").  The portlet can
+        be configured to connect to a fixed host automatically.  In
+        this case, you needn't enter a host address yourself, it
+        should come up with that host's start screen all by itself.
+        To change the configuration, place the portlet into EDIT mode
+        (usually by pressing a pencil-shaped icon in the portlet's
+        titlebar).  The portlet then displays a screen similar to the
+        preferences window of the web application.  You can enter the
+        address of the target host on this screen, and change all the
+        other settings as well.  Press "Connect" or "Disconnect" to
+        connect or disconnect.  If you enable "Auto-Connect" mode,
+        then the portlet will always try to remain connected with the
+        target host whenever it is in VIEW mode.
     </td>
   </tr>
 </table>

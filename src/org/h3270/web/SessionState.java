@@ -234,8 +234,10 @@ public class SessionState {
   public boolean setActiveColorScheme(String schemeName) {
     ColorScheme scheme = h3270Config.getColorScheme(schemeName);
 
-    logger.debug("setActiveColorScheme: " + schemeName);
-
+	if (logger.isDebugEnabled()) {
+    	logger.debug("setActiveColorScheme: " + scheme);
+	}
+	
     if (scheme != null) {
       logger.debug("OK");
       activeColorScheme = scheme;

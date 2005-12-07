@@ -1,5 +1,7 @@
 package org.h3270.test;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 
 import com.meterware.httpunit.WebResponse;
@@ -20,7 +22,7 @@ abstract class AbstractServletTest extends TestCase {
         }
 
         public void setUp() throws Exception {            
-            servletRunner = new ServletRunner("WEB-INF/web.xml");
+            servletRunner = new ServletRunner(new File("WEB-INF/web.xml"));
 
             client = newClient();
         }

@@ -24,16 +24,12 @@ package org.h3270.test;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
+import org.easymock.classextension.MockClassControl;
 import org.h3270.render.ColorScheme;
 import org.h3270.render.H3270Configuration;
 import org.h3270.web.SessionState;
 
 /**
- * TODO: These tests don't currently work, because H3270Configuration is
- *       now a class rather than an interface.  Can be solved by using
- *       the easymock classextension API, but I cannot figure out the
- *       details right now.  AS.
- * 
  * @author Alphonse Bendt
  * @version $Id$
  */
@@ -46,7 +42,7 @@ public class SessionStateTest extends TestCase {
     
     public void setUp() throws Exception 
     {
-        control = MockControl.createControl(H3270Configuration.class);
+        control = MockClassControl.createControl(H3270Configuration.class);
         
         mock = (H3270Configuration)control.getMock();
         
@@ -68,7 +64,7 @@ public class SessionStateTest extends TestCase {
     }
     
     public void testGetDefaultFont() {
-        assertEquals("nofont", objectUnderTest.getFontName());
+        assertEquals("courier", objectUnderTest.getFontName());
     }
     
     public void testSaveFontname() throws Exception {

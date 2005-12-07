@@ -24,6 +24,7 @@ package org.h3270.web;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -39,8 +40,6 @@ import org.h3270.host.FileTerminal;
 import org.h3270.host.InputField;
 import org.h3270.host.S3270;
 import org.h3270.host.Screen;
-import org.h3270.host.Terminal;
-import org.h3270.regex.Matcher;
 import org.h3270.regex.Pattern;
 import org.h3270.render.Engine;
 import org.h3270.render.H3270Configuration;
@@ -52,8 +51,7 @@ import org.h3270.render.HtmlRenderer;
  */
 public class Servlet extends AbstractServlet {
 
-  private static final Pattern FUNCTION_KEY_PATTERN =
-    Pattern.compile("p(f|a)([0-9]{1,2})");
+  private static final long serialVersionUID = 1L;
 
   private static final String STYLE_JSP = "/screen.jsp";
   private static final String DEFAULT_JSP = "/simple-screen.jsp";
@@ -173,7 +171,7 @@ public class Servlet extends AbstractServlet {
   private void handlePreferences(SessionState state,
       HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    String colorscheme = request.getParameter("colorscheme");
+    String colorscheme = URLDecoder.decode(request.getParameter("colorscheme"), "UTF-8");
     String render = request.getParameter("render");
     String font = request.getParameter("font");
     boolean modified = false;

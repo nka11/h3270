@@ -130,19 +130,8 @@
     <target name="test.init" depends="init" unless="test.skip">
         <path id="cp.test">
             <path refid="cp.base" />
-
+            <fileset dir="${dir.test}/lib" includes="*.jar" />
             <fileset dir="${dir.j2ee}" includes="*.jar" />
-
-            <pathelement location="${dir.test}/lib/xmlParserAPIs.jar" />
-            <pathelement location="${dir.test}/lib/xml-apis.jar" />
-            <pathelement location="${dir.test}/lib/xercesImpl.jar" />
-            <pathelement location="${dir.test}/lib/resolver.jar" />
-            <pathelement location="${dir.test}/lib/nekohtmlXni.jar" />
-            <pathelement location="${dir.test}/lib/nekohtml.jar" />
-            <pathelement location="${dir.test}/lib/nekohtml.jar" />
-            <pathelement location="${dir.test}/lib/js.jar" />
-            <pathelement location="${dir.test}/lib/httpunit.jar" />
-            <pathelement location="${dir.test}/lib/easymock.jar" />
         </path>
 
         <!-- add test sources so resources can be found -->
@@ -159,6 +148,8 @@
             <classpath refid="cp.run-test" />
             <test name="${testname}" />
             <formatter type="plain" usefile="false" />
+     <!--       <sysproperty key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.SimpleLog"/>
+            <sysproperty key="org.apache.commons.logging.simplelog.defaultlog" value="debug" /> -->
         </junit>
     </target>
 

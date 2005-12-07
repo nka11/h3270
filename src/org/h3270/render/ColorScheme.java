@@ -90,6 +90,11 @@ public class ColorScheme {
                                             unprotectedHiddenBackground);
   }
 
+  public String toString()
+  {
+      return "ColorScheme: " + getName();
+  }
+  
   public String getName() {
     return this.name;
   }

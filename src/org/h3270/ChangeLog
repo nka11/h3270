@@ -1,3 +1,20 @@
+2005-12-08  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270.java: Removed CRs that were accidentally inserted in
+	version 1.12.  Thanks to Ori Avtalion for pointing this out.
+
+2005-12-07  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* web/SessionState.java (setActiveColorScheme): debug statement
+
+	* web/Servlet.java (handlePreferences): need to urldecode color
+	scheme param as param may contains spaces which will be url
+	encoded
+
+	* web/AbstractServlet.java: removed unused imports
+
+	* render/ColorScheme.java (toString): new method
+
 2005-12-06  Andre Spiegel  <spiegel@gnu.org>
 
 	* Version.java: Version 1.3 released.

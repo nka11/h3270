@@ -23,6 +23,7 @@ package org.h3270.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Iterator;
@@ -40,7 +41,6 @@ import org.h3270.host.FileTerminal;
 import org.h3270.host.InputField;
 import org.h3270.host.S3270;
 import org.h3270.host.Screen;
-import org.h3270.regex.Pattern;
 import org.h3270.render.Engine;
 import org.h3270.render.H3270Configuration;
 import org.h3270.render.HtmlRenderer;
@@ -57,6 +57,7 @@ public class Servlet extends AbstractServlet {
   private static final String DEFAULT_JSP = "/simple-screen.jsp";
 
   private String targetHost;
+  private boolean autoconnect;
   private String execPath;
   private String templateDir;
 
@@ -82,6 +83,11 @@ public class Servlet extends AbstractServlet {
     }
 
     targetHost = configuration.getChild("target-host").getValue(null);
+    if (targetHost != null)
+    {
+        autoconnect = configuration.getChild("target-host").getAttributeAsBoolean("autoconnect", false);
+    }
+    
     Configuration dirConfig = configuration.getChild("template-dir");
     templateDir = getRealPath(dirConfig.getValue("/WEB-INF/templates"));
     engine = new Engine(templateDir);
@@ -100,6 +106,11 @@ public class Servlet extends AbstractServlet {
 
     SessionState state = getSessionState(request);
 
+    if (state.terminal == null && autoconnect)
+    {
+        connect(state, targetHost);
+    }
+    
     if (state.terminal != null) {
       state.terminal.updateScreen();
       Screen s = state.terminal.getScreen();
@@ -131,19 +142,7 @@ public class Servlet extends AbstractServlet {
 
       // TODO message to user if no hostname specified
       if (!hostname.equals("")) {
-        if (logger.isInfoEnabled()) {
-          logger.info("Connecting to " + hostname);
-        }
-
-        if (hostname.startsWith("file:")) {
-          String filename = new File (getRealPath("/WEB-INF/dump"),
-                                      hostname.substring(5)).toString();
-          state.terminal = new FileTerminal(new URL("file:" + filename));
-        } else {
-          state.terminal = new S3270(hostname, configuration);
-        }
-
-        state.setUseKeypad(false);
+        connect(state, hostname);
       }
     } else if (request.getParameter("disconnect") != null) {
       if (state.terminal != null)
@@ -167,6 +166,22 @@ public class Servlet extends AbstractServlet {
     }
     doGet(request, response);
   }
+
+private void connect(SessionState state, String hostname) throws IOException, MalformedURLException {
+    if (logger.isInfoEnabled()) {
+      logger.info("Connecting to " + hostname);
+    }
+
+    if (hostname.startsWith("file:")) {
+      String filename = new File (getRealPath("/WEB-INF/dump"),
+                                  hostname.substring(5)).toString();
+      state.terminal = new FileTerminal(new URL("file:" + filename));
+    } else {
+      state.terminal = new S3270(hostname, configuration);
+    }
+    
+    state.setUseKeypad(false);
+}
 
   private void handlePreferences(SessionState state,
       HttpServletRequest request, HttpServletResponse response)

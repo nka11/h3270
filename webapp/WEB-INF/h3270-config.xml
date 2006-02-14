@@ -24,7 +24,7 @@
 
   <!-- Use this to let users connect only to a single host -->
   <!--
-      <target-host>your.host.here</target-host>
+      <target-host autoconnect="false">your.host.here</target-host>
   -->
 
   <!-- list of available fonts -->

@@ -11,13 +11,16 @@
 
 <!ELEMENT s3270-options (language, model?, additional?) >
 
-<!ELEMENT  language (#PCDATA) >
+<!ELEMENT language (#PCDATA) >
 
 <!ELEMENT model (#PCDATA) >
 
 <!ELEMENT additional (#PCDATA) >
 
 <!ELEMENT target-host (#PCDATA)>
+<!ATTLIST target-host
+	autoconnect (true|false) "false"
+>
 
 <!ELEMENT fonts (font+)>
 <!ATTLIST fonts default CDATA #REQUIRED>

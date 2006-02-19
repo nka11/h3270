@@ -115,7 +115,7 @@ public class SessionState {
       }
     }
 
-    setActiveColorScheme(getStringProperty(COLORSCHEME, "White Background"));
+    setActiveColorScheme(getStringProperty(COLORSCHEME, h3270Config.getColorSchemeDefault()));
 
     if (isPropertyDefined(KEYPAD)) {
       useKeypad = getBooleanProperty(KEYPAD);
@@ -159,8 +159,6 @@ public class SessionState {
 
     properties_.store(stream, "");
 
-    byte[] bytes = stream.toByteArray();
-
     String asString = stream.toString();
 
     String state;
@@ -174,7 +172,7 @@ public class SessionState {
   }
 
   public String getFontName() {
-    return getStringProperty(FONTNAME, "courier");
+    return getStringProperty(FONTNAME, h3270Config.getFontnameDefault());
   }
 
   public Iterator getColorschemeSelectOptions() {

@@ -1,5 +1,7 @@
 package org.h3270.web;
 
+import java.io.InputStream;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
@@ -49,7 +51,8 @@ public abstract class AbstractServlet extends HttpServlet {
     if (configFile == null) {
       configFile = FILE_CONFIGURATION_DEFAULT;
     }
-    configuration = H3270Configuration.create (getRealPath(configFile));
+    InputStream inputStream = getServletContext().getResourceAsStream(configFile);
+    configuration = H3270Configuration.create (inputStream);
   }
 
   protected H3270Configuration getConfiguration() {

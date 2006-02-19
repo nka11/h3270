@@ -21,6 +21,8 @@ package org.h3270.test;
  * MA 02111-1307 USA
  */
 
+import org.h3270.test.render.H3270ConfigurationTest;
+
 import junit.framework.*;
 
 /**
@@ -42,6 +44,7 @@ public class AllTest extends TestCase {
     suite.addTestSuite (SessionStateTest.class);
     suite.addTestSuite (Bug1063147Test.class);
     suite.addTestSuite (BugRenderTest.class);
+    suite.addTestSuite (H3270ConfigurationTest.class);
     
     return suite;
   }

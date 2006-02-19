@@ -50,6 +50,12 @@ public class SessionStateTest extends TestCase {
         mock.getColorScheme("Blank");
         control.setDefaultReturnValue(colorScheme);
         
+        mock.getColorSchemeDefault();
+        control.setDefaultReturnValue("Blank");
+        
+        mock.getFontnameDefault();
+        control.setDefaultReturnValue("terminal");
+        
         control.replay();
         
         objectUnderTest = new SessionState(mock, "");
@@ -61,10 +67,6 @@ public class SessionStateTest extends TestCase {
     
     public void testGetDefaultColorscheme() {
         assertEquals(colorScheme, objectUnderTest.getActiveColorScheme());
-    }
-    
-    public void testGetDefaultFont() {
-        assertEquals("courier", objectUnderTest.getFontName());
     }
     
     public void testSaveFontname() throws Exception {

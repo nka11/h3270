@@ -20,9 +20,7 @@ public class PreferencesTest extends AbstractServletTest {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(PreferencesTest.class);
-        
-        return suite;
+        return new TestSuite(PreferencesTest.class);
     }
     
     public void testSetActiveColorScheme() throws Exception {

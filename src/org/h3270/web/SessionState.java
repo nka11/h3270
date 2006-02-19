@@ -66,8 +66,7 @@ public class SessionState {
   private static final String KEYPAD = "keypad";
   private static final String FONTNAME = "fontname";
 
-  private final static String[] KEYS = 
-    { COLORSCHEME, RENDERER, KEYPAD, FONTNAME };
+  private final static String[] KEYS = { COLORSCHEME, RENDERER, KEYPAD, FONTNAME };
 
   public Terminal terminal = null;
 
@@ -233,7 +232,7 @@ public class SessionState {
     ColorScheme scheme = h3270Config.getColorScheme(schemeName);
 
 	if (logger.isDebugEnabled()) {
-    	logger.debug("setActiveColorScheme: " + scheme);
+	  logger.debug("setActiveColorScheme: " + scheme);
 	}
 	
     if (scheme != null) {

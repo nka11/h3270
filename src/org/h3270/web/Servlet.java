@@ -296,7 +296,6 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
 
     if (cookie != null) {
       return cookie.getValue();
-
     }
 
     return "";

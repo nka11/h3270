@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE h3270 SYSTEM "etc/h3270-config.dtd">
+<!DOCTYPE h3270 PUBLIC "-//h3270//DTD h3270 configuration//EN" "http://cvs.sourceforge.net/viewcvs.py/*checkout*/h3270/h3270/webapp/WEB-INF/etc/h3270-config.dtd">
 <h3270>
   <!-- path used to locate the s3270 executable -->
   <exec-path>/usr/local/bin</exec-path> 

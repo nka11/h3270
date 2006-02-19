@@ -35,17 +35,24 @@ public class H3270Configuration
   extends org.apache.avalon.framework.configuration.DefaultConfiguration {
 
   private final List colorSchemes = new ArrayList();
+  private final String colorSchemeDefault;
   private final Map validFonts = new HashMap();
+  private final String fontnameDefault;
 
   private static final Pattern FILENAME_PATTERN =
     Pattern.compile ("file:(.*?)/WEB-INF/h3270-config\\.xml.*");
-  private String colorSchemeDefault;
-  private String fontnameDefault;
 
   private H3270Configuration (Configuration data) throws ConfigurationException {
     super(data);
-    createColorSchemes(data.getChild("colorschemes"));
-    createValidFonts(data.getChild("fonts"));
+
+    final Configuration colorschemeConfig = data.getChild("colorschemes");
+    createColorSchemes(colorschemeConfig);
+    colorSchemeDefault = createColorschemeDefault(colorschemeConfig, colorSchemes);
+    
+    final Configuration fontConfig = data.getChild("fonts");
+    createValidFonts(fontConfig);
+    fontnameDefault = createFontnameDefault(fontConfig, validFonts);
+
     // If exec-path points into WEB-INF, convert it into an absolute path now.
     DefaultConfiguration c = (DefaultConfiguration)data.getChild("exec-path");
     String execPath = c.getValue("");
@@ -100,17 +107,18 @@ public class H3270Configuration
       );
       colorSchemes.add(scheme);
     }
+  }
 
-    colorSchemeDefault = config.getAttribute("default", null);
-    if (colorSchemeDefault == null)
-    {
-        if (colorSchemes.isEmpty())
-        {
+  private String createColorschemeDefault(Configuration config, List colorSchemes) throws ConfigurationException {
+    String colorSchemeDefault = config.getAttribute("default", null);
+    if (colorSchemeDefault == null) {
+        if (colorSchemes.isEmpty()) {
             throw new ConfigurationException("need to specify at least one colorscheme");
         }
         // default to first colorscheme
-        colorSchemeDefault = ((ColorScheme)colorSchemes.get(0)).getName();
+        colorSchemeDefault = ((ColorScheme) colorSchemes.get(0)).getName();
     }
+    return colorSchemeDefault;
   }
 
   private void createValidFonts(Configuration config)
@@ -121,17 +129,19 @@ public class H3270Configuration
       String fontDescription = fonts[x].getAttribute("description", fontName);
       validFonts.put(fontName, fontDescription);
     }
+  }
 
-    fontnameDefault = config.getAttribute("default", null);
-    if (fontnameDefault == null)
-    {
-        if (validFonts.isEmpty())
-        {
+  private String createFontnameDefault(Configuration config, Map validFonts)
+      throws ConfigurationException {
+    String fontnameDefault = config.getAttribute("default", null);
+    if (fontnameDefault == null) {
+        if (validFonts.isEmpty()) {
             throw new ConfigurationException("need to specify at least one font");
         }
         // default to random fontname
         fontnameDefault = validFonts.keySet().iterator().next().toString();
     }
+    return fontnameDefault;
   }
 
   public String getFontnameDefault()
@@ -147,13 +157,13 @@ public class H3270Configuration
     }
   }
 
-  public static H3270Configuration create(InputStream in) {
-      try {
-          DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-          Configuration data = builder.build(in);
-          return new H3270Configuration(data);
-      } catch (Exception ex) {
-          throw new RuntimeException(ex);
-      }
+  public static H3270Configuration create (InputStream in) {
+    try {
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        Configuration data = builder.build(in);
+        return new H3270Configuration(data);
+    } catch (Exception ex) {
+        throw new RuntimeException(ex);
+    }
   }
 }

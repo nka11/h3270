@@ -1,3 +1,16 @@
+2006-04-28  Andre Spiegel  <spiegel@gnu.org>
+
+	* web/Servlet.java (handlePreferences): URL-decode colorscheme
+	only if present.  This seems to be necessary under JDK 1.4 at
+	least, maybe not under 1.5.
+
+	Suggestions by Ventura Casadevall, fixing bug#1444002:
+	
+	* render/RegexRenderer.java (render): Handle overlapping fields
+	correctly.
+
+	* host/Field.java (isEmpty): Correct for fields of length one.
+
 2006-02-19  Alphonse Bendt  <alphonse.bendt@it-fws.de>
 
 	* render/H3270Configuration.java (createColorSchemes,

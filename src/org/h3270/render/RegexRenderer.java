@@ -103,7 +103,7 @@ public class RegexRenderer extends HtmlRenderer {
         int number = Integer.parseInt (placeholder.group(1));
         String filterName = placeholder.group(2);
         String replacement = m.group(number);
-        if (replacement.startsWith("{") && replacement.endsWith("}"))
+        if (replacement.startsWith("{"))
           renderInputField (result, 
                             (InputField)screenSeq.getFieldAt(m.start(number)+1));
         else if (filterName != null)

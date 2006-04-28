@@ -1,3 +1,28 @@
+2006-02-19  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* render/H3270Configuration.java (createColorSchemes,
+	createValidFonts): extract methods that sets the defaults
+
+	* web/SessionState.java: cosmetics
+
+	* web/AbstractServlet.java (init): build h3270config via stream
+
+	* web/SessionState.java (c'tor): use configured colorscheme
+	default instead of hardcoded value
+	(getFontName): use configured fontname default instead of
+	hardcoded value
+	(getSavedState): removed unused code
+
+	* render/H3270Configuration.java (getColorschemeDefault,
+	getFontnameDefault): new methods
+
+	* web/Servlet.java: cosmetics
+
+2006-02-14  Alphonse Bendt  <alphonse.bendt@it-fws.de>
+
+	* web/Servlet.java: feature request #1428377
+	connect without pressing connect button
+
 2005-12-08  Andre Spiegel  <spiegel@gnu.org>
 
 	* host/S3270.java: Removed CRs that were accidentally inserted in

@@ -35,92 +35,91 @@ import java.net.URL;
  * @version $Id$
  */
 public class S3270ScreenTest extends TestCase {
-
-    public S3270ScreenTest(String name) {
-        super(name);
+  
+  public S3270ScreenTest(String name) {
+    super(name);
+  }
+  
+  private Screen createScreenFromDump(String filename) {
+    try {
+      URL url = getClass().getResource(filename);
+      
+      BufferedReader in = new BufferedReader(new InputStreamReader(url
+                                                                   .openStream()));
+      List lines = new ArrayList();
+      String status = null;
+      while (true) {
+        String line = in.readLine();
+        if (line == null)
+          break;
+        else if (line.startsWith("data: "))
+          lines.add(line.substring(6));
+        else if (line.startsWith("U F U"))
+          status = line;
+      }
+      S3270Screen screen = new S3270Screen();
+      screen.update(status, lines);
+      return screen;
+    } catch (IOException ex) {
+      throw new RuntimeException("IOException while reading dump: " + ex);
     }
-
-    private Screen createScreenFromDump(String filename) {
-        try {
-            URL url = getClass().getResource(filename);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(url
-                    .openStream()));
-            List lines = new ArrayList();
-            String status = null;
-            while (true) {
-                String line = in.readLine();
-                if (line == null)
-                    break;
-                else if (line.startsWith("data: "))
-                    lines.add(line.substring(6));
-                else if (line.startsWith("U F U"))
-                    status = line;
-            }
-            S3270Screen screen = new S3270Screen();
-            screen.update(status, lines);
-            return screen;
-        } catch (IOException ex) {
-            throw new RuntimeException("IOException while reading dump: " + ex);
-        }
+  }
+  
+  private String readTextScreen(String filename) {
+    StringBuffer result = new StringBuffer();
+    URL url = getClass().getResource(filename);
+    
+    try {
+      BufferedReader in = new BufferedReader(new InputStreamReader(url
+                                                                   .openStream(), "ISO-8859-1"));
+      while (true) {
+        String line = in.readLine();
+        if (line == null)
+          break;
+        result.append(line);
+        result.append('\n');
+      }
+      return result.toString();
+    } catch (IOException ex) {
+      throw new RuntimeException("IOException while reading text screen: " + ex);
     }
-
-    private String readTextScreen(String filename) {
-        StringBuffer result = new StringBuffer();
-        URL url = getClass().getResource(filename);
-
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(url
-                    .openStream(), "ISO-8859-1"));
-            while (true) {
-                String line = in.readLine();
-                if (line == null)
-                    break;
-                result.append(line);
-                result.append('\n');
-            }
-            return result.toString();
-        } catch (IOException ex) {
-            throw new RuntimeException(
-                    "IOException while reading text screen: " + ex);
-        }
+  }
+  
+  private void screenTest(String filename) {
+    Screen s = createScreenFromDump(filename + ".dump");
+    String result = new TextRenderer(true, false).render(s);
+    try {
+      PrintWriter out = new PrintWriter(new FileWriter(filename + ".out"));
+      out.print(result);
+      out.close();
+    } catch (Exception e) {
     }
-
-    private void screenTest(String filename) {
-        Screen s = createScreenFromDump(filename + ".dump");
-        String result = new TextRenderer(true, false).render(s);
-        try {
-            PrintWriter out = new PrintWriter(new FileWriter(filename + ".out"));
-            out.print(result);
-            out.close();
-        } catch (Exception e) {
-        }
-        String expected = readTextScreen(filename + ".txt");
-        assertEquals(expected, result);
-    }
-
-    public void test_screen_3() {
-        screenTest("/org/h3270/test/screen3");
-    }
-
-    public void test_screen_4() {
-        screenTest("/org/h3270/test/screen4");
-    }
-
-    public void test_screen_5() {
-        screenTest("/org/h3270/test/screen5");
-    }
-
-    public void test_screen_6() {
-        screenTest("/org/h3270/test/screen6");
-    }
-
-    public void test_screen_7() {
-        screenTest("/org/h3270/test/screen7");
-    }
-
-    public void test_screen_8() {
-        screenTest("/org/h3270/test/screen8");
-    }
-
+    String expected = readTextScreen(filename + ".txt");
+    assertEquals(expected, result);
+  }
+  
+  public void test_screen_3() {
+    screenTest("/org/h3270/test/screen3");
+  }
+  
+  public void test_screen_4() {
+    screenTest("/org/h3270/test/screen4");
+  }
+  
+  public void test_screen_5() {
+    screenTest("/org/h3270/test/screen5");
+  }
+  
+  public void test_screen_6() {
+    screenTest("/org/h3270/test/screen6");
+  }
+  
+  public void test_screen_7() {
+    screenTest("/org/h3270/test/screen7");
+  }
+  
+  public void test_screen_8() {
+    screenTest("/org/h3270/test/screen8");
+  }
+  
 }

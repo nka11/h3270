@@ -195,7 +195,7 @@ public class Field {
 
   public boolean isEmpty() {
     if (starty == endy)
-      return startx >= endx;
+      return startx > endx;
     else
       return starty > endy;
   }

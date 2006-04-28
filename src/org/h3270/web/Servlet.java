@@ -43,7 +43,7 @@ import org.h3270.host.S3270;
 import org.h3270.host.Screen;
 import org.h3270.render.Engine;
 import org.h3270.render.H3270Configuration;
-import org.h3270.render.HtmlRenderer;
+import org.h3270.render.*;
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
@@ -186,7 +186,7 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
   private void handlePreferences(SessionState state,
       HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    String colorscheme = URLDecoder.decode(request.getParameter("colorscheme"), "UTF-8");
+    String colorscheme = request.getParameter("colorscheme");
     String render = request.getParameter("render");
     String font = request.getParameter("font");
     boolean modified = false;
@@ -194,6 +194,7 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
     response.setContentType("text/html");
 
     if (colorscheme != null) {
+      colorscheme = URLDecoder.decode(request.getParameter("colorscheme"), "UTF-8");
       modified = state.setActiveColorScheme(colorscheme);
     }
 

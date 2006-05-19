@@ -266,8 +266,8 @@ public class S3270 implements Terminal {
 
   public void submitUnformatted (String data) {
     int index = 0;
-    for (int y = 0; y < screen.getHeight(); y++) {
-      for (int x = 0; x < screen.getWidth(); x++) {
+    for (int y = 0; y < screen.getHeight() && index < data.length(); y++) {
+      for (int x = 0; x < screen.getWidth() && index < data.length(); x++) {
         char newCh = data.charAt(index);
         if (newCh != screen.charAt(x, y)) {
           doCommand ("movecursor (" + y + ", " + x + ")");

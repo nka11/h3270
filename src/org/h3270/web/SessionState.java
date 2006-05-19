@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.*;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.StringDecoder;
@@ -46,7 +48,7 @@ import org.h3270.render.SelectOptionBean;
  * @author <a href="mailto:spiegel@it-fws.de">Andre Spiegel </a>
  * @version $Id$
  */
-public class SessionState {
+public class SessionState implements HttpSessionBindingListener {
 
   private static final StringEncoder ENCODER;
   private static final StringDecoder DECODER;
@@ -264,6 +266,19 @@ public class SessionState {
     return getBooleanProperty(RENDERER, true);
   }
 
+  public void valueBound(HttpSessionBindingEvent arg0) {
+    // nothing
+  }
+  
+  public void valueUnbound(HttpSessionBindingEvent arg0) {
+    // disconnect s3270 session when the HttpSession times out
+    if (terminal != null && terminal.isConnected()) {
+      if (logger.isInfoEnabled())
+        logger.info ("Session unbound, disconnecting terminal " + terminal);
+      terminal.disconnect();
+    }
+  }
+
   private boolean parseBooleanString(String s) {
     return (s != null) && Boolean.valueOf(s).booleanValue();
   }
@@ -302,4 +317,6 @@ public class SessionState {
 
     return prop;
   }
+
+
 }

@@ -4,7 +4,6 @@
   <portlet id="H3270Portlet">
     <portlet-name>H3270Portlet</portlet-name>
     <display-name>h3270 Portlet</display-name>
-    <description></description>
     <portlet-class>org.h3270.web.Portlet</portlet-class>
     <expiration-cache>1</expiration-cache>
 

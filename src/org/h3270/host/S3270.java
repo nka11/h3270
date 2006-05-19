@@ -354,6 +354,10 @@ public class S3270 implements Terminal {
     }
   }
   
+  public String toString() {
+    return "s3270 " + super.toString();
+  }
+  
   public static void main(String[] args) throws Exception {
     DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
     Configuration configuration = H3270Configuration.create("/home/spiegel/projects/h3270/cvs/webapp/WEB-INF/h3270-config.xml");

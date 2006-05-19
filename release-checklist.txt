@@ -19,6 +19,7 @@
       find . -name ".?*" | xargs rm -rf
       rm h3270.war
       rm release-checklist.txt
+      rm build.properties
       rm src/org/h3270/test/*.dump
       rm src/org/h3270/test/*.txt
       rm src/org/h3270/test/*.png
@@ -26,6 +27,7 @@
       rm -rf webapp/WEB-INF/bin-win
       rm -rf webapp/WEB-INF/lib/jregex*
       rm -rf webapp/WEB-INF/classes/*
+      rm -rf webapp/WEB-INF/dump/*
 
   * final test in export area
 

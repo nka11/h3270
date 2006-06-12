@@ -179,7 +179,7 @@ public class ColorScheme {
     return result.toString();
   }
 
-  private class TextStyle {
+  public class TextStyle {
 
     public String foregroundColor;
     public String backgroundColor;

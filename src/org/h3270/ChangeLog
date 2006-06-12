@@ -1,3 +1,45 @@
+2006-06-12  Andre Spiegel  <spiegel@gnu.org>
+
+	Changes by Pasqual Milvaques to support extended colors and
+	extended highlighting.  Installed with slight modifications.
+	
+	* host/Field.java (ATTR_COL_*, ATTR_EH_*): New constants for
+	extended colors and extended highlighting.
+	(extendedColor, extendedHighlight): New fields.
+	(c'tor): Add another form that initializes the above.
+	(getExtendedColor, getExtendedHighlight, hasExtendedColor,
+	hasExtendedHighlight): New fields.
+
+	* host/InputField.java (c'tor): Add another form that takes
+	extended color and extended highlighting for initialization.
+
+	* host/S3270Screen.java (color, ext_highlight): New fields.
+	(FORMATTED_CHAR_PATTERN): Accommodate extended colors
+	and highlighting.
+	(createField, decode, updateBuffer): Likewise.
+
+	* render/HtmlRenderer.java (extendedColorMap,
+	extendedHighlightMap): New fields.
+	(getExtendedColorMap, getExtendedHighlightMap): Accessor methods.
+	(needSpan, protectedFieldClass): New methods.
+	(renderFormatted): Use the above to support extended colors and
+	extended highlighting.
+
+	* render/IntMap.java: Initial revision.
+
+	* render/ColorScheme.java (TextStyle): Made the class public.
+
+2006-05-19  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270.java (submitUnformatted): Make the loop check a
+	little more rigorous, as suggested by "jeffryz" in bug #1484673.
+
+	* host/S3270.java (toString): Implement for logging.
+
+	* web/SessionState.java: Implement HttpSessionBindingListener.
+	(valueBound): Required by interface, does nothing.
+	(valueUnbound): Disconnect the terminal.
+
 2006-04-28  Andre Spiegel  <spiegel@gnu.org>
 
 	* web/Servlet.java (handlePreferences): URL-decode colorscheme

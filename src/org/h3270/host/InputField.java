@@ -37,13 +37,21 @@ public class InputField extends Field {
 
   public InputField (Screen screen,
                      byte fieldCode,
-                     int startx, int starty, int endx, int endy) {
+                     int startx, int starty, int endx, int endy,
+                     int color, int ext_highlight) {
     super (screen,
            fieldCode,
-           startx, starty, endx, endy);
+           startx, starty, endx, endy, color, ext_highlight);
     if ((fieldCode & ATTR_NUMERIC) != 0) {
       isNumeric = true;
     }
+  }
+
+  public InputField (Screen screen,
+                     byte fieldCode,
+                     int startx, int starty, int endx, int endy) {
+    this (screen, fieldCode, startx, starty, endx, endy,
+          ATTR_COL_DEFAULT, ATTR_EH_DEFAULT);
   }
 
   public boolean isNumeric() {

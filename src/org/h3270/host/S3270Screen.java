@@ -140,9 +140,8 @@ public class S3270Screen extends AbstractScreen {
       buffer[y] = line;
     }     
     // add the final field on the page
-    fields.add (createField (fieldStartCode,
-                             fieldStartX, fieldStartY,
-                             width-1, height-1));
+    fields.add(createField(fieldStartCode, fieldStartX, fieldStartY,
+               width - 1, height - 1, color, ext_highlight));
   }
   
   public List getBufferData() {
@@ -163,27 +162,40 @@ public class S3270Screen extends AbstractScreen {
     } 
   }
 
-  private static final Pattern FORMATTED_CHAR_PATTERN = 
-    Pattern.compile ("SF\\((..)=(..)(,.*?)?\\)|[0-9a-fA-F]{2}");
-
+  private static final Pattern FORMATTED_CHAR_PATTERN = Pattern.compile (
+    "SF\\((..)=(..)(,(..)=(..)(,(..)=(..))?)?\\)|[0-9a-fA-F]{2}"
+  );
 
   private int  fieldStartX = 0;
   private int  fieldStartY = 0;
   private byte fieldStartCode = (byte)0xe0;
 
+  private int color = Field.ATTR_COL_DEFAULT;
+  private int ext_highlight = Field.ATTR_EH_DEFAULT;
+  
   /**
    * Decodes a single line from the raw screen buffer dump.
    */
   private char[] decode (String line, int y, List fields) {
-    if (line.startsWith ("data: ")) line = line.substring(6);
+
+    int fieldEndX = 0;
+    int fieldEndY = 0;
+    int i;
+    int aux_startcode = -1;
+    int aux_color;
+    int aux_exthighlight;
+    String aux_code;
+
+    if (line.startsWith("data: ")) line = line.substring(6);
+    
     StringBuffer result = new StringBuffer();
     int index = 0;
 
-	// workaround! delete all extended attributes in a line!
-	// must have, until h3270 supports extended attributes
-	// TODO:    
+    // workaround! delete all extended attributes in a line!
+    // must have, until h3270 supports extended attributes
+    // TODO:    
     line = line.replaceAll("SA\\(..=..\\)", "");
-    
+
     Matcher m = FORMATTED_CHAR_PATTERN.matcher (line);
     
     while (m.find()) {
@@ -194,23 +206,52 @@ public class S3270Screen extends AbstractScreen {
           throw new RuntimeException 
             ("format information in unformatted screen");
         result.append (' ');
-        if (m.group(1).equals("c0")) {
-          if (fieldStartX != -1) {
-            // if we've been in an open field, close it now
-            int fieldEndX = index - 1;
-            int fieldEndY = y;
-            if (fieldEndX == -1) {
-              fieldEndX = width-1;
-              fieldEndY--;
+        i = 1;
+        aux_color = -1;
+        aux_exthighlight = -1;
+
+        while (i <= m.groupCount()) {
+          aux_code = m.group(i);
+          if (aux_code == null) break;
+
+          if (aux_code.equals("c0")) {
+            if (fieldStartX != -1) {
+              // if we've been in an open field, close it now
+              fieldEndX = index - 1;
+              fieldEndY = y;
+              if (fieldEndX == -1) {
+                fieldEndX = width-1;
+                fieldEndY--;
+              }
             }
-            //if(!m.group(2).equals("c0"))
-            fields.add (createField (fieldStartCode, 
-                                     fieldStartX, fieldStartY,
-                                     fieldEndX,   fieldEndY));
+            aux_startcode = i + 1;                        
+          } else if (aux_code.equals("41")) {
+            aux_exthighlight = i + 1;
+          } else if (aux_code.equals("42")) {
+            aux_color = i + 1;
+          }
+          i = i + 3;
+        }
+
+        if (i > 1) {
+          if (fieldStartX != -1) {                   
+            fields.add (createField (fieldStartCode, fieldStartX,
+                                     fieldStartY, fieldEndX, fieldEndY, color,
+                                     ext_highlight));
           }            
           fieldStartX = index + 1;
           fieldStartY = y;
-          fieldStartCode = (byte)Integer.parseInt (m.group(2), 16);
+          fieldStartCode = (byte) Integer.parseInt(m.group(aux_startcode), 16);
+          if (aux_exthighlight != -1) {
+            ext_highlight = Integer.parseInt(m.group(aux_exthighlight), 16);
+          } else {
+            ext_highlight = Field.ATTR_EH_DEFAULT;
+          }
+          if (aux_color != -1) {
+            color = Integer.parseInt(m.group(aux_color), 16);
+          } else {
+            color = Field.ATTR_COL_DEFAULT;
+          }
         }
       } else {
         result.append ((char)(Integer.parseInt (code, 16)));
@@ -225,15 +266,14 @@ public class S3270Screen extends AbstractScreen {
     return result.toString().toCharArray(); 
   }
   
-  private Field createField (byte startCode,
-                             int startx, int starty,
-                             int endx, int endy) {
+  private Field createField(byte startCode, int startx, int starty,
+                            int endx, int endy, int color, int ext_highlight) {
     if ((startCode & Field.ATTR_PROTECTED) == 0)
-      return new InputField (this, startCode,
-                             startx, starty, endx, endy);
+      return new InputField (this, startCode, startx, starty, endx, endy,
+                             color, ext_highlight);
     else
-      return new Field (this, startCode,
-                        startx, starty, endx, endy);
+      return new Field (this, startCode, startx, starty, endx, endy,
+                        color, ext_highlight);
   }
                               
   public static void main (String[] args) throws IOException {
@@ -251,3 +291,4 @@ public class S3270Screen extends AbstractScreen {
   }
 
 }
+	

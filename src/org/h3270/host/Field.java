@@ -33,11 +33,31 @@ import org.h3270.regex.Pattern;
  */
 public class Field {
 
+  // bits controlling the field type (mask = c0)
+  
   public static final byte ATTR_PROTECTED = 0x20;
   public static final byte ATTR_NUMERIC   = 0x10;
   public static final byte ATTR_DISP_1    = 0x08;
   public static final byte ATTR_DISP_2    = 0x04;
 
+  // attributes for extended highlighting (mask = 41)
+  
+  public static final int ATTR_EH_DEFAULT    = 0x00;
+  public static final int ATTR_EH_BLINK      = 0x80;
+  public static final int ATTR_EH_REV_VIDEO  = 0xF2;
+  public static final int ATTR_EH_UNDERSCORE = 0xF4;
+  
+  // attributes for colors (mask = 42)
+
+  public static final int ATTR_COL_DEFAULT = 0x00;
+  public static final int ATTR_COL_BLUE    = 0xF1;
+  public static final int ATTR_COL_RED     = 0xF2;
+  public static final int ATTR_COL_PINK    = 0xF3;
+  public static final int ATTR_COL_GREEN   = 0xF4;
+  public static final int ATTR_COL_TURQ    = 0xF5;
+  public static final int ATTR_COL_YELLOW  = 0xF6;
+  public static final int ATTR_COL_WHITE   = 0xF7;
+  
   protected Screen screen;
 
   protected int startx;
@@ -53,19 +73,39 @@ public class Field {
 
   private int displayMode = DISPLAY_NORMAL;
 
-  public Field (Screen screen, byte fieldCode, 
-                int startx, int starty, int endx, int endy) {
+  /**
+   * Value of the extended highlighting attribute for this field
+   */
+  private int extendedHighlight = ATTR_EH_DEFAULT;
+
+  /**
+   * Value of the color extended attribute for this field
+   */
+  private int extendedColor = ATTR_COL_DEFAULT;
+
+  public Field (Screen screen, byte fieldCode, int startx, int starty,
+                int endx, int endy, int extendedColor, int extendedHighlight) {
     this.screen = screen;
     this.startx = startx;
     this.starty = starty;
     this.endx = endx;
     this.endy = endy;
+
+    this.extendedColor = extendedColor;
+    this.extendedHighlight = extendedHighlight;
+
     if ((fieldCode & ATTR_DISP_1) == 0)
       displayMode = DISPLAY_NORMAL;
     else if ((fieldCode & ATTR_DISP_2) == 0)
       displayMode = DISPLAY_INTENSIFIED;
     else
       displayMode = DISPLAY_HIDDEN;
+  }
+
+  public Field (Screen screen, byte fieldCode,
+                int startx, int starty, int endx, int endy) {
+    this(screen, fieldCode, startx, starty, endx, endy, 
+         ATTR_COL_DEFAULT, ATTR_EH_DEFAULT);
   }
 
   /**
@@ -204,8 +244,39 @@ public class Field {
     return displayMode == DISPLAY_INTENSIFIED;
   }
 
+  /**
+   * Returns true if this field has a 3270 extended color.
+   */
+  public boolean hasExtendedColor() {
+    return extendedColor != ATTR_COL_DEFAULT;
+  }
+
+  /**
+   * Returns true if this field has 3270 extended highlighting.
+   */
+  public boolean hasExtendedHighlight() {
+    return extendedHighlight != ATTR_EH_DEFAULT;
+  }
+
   public boolean isHidden() {
     return displayMode == DISPLAY_HIDDEN;
   }
 
+  /**
+   * If this Field has an extended color, returns the index of that color
+   * (0xf1 through 0xf7).  If this Field does not have an extended color
+   * assigned, returns zero.
+   */
+  public int getExtendedColor() {
+    return extendedColor;
+  }
+
+  /**
+   * If this field has extended highlighting, returns the index of that
+   * highlighting scheme.  If this Field does have extended highlighting,
+   * zero is returned.
+   */
+  public int getExtendedHighlight() {
+    return extendedHighlight;
+  }    
 }

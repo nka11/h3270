@@ -30,6 +30,18 @@ import org.h3270.host.*;
  */
 public class HtmlRenderer implements Renderer {
 
+  /**
+   * Maps the integer values of extended color attributes to the
+   * corresponding CSS classes.
+   */
+  private IntMap extendedColorMap = null;
+  
+  /**
+   * Maps the integer values of extended highlight attributes to the
+   * corresponding CSS classes.
+   */
+  private IntMap extendedHighlightMap = null;
+  
   public boolean canRender (Screen s) {
     return true;
   }
@@ -87,24 +99,78 @@ public class HtmlRenderer implements Renderer {
         if (f.getEndX() == screen.getWidth()-1 && f.getEndY() >= f.getStartY())
           result.append ("\n");
       } else {
-        if (f.isIntensified()) 
-          result.append ("<span class=\"h3270-intensified\">");
-        else if (f.isHidden())
-          result.append ("<span class=\"h3270-hidden\">");
         String text = f.getText();
-        for (int j=0; j<text.length(); j++) {
+        if (text.length() > 0) {
+          result.append(text.charAt(0));
+        }
+        if (needSpan (f)) {
+          result.append ("<span class=\"" + protectedFieldClass(f) + "\">");
+        }
+        for (int j=1; j<text.length(); j++) {
           char ch = text.charAt(j);
           if (ch == '\u0000')
             result.append (' ');
           else
             result.append (ch);
         }
-        if (f.isIntensified() || f.isHidden()) result.append ("</span>");
+        if (needSpan(f)) result.append ("</span>");
       }
     }
     result.append ("</pre>");
   }
+  
+  private boolean needSpan (Field f) {
+    return f.isIntensified()    || f.isHidden() || 
+           f.hasExtendedColor() || f.hasExtendedHighlight();
+  }
+   
+  private String protectedFieldClass (Field f) {
+    StringBuffer result = new StringBuffer();
+    boolean isIntensified = f.isIntensified();
+    boolean isHidden      = f.isHidden();
+    boolean hasExtendedColor     = f.hasExtendedColor();
+    boolean hasExtendedHighlight = f.hasExtendedHighlight();
 
+    if (isIntensified) result.append ("h3270-intensified");
+    else if (isHidden) result.append ("h3270-hidden");
+    
+    if (hasExtendedColor) {
+      if (isIntensified || isHidden) result.append (" ");
+      result.append (getExtendedColorMap().get (f.getExtendedColor()));
+    }
+    
+    if (hasExtendedHighlight) {
+      if (isIntensified || isHidden || hasExtendedColor) result.append (" ");
+      result.append (getExtendedHighlightMap().get (f.getExtendedHighlight()));
+    }
+      
+    return result.toString();
+  }
+  
+  private IntMap getExtendedColorMap() {
+    if (extendedColorMap == null) {
+      extendedColorMap = new IntMap();
+      extendedColorMap.put (Field.ATTR_COL_BLUE,   "h3270-color-blue");
+      extendedColorMap.put (Field.ATTR_COL_RED,    "h3270-color-red");
+      extendedColorMap.put (Field.ATTR_COL_PINK,   "h3270-color-pink");
+      extendedColorMap.put (Field.ATTR_COL_GREEN,  "h3270-color-green");
+      extendedColorMap.put (Field.ATTR_COL_TURQ,   "h3270-color-turq");
+      extendedColorMap.put (Field.ATTR_COL_YELLOW, "h3270-color-yellow");
+      extendedColorMap.put (Field.ATTR_COL_WHITE,  "h3270-color-white");
+    }
+    return extendedColorMap;
+  }
+   
+  private IntMap getExtendedHighlightMap() {
+    if (extendedHighlightMap == null) {
+      extendedHighlightMap = new IntMap();
+      extendedHighlightMap.put (Field.ATTR_EH_BLINK,     "h3270-highlight-blink");
+      extendedHighlightMap.put (Field.ATTR_EH_REV_VIDEO, "h3270-highlight-rev-video");
+      extendedHighlightMap.put (Field.ATTR_EH_UNDERSCORE,"h3270-highlight-underscore");
+    }
+    return extendedHighlightMap;
+  }
+  
   private void renderUnformatted (Screen screen, StringBuffer result) {
     result.append ("<textarea name=field class=\"h3270-input\" "
                    + "cursor=lime "

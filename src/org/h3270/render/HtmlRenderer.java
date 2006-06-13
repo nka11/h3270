@@ -163,13 +163,13 @@ public class HtmlRenderer implements Renderer {
   private IntMap getExtendedColorMap() {
     if (extendedColorMap == null) {
       extendedColorMap = new IntMap();
-      extendedColorMap.put (Field.ATTR_COL_BLUE,   "h3270-color-blue");
-      extendedColorMap.put (Field.ATTR_COL_RED,    "h3270-color-red");
-      extendedColorMap.put (Field.ATTR_COL_PINK,   "h3270-color-pink");
-      extendedColorMap.put (Field.ATTR_COL_GREEN,  "h3270-color-green");
-      extendedColorMap.put (Field.ATTR_COL_TURQ,   "h3270-color-turq");
-      extendedColorMap.put (Field.ATTR_COL_YELLOW, "h3270-color-yellow");
-      extendedColorMap.put (Field.ATTR_COL_WHITE,  "h3270-color-white");
+      extendedColorMap.put (Field.ATTR_COL_BLUE,      "h3270-color-blue");
+      extendedColorMap.put (Field.ATTR_COL_RED,       "h3270-color-red");
+      extendedColorMap.put (Field.ATTR_COL_PINK,      "h3270-color-pink");
+      extendedColorMap.put (Field.ATTR_COL_GREEN,     "h3270-color-green");
+      extendedColorMap.put (Field.ATTR_COL_TURQUOISE, "h3270-color-turquoise");
+      extendedColorMap.put (Field.ATTR_COL_YELLOW,    "h3270-color-yellow");
+      extendedColorMap.put (Field.ATTR_COL_WHITE,     "h3270-color-white");
     }
     return extendedColorMap;
   }

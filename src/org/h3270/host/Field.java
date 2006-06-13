@@ -49,14 +49,14 @@ public class Field {
   
   // attributes for colors (mask = 42)
 
-  public static final int ATTR_COL_DEFAULT = 0x00;
-  public static final int ATTR_COL_BLUE    = 0xF1;
-  public static final int ATTR_COL_RED     = 0xF2;
-  public static final int ATTR_COL_PINK    = 0xF3;
-  public static final int ATTR_COL_GREEN   = 0xF4;
-  public static final int ATTR_COL_TURQ    = 0xF5;
-  public static final int ATTR_COL_YELLOW  = 0xF6;
-  public static final int ATTR_COL_WHITE   = 0xF7;
+  public static final int ATTR_COL_DEFAULT   = 0x00;
+  public static final int ATTR_COL_BLUE      = 0xF1;
+  public static final int ATTR_COL_RED       = 0xF2;
+  public static final int ATTR_COL_PINK      = 0xF3;
+  public static final int ATTR_COL_GREEN     = 0xF4;
+  public static final int ATTR_COL_TURQUOISE = 0xF5;
+  public static final int ATTR_COL_YELLOW    = 0xF6;
+  public static final int ATTR_COL_WHITE     = 0xF7;
   
   protected Screen screen;
 

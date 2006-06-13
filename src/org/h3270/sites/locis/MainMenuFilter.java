@@ -40,19 +40,19 @@ public class MainMenuFilter implements Filter {
       if (m.group(3) == null)
         m.appendReplacement (
           buffer,
-          "<tr><td align=right>$1</td> <td colspan=2>$2</td></tr>\n"
+          "<tr><td align=\"right\">$1</td> <td colspan=\"2\">$2</td></tr>\n"
         );
       else
         m.appendReplacement (
           buffer,
-          "<tr><td align=right>$1</td> <td>$2</td>" 
-          + "<td width=60%><i>$3</i></td></tr>\n"
+          "<tr><td align=\"right\">$1</td> <td>$2</td>" 
+          + "<td style=\"width: 60%;\"><i>$3</i></td></tr>\n"
         );
     }
     m.appendTail (buffer);
     m = announcementPattern.matcher(buffer);
     String result = m.replaceAll(
-      "\n<tr><td align=center colspan=3 " +      "style=\"padding:10px;\"" +      ">$1</td></tr>\n"
+      "\n<tr><td align=\"center\" colspan=\"3\" " +      "style=\"padding:10px;\"" +      ">$1</td></tr>\n"
     );
     return result;
   }

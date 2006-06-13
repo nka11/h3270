@@ -152,33 +152,80 @@ public class ColorScheme {
 
   public String toCSS() {
     StringBuffer result = new StringBuffer();
-    result.append(".h3270-form {\n");
-    result.append(protectedNormalStyle.toCSS());
-    result.append("}\n");
-
-    result.append(".h3270-intensified {\n");
-    result.append(protectedIntensifiedStyle.toCSS());
-    result.append("}\n");
-
-    result.append(".h3270-hidden {\n");
-    result.append(protectedHiddenStyle.toCSS());
-    result.append("}\n");
-
-    result.append(".h3270-input {\n");
-    result.append(unprotectedNormalStyle.toCSS());
-    result.append("}\n");
-
-    result.append(".h3270-input-intensified {\n");
-    result.append(unprotectedIntensifiedStyle.toCSS());
-    result.append("}\n");
-
-    result.append(".h3270-input-hidden {\n");
-    result.append(unprotectedHiddenStyle.toCSS());
-    result.append("}\n");
-
+    result.append (standardCSS());
+    result.append (extendedHighlightCSS());
+    result.append (extendedColorCSS());
+    return result.toString();
+  }
+  
+  private String css (String name, TextStyle style) {
+    StringBuffer result = new StringBuffer();
+    result.append(".");
+    result.append(name);
+    result.append(" {\n");
+    result.append(style.toCSS());
+    result.append("\n}\n");
     return result.toString();
   }
 
+  private String css (String name, String color) {
+    StringBuffer result = new StringBuffer();
+    result.append(".");
+    result.append(name);
+    result.append(" {\n");
+    result.append("  color: " + color + "!important;");
+    result.append("\n}\n");
+    return result.toString();
+  }
+
+  private String standardCSS() {
+    StringBuffer result = new StringBuffer();
+    result.append (css ("h3270-form",              protectedNormalStyle));
+    result.append (css ("h3270-intensified",       protectedIntensifiedStyle));
+    result.append (css ("h3270-hidden",            protectedHiddenStyle));
+    result.append (css ("h3270-input",             unprotectedNormalStyle));
+    result.append (css ("h3270-input-intensified", unprotectedIntensifiedStyle));
+    result.append (css ("h3270-input-hidden",      unprotectedHiddenStyle));
+    return result.toString();
+  }
+  
+  private String extendedHighlightCSS() {
+    StringBuffer result = new StringBuffer();
+    result.append(".h3270-highlight-blink {\n");
+    result.append("  text-decoration:blink;\n");
+    result.append("}\n");
+
+    result.append(".h3270-highlight-underscore {\n");
+    result.append("  text-decoration:underline;\n");
+    result.append("}\n");
+
+    result.append(".h3270-highlight-rev-video {\n");
+    // the following is not quite correct, because "reverse video"
+    // should reverse the style that would otherwise be effective
+    // in a given field, not just the "normal" style, but we'll
+    // leave it at this for now
+    result.append(protectedNormalStyle.reverse().toCSS());
+    result.append("}\n");
+    
+    return result.toString();
+  }
+  
+  private String extendedColorCSS() {
+    StringBuffer result = new StringBuffer();
+    // these will soon be configurable in h3270-config.xml
+    result.append (css ("h3270-color-blue",      "blue"));
+    result.append (css ("h3270-color-red",       "red"));
+    result.append (css ("h3270-color-pink",      "#ffb6c1"));
+    result.append (css ("h3270-color-green",     "lime"));
+    result.append (css ("h3270-color-turquoise", "#40e0d0"));
+    result.append (css ("h3270-color-yellow",    "yellow"));
+    result.append (css ("h3270-color-white",     "white"));
+    return result.toString();
+  }
+  
+  /**
+   * Represents the foreground and background colors of a given field.
+   */
   public class TextStyle {
 
     public String foregroundColor;
@@ -204,6 +251,10 @@ public class ColorScheme {
         this.backgroundColor = other.backgroundColor;
     }
 
+    public TextStyle reverse() {
+      return new TextStyle(this.backgroundColor, this.foregroundColor);
+    }
+    
     public String toCSS() {
       StringBuffer result = new StringBuffer();
       if (backgroundColor != null)

@@ -27,7 +27,7 @@ package org.h3270.render;
  */
 public class SelectOptionBean {
 
-  private final static String SELECTED = "selected";
+  private final static String SELECTED = "selected=\"selected\"";
   private final static String NOT_SELECTED = "";
 
   private final String optionValue;

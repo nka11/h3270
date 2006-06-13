@@ -126,7 +126,7 @@ public class SessionState implements HttpSessionBindingListener {
   public String toString() {
     return "<SessionState: " + properties_.toString() + ">";
   }
-
+  
   public String getHostname() {
     if (terminal != null) {
       return terminal.getHostname();
@@ -145,7 +145,7 @@ public class SessionState implements HttpSessionBindingListener {
       StringBuffer b = new StringBuffer();
       b.append("<b>h3270 version ");
       b.append(org.h3270.Version.value);
-      b.append("</b>\n<br><br>not connected\n");
+      b.append("</b>\n<br /><br />not connected\n");
 
       return b.toString();
     }

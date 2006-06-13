@@ -1,30 +1,30 @@
 <%@ page import="java.util.*" %>
-
 <jsp:useBean id="sessionState" scope="session" class="org.h3270.web.SessionState" />
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>Preferences</title>
 
-<style>
+<style type="text/css">
 td { font-family:freesans,arial,helvetica; }
 </style>
 
 <script type="text/javascript">
   function doApply() {
-    opener.document.control.colorscheme.value
-      = document.prefs.colorscheme.options
-                              [document.prefs.colorscheme.selectedIndex].text;
+    var control = opener.document.forms["control"];
+    var prefs = document.forms["prefs"];
+    control.colorscheme.value
+      = prefs.colorscheme.options[prefs.colorscheme.selectedIndex].text;
 
-	opener.document.control.font.value
-	  = document.prefs.font.options[document.prefs.font.selectedIndex].value;
+	control.font.value
+	  = prefs.font.options[prefs.font.selectedIndex].value;
 
-    if (document.prefs.render.checked) {
-      opener.document.control.render.value = "true";
+    if (prefs.render.checked) {
+      control.render.value = "true";
     } else {
-      opener.document.control.render.value = "false";
+      control.render.value = "false";
     }
-    opener.document.control.submit();
+    control.submit();
   }
 
   function doSubmit() {
@@ -35,16 +35,16 @@ td { font-family:freesans,arial,helvetica; }
 </head>
 
 <body>
-  <form name=prefs action="" method=POST>
+  <form id="prefs" action="" method="post">
   <table cellspacing="4" style="font-size:10pt;">
     <tr>
       <td>Color Scheme:</td>
       <td>
-        <select name=colorscheme style="min-width:12em;">
+        <select name="colorscheme" style="min-width:12em;">
           <%
  			Iterator i = sessionState.getColorschemeSelectOptions();
  			while(i.hasNext()) { %>
- 				<%= i.next() %>
+ 			  <%= i.next() %>
  	      <% } %>	
         </select>
       </td>
@@ -52,12 +52,13 @@ td { font-family:freesans,arial,helvetica; }
     <tr>
       <td>Font:</td>
       <td>
-        <select name=font style="min-width:12em;">
+        <select name="font" style="min-width:12em;">
         <% i = sessionState.getFontSelectOptions();
            while(i.hasNext()) { %>
 				<%= i.next() %>          
 		<% } %>
         </select>
+      </td>
     </tr>
 <!--    <tr>
       <td>Charset:</td>
@@ -71,7 +72,7 @@ td { font-family:freesans,arial,helvetica; }
         <option>french</option>
         <option selected>german</option>
         <option>icelandic</option>
-        <option>iso-hebrew</option>
+        <option>hebrew</option>
         <option>iso-turkish</option>
         <option>italian</option>
         <option>japanese</option>
@@ -86,22 +87,22 @@ td { font-family:freesans,arial,helvetica; }
       </td>
     </tr> -->
     <tr>
-      <td colspan=2>
-        <input type=checkbox name=render value="render"
+      <td colspan="2">
+        <input type="checkbox" name="render" value="render"
         <% if (sessionState.isUseRenderers())
-             out.print (" checked ");
+             out.print (" checked=\"checked\" ");
         %>
-        > Use Regex Rendering Engine
+        /> Use Regex Rendering Engine
       </td>
     </tr>
     <tr>
-      <td colspan=3 align=right  style="padding-top:1em;">
-        <input type=button id="prefs-ok" name=prefs-ok value=OK
-               onClick="doSubmit();">
-        <input type=button id="prefs-apply" name=prefs-apply value=Apply
-               onClick="doApply();">
-        <input type=submit name=prefs-cancel value=Cancel 
-               onClick="window.close();">
+      <td colspan="3" align="right"  style="padding-top:1em;">
+        <input type="button" id="prefs-ok" name="prefs-ok" value="OK"
+               onclick="doSubmit();" />
+        <input type="button" id="prefs-apply" name="prefs-apply" value="Apply"
+               onclick="doApply();" />
+        <input type="submit" name="prefs-cancel" value="Cancel" 
+               onclick="window.close();" />
       </td>
     </tr>
   </table>

@@ -60,9 +60,9 @@
   }
 
   function sendFormWithKey(strKey) {
-    if (document.screen != null) {
-      document.screen.key.value = strKey;
-      document.screen.submit();
+    if (document.forms["screen"] != null) {
+      document.forms["screen"].key.value = strKey;
+      document.forms["screen"].submit();
     }
   }
 

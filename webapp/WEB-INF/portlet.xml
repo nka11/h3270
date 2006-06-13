@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<portlet-app id="h3270" version="1.2.3">
+<portlet-app id="h3270" version="1.3.1">
 
   <portlet id="H3270Portlet">
+    <description>H3270 Portlet</description>
     <portlet-name>H3270Portlet</portlet-name>
-    <display-name>h3270 Portlet</display-name>
+    <display-name>H3270 Portlet</display-name>
     <portlet-class>org.h3270.web.Portlet</portlet-class>
     <expiration-cache>1</expiration-cache>
 

@@ -57,6 +57,22 @@
             pifg="black" pibg="white" phfg="white" phbg="white" 
             unfg="black" unbg="lightgrey" uifg="black" uibg="lightgrey" 
             uhfg="black" uhbg="lightgrey" />
+
+<!--    
+    Will soon rework the scheme element so that it optionally
+    supports the following format as well, AS.
+
+    <scheme name="Amber">
+      <protected>
+        <normal      background="black" foreground="orange"/>
+        <hidden      background="black" foreground="black"/>
+        <intensified background="black" foreground="white"/>
+      </protected>
+      <unprotected>
+        
+      </unprotected>
+    </scheme>
+-->
   </colorschemes>
 
 </h3270>

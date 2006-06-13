@@ -1,3 +1,23 @@
+2006-06-13  Andre Spiegel  <spiegel@gnu.org>
+
+	Changes by Ori Avtalion to make h3270 XHTML-compliant,
+	and for proper escaping of characters in HTML attributes
+	and HTML text.  (Many changes also in HTML and JavaScript files,
+	not listed here.)
+	
+	* render/HtmlRenderer.java (escapeHTMLAttribute, escapeHTMLText):
+	New methods.
+	(appendFocus, createHTMLInput, render, renderFormatted,
+	renderUnformatted): XHTML-ize.
+
+	* web/SessionState.java (getScreen): XHTML-ize.
+
+	* render/RegexRenderer.java (render): XHTML-ize main form.
+
+	* render/SelectOptionBean.java (SELECTED): XHTML-ized.
+
+	* sites/locis/MainMenuFilter.java (filter): XHTML-ize.
+
 2006-06-12  Andre Spiegel  <spiegel@gnu.org>
 
 	Changes by Pasqual Milvaques to support extended colors and

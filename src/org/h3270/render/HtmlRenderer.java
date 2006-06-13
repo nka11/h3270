@@ -50,15 +50,27 @@ public class HtmlRenderer implements Renderer {
     return true;
   }
 
+  public static String escapeHTMLAttribute (String value) {
+	    return value.replaceAll("\\&","&amp;").
+	                  replaceAll("\"","&quot;").
+	                  replaceAll("\'","&#39;");
+  }
+  
+  public static String escapeHTMLText (String value) {
+	    return value.replaceAll("\\&","&amp;").
+                     replaceAll("\\<","&lt;").
+                     replaceAll("\\>","&gt;");
+  }
+  
   public String render (Screen screen, String actionURL) {
     StringBuffer result = new StringBuffer();
     
-    result.append ("<form name=\"screen\" action=\"" + actionURL + "\" method=\"POST\" class=\"h3270-form\">\n");
+    result.append ("<form id=\"screen\" action=\"" + actionURL + "\" method=\"post\" class=\"h3270-form\">\n");
     if (screen.isFormatted())
       renderFormatted (screen, result);
     else
       renderUnformatted (screen, result);
-    result.append ("<input type=hidden name=key>\n");
+    result.append ("<div><input type=\"hidden\" name=\"key\" /></div>\n");
     result.append ("</form>\n");
     
     appendFocus (screen, result);
@@ -77,9 +89,10 @@ public class HtmlRenderer implements Renderer {
   protected void appendFocus (Screen screen, StringBuffer buffer) {
     Field f = screen.getFocusedField();
     if (f != null) {
-      buffer.append ("<script>\n");
-      buffer.append ("  document.screen.field_" + f.getStartX() + "_" + f.getStartY() +
-                     ".focus()\n");
+      buffer.append ("<script type=\"text/javascript\">\n");
+      buffer.append ("  document.forms[\"screen\"]." +
+         "field_" + f.getStartX() + "_" + f.getStartY() +
+         ".focus()\n");
       buffer.append ("</script>\n");
     }
   }
@@ -100,18 +113,18 @@ public class HtmlRenderer implements Renderer {
           result.append ("\n");
       } else {
         String text = f.getText();
+        // First append the control character that started the field,
+        // without any formatting applied to it.
         if (text.length() > 0) {
           result.append(text.charAt(0));
         }
         if (needSpan (f)) {
           result.append ("<span class=\"" + protectedFieldClass(f) + "\">");
         }
-        for (int j=1; j<text.length(); j++) {
-          char ch = text.charAt(j);
-          if (ch == '\u0000')
-            result.append (' ');
-          else
-            result.append (ch);
+        // Now the rest of the field.
+        if (text.length() > 1) {
+          String newText = text.substring(1).replaceAll ("\u0000", " ");
+          result.append (escapeHTMLText (newText));
         }
         if (needSpan(f)) result.append ("</span>");
       }
@@ -170,10 +183,10 @@ public class HtmlRenderer implements Renderer {
     }
     return extendedHighlightMap;
   }
-  
+
   private void renderUnformatted (Screen screen, StringBuffer result) {
-    result.append ("<textarea name=field class=\"h3270-input\" "
-                   + "cursor=lime "
+    result.append ("<textarea name=\"field\" class=\"h3270-input\" "
+                   + "cursor=\"lime\" "
                    + "rows=" + screen.getHeight()
                    + " cols=" + screen.getWidth() + ">\n");
     for (int y = 0; y < screen.getHeight(); y++) {
@@ -186,11 +199,11 @@ public class HtmlRenderer implements Renderer {
       }
       result.append ("\n");
     }
+    
     result.append ("</textarea>\n");
-    result.append ("<script>\n");
+    result.append ("<script type=\"text/javascript\">\n");
     result.append ("  document.screen.field.focus();\n");
     result.append ("</script>\n");
-    
   }
 
   protected void renderInputField (StringBuffer result, InputField f) {
@@ -214,7 +227,7 @@ public class HtmlRenderer implements Renderer {
   protected void createHtmlInput (StringBuffer result, InputField f,
                                   String value, int lineNumber, int width) {
     result.append ("<input ");
-    result.append ("type=" + (f.isHidden() ? "password " : "text "));
+    result.append ("type=" + (f.isHidden() ? "\"password\" " : "\"text\" "));
     result.append ("name=\"field_" + f.getStartX() + "_" + f.getStartY());
     if (lineNumber != -1)
       result.append ("_" + lineNumber);
@@ -225,10 +238,10 @@ public class HtmlRenderer implements Renderer {
       result.append ("class=\"h3270-input-hidden\" ");
     else
       result.append ("class=\"h3270-input\" ");
-    result.append ("value=\"" + InputField.trim (value) + "\" ");
+    result.append ("value=\"" + escapeHTMLAttribute(InputField.trim(value)) + "\" ");
     result.append ("maxlength=\"" + width + "\" ");
     result.append ("size=\"" + width + "\" ");
-    result.append (">");
+    result.append ("/>");
   }
      
 }

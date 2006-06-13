@@ -89,7 +89,7 @@ public class S3270ScreenTest extends TestCase {
     Screen s = createScreenFromDump(filename + ".dump");
     String result = new TextRenderer(true, false).render(s);
     try {
-      PrintWriter out = new PrintWriter(new FileWriter(filename + ".out"));
+      PrintWriter out = new PrintWriter(new FileWriter("/home/spiegel/projects/h3270/cvs/test/src" + filename + ".out"));
       out.print(result);
       out.close();
     } catch (Exception e) {
@@ -120,6 +120,10 @@ public class S3270ScreenTest extends TestCase {
   
   public void test_screen_8() {
     screenTest("/org/h3270/test/screen8");
+  }
+  
+  public void test_screenXA() {
+    screenTest("/org/h3270/test/screenXA");
   }
   
 }

@@ -95,7 +95,7 @@ public class RegexRenderer extends HtmlRenderer {
       // Generate HTML page from template, replacing placeholders
       // in the template with matches from the matchPattern.
       StringBuffer result = new StringBuffer();
-      result.append ("<form name=\"screen\" action=\"" + actionURL + "\" method=\"POST\">\n");
+      result.append ("<form id=\"screen\" action=\"" + actionURL + "\" method=\"post\">\n");
       Matcher placeholder = PLACEHOLDER_PATTERN.matcher (htmlTemplate);
       int index = 0;
       while (placeholder.find()) {
@@ -114,7 +114,7 @@ public class RegexRenderer extends HtmlRenderer {
         index = placeholder.end();        
       }
       result.append (htmlTemplate.substring (index));
-      result.append ("<input type=hidden name=key>\n");
+      result.append ("<div><input type=\"hidden\" name=\"key\" /></div>\n");
       result.append ("</form>");
       appendFocus (s, result);
       return result.toString();

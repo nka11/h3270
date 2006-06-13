@@ -1,5 +1,26 @@
 package org.h3270.web;
 
+/*
+ * Copyright (C) 2006 akquinet
+ *
+ * This file is part of h3270.
+ *
+ * h3270 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * h3270 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with h3270; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+ * MA 02111-1307 USA
+ */
+
 import java.io.*;
 import java.util.*;
 
@@ -39,7 +60,7 @@ public class Portlet extends GenericPortlet {
     PrintWriter out = response.getWriter();
 
     // stlye
-    out.println("<style>");
+    out.println("<style type=\"text/css\">");
     out.println(".h3270-form pre, .h3270-form pre input, .h3270-form textarea {");
     out.println("  font-family: " + prefs.getValue("font", "courier") + ";");
     out.println("  font-size: " + prefs.getValue("font-size", "8") + "pt;");
@@ -49,9 +70,8 @@ public class Portlet extends GenericPortlet {
     out.println("</style>");
 
     // keyboard-handling
-    out.println("<script>");
-    getPortletContext().getRequestDispatcher ("/common/keyboard.js")
-                       .include (request, response);
+    out.println("<script type=\"text/javascript\">");
+    include (out, "/common/keyboard.js");
     out.println("</script>");
     
     // screen image
@@ -60,13 +80,11 @@ public class Portlet extends GenericPortlet {
     out.println("</td>");
     if (prefs.getValue("keypad", "false").equals("true")) {
       out.println("<td>");
-      getPortletContext().getRequestDispatcher ("/keys.html")
-                         .include(request, response);
+      include (out, "/keys.html");
       out.println("</td>");
     }
     out.println("</tr></table>");
     
-    out.close();
   }
   
   protected void doEdit(RenderRequest request, RenderResponse response)
@@ -78,8 +96,8 @@ public class Portlet extends GenericPortlet {
   public void processAction (ActionRequest request, ActionResponse response)
       throws PortletException, IOException {
     PortletMode mode = request.getPortletMode();
-    if      (mode == PortletMode.EDIT) processEditAction (request, response);
-    else if (mode == PortletMode.VIEW) processViewAction (request, response);
+    if      (PortletMode.EDIT.equals(mode)) processEditAction (request, response);
+    else if (PortletMode.VIEW.equals(mode)) processViewAction (request, response);
   }
 
   /**
@@ -88,11 +106,11 @@ public class Portlet extends GenericPortlet {
   public void processEditAction (ActionRequest request,
                                  ActionResponse response)
       throws PortletException, IOException {
-
     // always store preferences, except when "Cancel" was pressed
-    if (request.getParameter("cancel") == null)
+    if (request.getParameter("cancel") == null) {
       storePreferences (request);
-
+    }
+      
     if (request.getParameter("connect") != null) {
       createTerminal(request);
       response.setPortletMode (PortletMode.VIEW);
@@ -254,4 +272,14 @@ public class Portlet extends GenericPortlet {
     return getPortletContext().getRealPath(path);
   }
   
+  private void include (PrintWriter out, String filename) throws IOException {
+    BufferedReader in = new BufferedReader (
+      new FileReader (getRealPath (filename))
+    );
+    while (true) {
+      String line = in.readLine();
+      if (line == null) break;
+      out.println (line);
+    }
+  }
 }

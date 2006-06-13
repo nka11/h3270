@@ -28,25 +28,25 @@ pre, pre input, textarea {
 }
 
 .h3270-color-blue {
-    color:blue;
+    color:blue !important;
 }
 .h3270-color-red {
-    color:red;
+    color:red !important;
 }
 .h3270-color-pink {
-    color:#ffb6c1;
+    color:#ffb6c1 !important;
 }
 .h3270-color-green {
-    color:lime;
+    color:lime !important;
 }
 .h3270-color-turq {
-    color:#40e0d0;
+    color:#40e0d0 !important;
 }
 .h3270-color-yellow {
-    color:yellow;
+    color:yellow !important;
 }
 .h3270-color-white {
-    color:white;
+    color:white !important;
 }
 
 <%= sessionState.getActiveColorScheme().toCSS() %>

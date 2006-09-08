@@ -1,6 +1,8 @@
 
   // Keyboard Handling Code
 
+  enter = false;
+
   if (isIE()) {
     document.onkeydown = handleIEKeyDownEvent;
     document.onhelp = handleIEKeyHelpEvent;
@@ -60,9 +62,14 @@
   }
 
   function sendFormWithKey(strKey) {
-    if (document.forms["screen"] != null) {
+    if (document.forms["screen"] != null && enter == false) {
       document.forms["screen"].key.value = strKey;
       document.forms["screen"].submit();
+      enter = true;
+    }
+    else if (enter == true)
+    {
+      alert("The current transaction is still running. Please try again.");
     }
   }
 

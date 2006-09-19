@@ -106,14 +106,14 @@ public class Servlet extends AbstractServlet {
 
     SessionState state = getSessionState(request);
 
-    if (state.terminal == null && autoconnect)
+    if (state.getTerminal() == null && autoconnect)
     {
         connect(state, targetHost);
     }
     
-    if (state.terminal != null) {
-      state.terminal.updateScreen();
-      Screen s = state.terminal.getScreen();
+    if (state.getTerminal() != null) {
+      state.getTerminal().updateScreen();
+      Screen s = state.getTerminal().getScreen();
 
       if (state.isUseRenderers() && engine.canRender(s)) {
         state.setScreen(engine.render(s));
@@ -145,24 +145,24 @@ public class Servlet extends AbstractServlet {
         connect(state, hostname);
       }
     } else if (request.getParameter("disconnect") != null) {
-      if (state.terminal != null)
-        state.terminal.disconnect();
-      state.terminal = null;
+      if (state.getTerminal() != null)
+        state.getTerminal().disconnect();
+      state.setTerminal (null);
       state.setScreen(null);
     } else if (request.getParameter("refresh") != null) {
-      state.terminal.updateScreen();
+      state.getTerminal().updateScreen();
     } else if (request.getParameter("dumpfile") != null
         && !request.getParameter("dumpfile").equals("")) {
       String filename = new File(getRealPath("/WEB-INF/dump"), request
           .getParameter("dumpfile")).toString();
-      state.terminal.dumpScreen(filename);
+      state.getTerminal().dumpScreen(filename);
     } else if (request.getParameter("keypad") != null) {
       state.setUseKeypad(!state.isUseKeypad());
-    } else if (state.terminal != null) {
+    } else if (state.getTerminal() != null) {
       submitScreen(request);
       String key = request.getParameter("key");
       if (key != null)
-        state.terminal.doKey(key);
+        state.getTerminal().doKey(key);
     }
     doGet(request, response);
   }
@@ -175,9 +175,9 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
     if (hostname.startsWith("file:")) {
       String filename = new File (getRealPath("/WEB-INF/dump"),
                                   hostname.substring(5)).toString();
-      state.terminal = new FileTerminal(new URL("file:" + filename));
+      state.setTerminal (new FileTerminal(new URL("file:" + filename)));
     } else {
-      state.terminal = new S3270(hostname, configuration);
+      state.setTerminal (new S3270(hostname, configuration));
     }
     
     state.setUseKeypad(false);
@@ -233,7 +233,7 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
    */
   private void submitScreen(HttpServletRequest request) throws IOException {
     SessionState state = getSessionState(request);
-    Screen s = state.terminal.getScreen();
+    Screen s = state.getTerminal().getScreen();
     if (s.isFormatted()) {
       for (Iterator i = s.getFields().iterator(); i.hasNext();) {
         Field f = (Field) i.next();
@@ -255,9 +255,9 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
           }
         }
       }
-      state.terminal.submitScreen();
+      state.getTerminal().submitScreen();
     } else {
-      state.terminal.submitUnformatted((String) request.getParameter("field"));
+      state.getTerminal().submitUnformatted((String) request.getParameter("field"));
     }
   }
 

@@ -106,19 +106,23 @@ public class Servlet extends AbstractServlet {
 
     SessionState state = getSessionState(request);
 
-    if (state.getTerminal() == null && autoconnect)
+    if (state.getTerminal(request) == null && autoconnect)
     {
-        connect(state, targetHost);
+        connect (request, state, targetHost);
     }
     
-    if (state.getTerminal() != null) {
-      state.getTerminal().updateScreen();
-      Screen s = state.getTerminal().getScreen();
+    if (state.getTerminal(request) != null) {
+      state.getTerminal(request).updateScreen();
+      Screen s = state.getTerminal(request).getScreen();
 
       if (state.useRenderers() && engine.canRender(s)) {
-        state.setScreen(engine.render(s));
+        state.setScreen (request, 
+                         engine.render(s, "", 
+                                       state.getTerminalNumber(request)));
       } else {
-        state.setScreen(basicRenderer.render(s));
+        state.setScreen (request, 
+                         basicRenderer.render(s, "",
+                                              state.getTerminalNumber(request)));
       }
     }
     getServletContext().getRequestDispatcher(mainJSP)
@@ -142,32 +146,34 @@ public class Servlet extends AbstractServlet {
 
       // TODO message to user if no hostname specified
       if (!hostname.equals("")) {
-        connect(state, hostname);
+        connect (request, state, hostname);
       }
     } else if (request.getParameter("disconnect") != null) {
-      if (state.getTerminal() != null)
-        state.getTerminal().disconnect();
-      state.setTerminal (null);
-      state.setScreen(null);
+      if (state.getTerminal(request) != null)
+        state.getTerminal(request).disconnect();
+      state.setTerminal (request, null);
+      state.setScreen (request, null);
     } else if (request.getParameter("refresh") != null) {
-      state.getTerminal().updateScreen();
+      state.getTerminal(request).updateScreen();
     } else if (request.getParameter("dumpfile") != null
         && !request.getParameter("dumpfile").equals("")) {
       String filename = new File(getRealPath("/WEB-INF/dump"), request
           .getParameter("dumpfile")).toString();
-      state.getTerminal().dumpScreen(filename);
+      state.getTerminal(request).dumpScreen(filename);
     } else if (request.getParameter("keypad") != null) {
-      state.useKeypad(!state.useKeypad());
-    } else if (state.getTerminal() != null) {
+      state.useKeypad(request, !state.useKeypad(request));
+    } else if (state.getTerminal(request) != null) {
       submitScreen(request);
       String key = request.getParameter("key");
       if (key != null)
-        state.getTerminal().doKey(key);
+        state.getTerminal(request).doKey(key);
     }
     doGet(request, response);
   }
 
-  private void connect(SessionState state, String hostname) throws IOException, MalformedURLException {
+  private void connect (HttpServletRequest request,
+                        SessionState state,
+                        String hostname) throws IOException, MalformedURLException {
     if (logger.isInfoEnabled()) {
       logger.info("Connecting to " + hostname);
     }
@@ -175,12 +181,12 @@ public class Servlet extends AbstractServlet {
     if (hostname.startsWith("file:")) {
       String filename = new File (getRealPath("/WEB-INF/dump"),
                                   hostname.substring(5)).toString();
-      state.setTerminal (new FileTerminal(new URL("file:" + filename)));
+      state.setTerminal (request, new FileTerminal(new URL("file:" + filename)));
     } else {
-      state.setTerminal (new S3270(hostname, configuration));
+      state.setTerminal (request, new S3270(hostname, configuration));
     }
     
-    state.useKeypad(false);
+    state.useKeypad (request, false);
   }
 
   private void handlePreferences(SessionState state,
@@ -195,7 +201,7 @@ public class Servlet extends AbstractServlet {
 
     if (colorscheme != null) {
       colorscheme = URLDecoder.decode(request.getParameter("colorscheme"), "UTF-8");
-      modified = state.setActiveColorScheme(colorscheme);
+      modified = state.setActiveColorScheme(request, colorscheme);
     }
 
     if (render != null) {
@@ -233,7 +239,7 @@ public class Servlet extends AbstractServlet {
    */
   private void submitScreen(HttpServletRequest request) throws IOException {
     SessionState state = getSessionState(request);
-    Screen s = state.getTerminal().getScreen();
+    Screen s = state.getTerminal(request).getScreen();
     if (s.isFormatted()) {
       for (Iterator i = s.getFields().iterator(); i.hasNext();) {
         Field f = (Field) i.next();
@@ -255,9 +261,9 @@ public class Servlet extends AbstractServlet {
           }
         }
       }
-      state.getTerminal().submitScreen();
+      state.getTerminal(request).submitScreen();
     } else {
-      state.getTerminal().submitUnformatted((String) request.getParameter("field"));
+      state.getTerminal(request).submitUnformatted((String) request.getParameter("field"));
     }
   }
 

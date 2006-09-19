@@ -15,6 +15,11 @@ public class TerminalState {
   private boolean useKeypad = false;
   private ColorScheme activeColorScheme = null;
   private String screen = null;
+
+  public TerminalState (boolean useKeypad, ColorScheme activeColorScheme) {
+    this.useKeypad = useKeypad;
+    this.activeColorScheme = activeColorScheme;
+  }
   
   public ColorScheme getActiveColorScheme() {
     return activeColorScheme;

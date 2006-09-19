@@ -253,21 +253,21 @@ public class SessionState implements HttpSessionBindingListener {
     return false;
   }
 
-  public void setUseKeypad(boolean useKeypad) {
+  public void useKeypad(boolean useKeypad) {
     terminalState.useKeypad (useKeypad);
 
     put(KEYPAD, useKeypad);
   }
 
-  public boolean isUseKeypad() {
+  public boolean useKeypad() {
     return terminalState.useKeypad();
   }
 
-  public void setUseRenderers(boolean useRenderers) {
+  public void useRenderers(boolean useRenderers) {
     put(RENDERER, useRenderers);
   }
 
-  public boolean isUseRenderers() {
+  public boolean useRenderers() {
     return getBooleanProperty(RENDERER, true);
   }
 

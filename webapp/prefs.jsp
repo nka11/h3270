@@ -42,7 +42,7 @@ td { font-family:freesans,arial,helvetica; }
       <td>
         <select name="colorscheme" style="min-width:12em;">
           <%
- 			Iterator i = sessionState.getColorschemeSelectOptions();
+ 			Iterator i = sessionState.getColorschemeSelectOptions(request);
  			while(i.hasNext()) { %>
  			  <%= i.next() %>
  	      <% } %>	
@@ -89,7 +89,7 @@ td { font-family:freesans,arial,helvetica; }
     <tr>
       <td colspan="2">
         <input type="checkbox" name="render" value="render"
-        <% if (sessionState.isUseRenderers())
+        <% if (sessionState.useRenderers())
              out.print (" checked=\"checked\" ");
         %>
         /> Use Regex Rendering Engine

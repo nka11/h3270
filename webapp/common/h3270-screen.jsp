@@ -2,10 +2,10 @@
   <tr>
     <td style="width:50em;height:37em;" align="center" valign="middle"
       class="h3270-screen-border h3270-form">
-      <%= sessionState.getScreen() %>
+      <%= sessionState.getScreen(request) %>
     </td>
 
-    <% if (sessionState.isUseKeypad()) { %>
+    <% if (sessionState.useKeypad(request)) { %>
        <td rowspan=2 valign=top
            class="h3270-screen-border">
          <jsp:include page="keys.html" flush="true"/>

@@ -4,7 +4,7 @@
                   action="<%= response.encodeURL("servlet") %>"
                   method=POST>
             <td width=30% align=left>
-              <% if (!sessionState.isConnected()) {
+              <% if (!sessionState.isConnected(request)) {
                    String targetHost = 
                      (String)session.getAttribute("targetHost");
                    if (targetHost == null) { %>
@@ -21,7 +21,7 @@
                  <input type=button id="prefs" name=prefs value="Preferences..."
                         onClick="openPrefs();">
             <% } else { %>
-                 Host: <b><%= sessionState.getHostname() %></b>
+                 Host: <b><%= sessionState.getHostname(request) %></b>
               </td>
               <td width=70% align=right>
                  <input type=submit name=disconnect value="Disconnect">
@@ -37,6 +37,7 @@
               <input type=hidden name=colorscheme>
               <input type=hidden name=font>
               <input type=hidden name=render>
+		      <%= sessionState.getTerminalParam(request) %>
             </form>
             </tr>
         </table>

@@ -14,4 +14,4 @@ pre, pre input, textarea {
     border-collapse:collapse;
 }
 
-<%= sessionState.getActiveColorScheme().toCSS() %>
+<%= sessionState.getActiveColorScheme(request).toCSS() %>

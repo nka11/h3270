@@ -30,6 +30,7 @@ import org.h3270.host.Screen;
 import org.h3270.host.ScreenCharSequence;
 import org.h3270.regex.Matcher;
 import org.h3270.regex.Pattern;
+import org.h3270.web.SessionState;
 
 /**
  * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
@@ -88,7 +89,7 @@ public class RegexRenderer extends HtmlRenderer {
   private static final Pattern PLACEHOLDER_PATTERN =
     Pattern.compile ("(?<!&)#([0-9]+)(?:\\{(.*?)\\})?");
 
-  public String render (Screen s, String actionURL) {
+  public String render (Screen s, String actionURL, int id) {
     ScreenCharSequence screenSeq = new ScreenCharSequence(s);
     Matcher m = matchPattern.matcher(screenSeq.toString());
     if (m.find()) {
@@ -115,6 +116,12 @@ public class RegexRenderer extends HtmlRenderer {
       }
       result.append (htmlTemplate.substring (index));
       result.append ("<div><input type=\"hidden\" name=\"key\" /></div>\n");
+      if (id >= 0) {
+        result.append ("<div><input type=\"hidden\" name=\"" 
+                     + SessionState.TERMINAL + "\" value=\"" 
+                     + id + "\"></div>\n");
+
+      }
       result.append ("</form>");
       appendFocus (s, result);
       return result.toString();

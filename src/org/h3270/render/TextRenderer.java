@@ -53,6 +53,10 @@ public class TextRenderer implements Renderer {
     return true;
   }
 
+  public String render (Screen s, String actionURL, int number) {
+    return this.render(s);
+  }
+  
   public String render (Screen s, String actionURL) {
     return this.render(s);
   }

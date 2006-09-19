@@ -23,6 +23,7 @@ package org.h3270.render;
 
 import java.util.*;
 import org.h3270.host.*;
+import org.h3270.web.*;
 
 /**
  * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
@@ -62,7 +63,7 @@ public class HtmlRenderer implements Renderer {
                      replaceAll("\\>","&gt;");
   }
   
-  public String render (Screen screen, String actionURL) {
+  public String render (Screen screen, String actionURL, int number) {
     StringBuffer result = new StringBuffer();
     
     result.append ("<form id=\"screen\" action=\"" + actionURL + "\" method=\"post\" class=\"h3270-form\">\n");
@@ -71,6 +72,11 @@ public class HtmlRenderer implements Renderer {
     else
       renderUnformatted (screen, result);
     result.append ("<div><input type=\"hidden\" name=\"key\" /></div>\n");
+    if (number >= 0) {
+      result.append ("<div><input type=\"hidden\" name=\"" 
+                     + SessionState.TERMINAL + "\" value=\"" 
+                     + number + "\"></div>\n");
+    }
     result.append ("</form>\n");
     
     appendFocus (screen, result);
@@ -79,7 +85,11 @@ public class HtmlRenderer implements Renderer {
   }
 
   public String render (Screen screen) {
-    return this.render (screen, "");
+    return this.render (screen, "", -1);
+  }
+  
+  public String render (Screen screen, String actionURL) {
+    return this.render (screen, actionURL, -1);
   }
   
   /**

@@ -68,17 +68,22 @@ public class Engine implements Renderer {
   }
 
   public String render (Screen s) {
-    return this.render (s, "");
+    return this.render (s, "", -1);
   }
   
   public String render (Screen s, String actionURL) {
-    String screenText = new TextRenderer().render(s, actionURL);
+    return this.render (s, "", -1);
+  }
+  
+  public String render (Screen s, String actionURL, int number) {
+    String screenText = new TextRenderer().render(s, actionURL, number);
     for (Iterator i = renderers.iterator(); i.hasNext();) {
       Renderer r = (Renderer)i.next();
-      if (r.canRender (screenText))
-        return r.render(s, actionURL);
+      if (r.canRender (screenText)) {
+        return r.render(s, actionURL, number);
+      }
     }
-    return fallback.render(s, actionURL);
+    return fallback.render(s, actionURL, number);
   }
 
   private Renderer getRenderer (Screen s) {
@@ -89,7 +94,7 @@ public class Engine implements Renderer {
     }
     return fallback;
   }
-
+  
   public static void main(String[] args) {
     Engine e = new Engine("/usr/java/tomcat/webapps/h3270/WEB-INF/templates");
     System.out.println(e);

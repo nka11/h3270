@@ -115,7 +115,7 @@ public class Servlet extends AbstractServlet {
       state.getTerminal().updateScreen();
       Screen s = state.getTerminal().getScreen();
 
-      if (state.isUseRenderers() && engine.canRender(s)) {
+      if (state.useRenderers() && engine.canRender(s)) {
         state.setScreen(engine.render(s));
       } else {
         state.setScreen(basicRenderer.render(s));
@@ -130,9 +130,9 @@ public class Servlet extends AbstractServlet {
 
     SessionState state = getSessionState(request);
 
-    boolean prevRendering = state.isUseRenderers();
+    boolean prevRendering = state.useRenderers();
     handlePreferences(state, request, response);
-    if (state.isUseRenderers() && !prevRendering)
+    if (state.useRenderers() && !prevRendering)
       engine = new Engine(templateDir);
 
     if (request.getParameter("connect") != null) {
@@ -157,7 +157,7 @@ public class Servlet extends AbstractServlet {
           .getParameter("dumpfile")).toString();
       state.getTerminal().dumpScreen(filename);
     } else if (request.getParameter("keypad") != null) {
-      state.setUseKeypad(!state.isUseKeypad());
+      state.useKeypad(!state.useKeypad());
     } else if (state.getTerminal() != null) {
       submitScreen(request);
       String key = request.getParameter("key");
@@ -167,11 +167,11 @@ public class Servlet extends AbstractServlet {
     doGet(request, response);
   }
 
-private void connect(SessionState state, String hostname) throws IOException, MalformedURLException {
+  private void connect(SessionState state, String hostname) throws IOException, MalformedURLException {
     if (logger.isInfoEnabled()) {
       logger.info("Connecting to " + hostname);
     }
-
+    
     if (hostname.startsWith("file:")) {
       String filename = new File (getRealPath("/WEB-INF/dump"),
                                   hostname.substring(5)).toString();
@@ -180,8 +180,8 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
       state.setTerminal (new S3270(hostname, configuration));
     }
     
-    state.setUseKeypad(false);
-}
+    state.useKeypad(false);
+  }
 
   private void handlePreferences(SessionState state,
       HttpServletRequest request, HttpServletResponse response)
@@ -200,9 +200,9 @@ private void connect(SessionState state, String hostname) throws IOException, Ma
 
     if (render != null) {
       if (render.equals("true")) {
-        state.setUseRenderers(true);
+        state.useRenderers(true);
       } else if (render.equals("false")) {
-        state.setUseRenderers(false);
+        state.useRenderers(false);
       }
       modified = true;
     }

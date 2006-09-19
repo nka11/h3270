@@ -45,7 +45,7 @@ import org.h3270.render.H3270Configuration;
 import org.h3270.render.SelectOptionBean;
 
 /**
- * @author <a href="mailto:spiegel@it-fws.de">Andre Spiegel </a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class SessionState implements HttpSessionBindingListener {
@@ -70,14 +70,11 @@ public class SessionState implements HttpSessionBindingListener {
 
   private final static String[] KEYS = { COLORSCHEME, RENDERER, KEYPAD, FONTNAME };
 
-  public Terminal terminal = null;
-
   private final H3270Configuration h3270Config;
-  private boolean useKeypad = false;
   private final Properties properties_ = new Properties();
-  private ColorScheme activeColorScheme;
-  private String screen;
 
+  private TerminalState terminalState = new TerminalState();
+  
   /**
    * although it is never called tomcat seems to insist to have a no-args
    * constructor.
@@ -119,7 +116,7 @@ public class SessionState implements HttpSessionBindingListener {
     setActiveColorScheme(getStringProperty(COLORSCHEME, h3270Config.getColorSchemeDefault()));
 
     if (isPropertyDefined(KEYPAD)) {
-      useKeypad = getBooleanProperty(KEYPAD);
+      terminalState.useKeypad (getBooleanProperty(KEYPAD));
     }
   }
 
@@ -127,20 +124,28 @@ public class SessionState implements HttpSessionBindingListener {
     return "<SessionState: " + properties_.toString() + ">";
   }
   
+  public Terminal getTerminal() {
+    return terminalState.getTerminal();
+  }
+  
+  public void setTerminal (Terminal terminal) {
+    terminalState.setTerminal(terminal);
+  }
+  
   public String getHostname() {
-    if (terminal != null) {
-      return terminal.getHostname();
+    if (terminalState.getTerminal() != null) {
+      return terminalState.getTerminal().getHostname();
     }
     return null;
   }
 
   public boolean isConnected() {
-    return terminal != null;
+    return terminalState.getTerminal() != null;
   }
 
   public String getScreen() {
-    if (screen != null) {
-      return screen.toString();
+    if (terminalState.getTerminal().getScreen() != null) {
+      return terminalState.getTerminal().getScreen().toString();
     } else {
       StringBuffer b = new StringBuffer();
       b.append("<b>h3270 version ");
@@ -152,7 +157,7 @@ public class SessionState implements HttpSessionBindingListener {
   }
 
   void setScreen(String screen) {
-    this.screen = screen;
+    terminalState.setScreen(screen);
   }
 
   public String getSavedState() throws IOException {
@@ -223,7 +228,7 @@ public class SessionState implements HttpSessionBindingListener {
   }
 
   public ColorScheme getActiveColorScheme() {
-    return activeColorScheme;
+    return terminalState.getActiveColorScheme();
   }
 
   public List getColorSchemes() {
@@ -239,7 +244,7 @@ public class SessionState implements HttpSessionBindingListener {
 	
     if (scheme != null) {
       logger.debug("OK");
-      activeColorScheme = scheme;
+      terminalState.setActiveColorScheme (scheme);
 
       put(COLORSCHEME, schemeName);
 
@@ -249,13 +254,13 @@ public class SessionState implements HttpSessionBindingListener {
   }
 
   public void setUseKeypad(boolean useKeypad) {
-    this.useKeypad = useKeypad;
+    terminalState.useKeypad (useKeypad);
 
     put(KEYPAD, useKeypad);
   }
 
   public boolean isUseKeypad() {
-    return useKeypad;
+    return terminalState.useKeypad();
   }
 
   public void setUseRenderers(boolean useRenderers) {
@@ -272,10 +277,12 @@ public class SessionState implements HttpSessionBindingListener {
   
   public void valueUnbound(HttpSessionBindingEvent arg0) {
     // disconnect s3270 session when the HttpSession times out
-    if (terminal != null && terminal.isConnected()) {
+    if (terminalState.getTerminal() != null 
+     && terminalState.getTerminal().isConnected()) {
       if (logger.isInfoEnabled())
-        logger.info ("Session unbound, disconnecting terminal " + terminal);
-      terminal.disconnect();
+        logger.info ("Session unbound, disconnecting terminal " 
+                     + terminalState.getTerminal());
+      terminalState.getTerminal().disconnect();
     }
   }
 

@@ -1,3 +1,40 @@
+2006-09-19  Andre Spiegel  <spiegel@gnu.org>
+
+	Changes to allow multiple 3270 sessions in the same 
+	HttpSession (different browser windows or tabs).
+	
+	* render/Engine.java, render/HtmlRenderer.java,
+	render/RegexRenderer.java, render/TextRenderer.java (render):
+	Accommodate the new, optional third parameter.
+
+	* render/Renderer.java (render): Overload with a three-parameter
+	version that requires a terminal number.
+
+	* web/Servlet.java: Adapt to changes in SessionState,
+	parameterizing the state with the request, so that multiple
+	browser windows can have independent sessions.
+
+	* web/SessionState.java: Add a "request" parameter to most
+	accessors.  Add logic to maintain a list of TerminalState objects,
+	indexed by a request parameter.
+
+	* web/TerminalState.java (ctor): Require parameters.
+
+	* web/Servlet.java (connect, doGet, doPost, handlePreferences):
+	Adapt to name changes of boolean accessor methods.
+
+	* web/SessionState.java (useKeypad, useRenderers): Renamed from
+	isUseKeypad, isUseRenderers, setUseKeypad, setUseRenderers.
+
+	* web/Servlet.java (connect, doGet, doPost, submitScreen): Use
+	accessor method to get/set the terminal.
+
+	* web/SessionState.java: Use the new TerminalState class to
+	encapsulate terminal-specific
+	(window-specific) information.
+
+	* web/TerminalState.java: Initial revision.
+
 2006-06-13  Andre Spiegel  <spiegel@gnu.org>
 
 	* h3270 Version 1.3.1 released.

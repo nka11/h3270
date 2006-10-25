@@ -212,7 +212,7 @@ public class HtmlRenderer implements Renderer {
     
     result.append ("</textarea>\n");
     result.append ("<script type=\"text/javascript\">\n");
-    result.append ("  document.screen.field.focus();\n");
+    result.append ("  document.forms[\"screen\"].field.focus();\n");
     result.append ("</script>\n");
   }
 

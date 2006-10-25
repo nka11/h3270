@@ -33,8 +33,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.h3270.regex.Matcher;
-import org.h3270.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.h3270.render.TextRenderer;
 
 /**

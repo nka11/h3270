@@ -21,7 +21,7 @@ package org.h3270.sites.locis;
  * MA 02111-1307 USA
  */
 
-import org.h3270.regex.*;
+import java.util.regex.*;
 import org.h3270.render.Filter;
 
 public class MainMenuFilter implements Filter {

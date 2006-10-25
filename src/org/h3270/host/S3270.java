@@ -36,7 +36,7 @@ import java.util.List;
 import org.apache.avalon.framework.configuration.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.h3270.regex.*;
+import java.util.regex.*;
 import org.h3270.render.*;
 
 /**

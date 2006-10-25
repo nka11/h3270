@@ -23,7 +23,7 @@ package org.h3270.host;
 
 import java.util.StringTokenizer;
 
-import org.h3270.regex.Pattern;
+import java.util.regex.Pattern;
 
 /**
  * Represents a Field on a Screen.

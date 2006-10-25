@@ -28,8 +28,8 @@ import java.io.IOException;
 import org.h3270.host.InputField;
 import org.h3270.host.Screen;
 import org.h3270.host.ScreenCharSequence;
-import org.h3270.regex.Matcher;
-import org.h3270.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.h3270.web.SessionState;
 
 /**

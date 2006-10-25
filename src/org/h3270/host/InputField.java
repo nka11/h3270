@@ -21,7 +21,7 @@ package org.h3270.host;
  * MA 02111-1307 USA
  */
 
-import org.h3270.regex.*;
+import java.util.regex.*;
 
 /**
  * Represents a Field that allows user input.

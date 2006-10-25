@@ -1,7 +1,7 @@
 package org.h3270.web;
 
 /*
- * Copyright (C) 2006-2006 akquinet
+ * Copyright (C) 2005-2006 akquinet framework solutions
  *
  * This file is part of h3270.
  *

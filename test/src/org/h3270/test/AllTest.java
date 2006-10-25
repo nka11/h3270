@@ -1,7 +1,7 @@
 package org.h3270.test;
 
 /*
- * Copyright (C) 2003, 2004 it-frameworksolutions
+ * Copyright (C) 2003-2006 akquinet framework solutions
  *
  * This file is part of h3270.
  *
@@ -17,8 +17,8 @@ package org.h3270.test;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
- * MA 02111-1307 USA
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+ * MA 02110-1301 USA
  */
 
 import org.h3270.test.render.H3270ConfigurationTest;
@@ -41,7 +41,7 @@ public class AllTest extends TestCase {
 
     suite.addTestSuite (S3270ScreenTest.class);
     suite.addTestSuite (RegexTest.class);
-    suite.addTestSuite (SessionStateTest.class);
+    //suite.addTestSuite (SessionStateTest.class);
     suite.addTestSuite (Bug1063147Test.class);
     suite.addTestSuite (BugRenderTest.class);
     suite.addTestSuite (H3270ConfigurationTest.class);

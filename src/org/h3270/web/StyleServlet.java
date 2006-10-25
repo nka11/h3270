@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.configuration.Configuration;
 
 /*
- * Copyright (C) 2004 it-frameworksolutions
+ * Copyright (C) 2004-2006 akquinet framework solutions
  *
  * This file is part of h3270.
  *
@@ -25,8 +25,8 @@ import org.apache.avalon.framework.configuration.Configuration;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
- * MA 02111-1307 USA
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+ * MA 02110-1301 USA
  */
 
 /**

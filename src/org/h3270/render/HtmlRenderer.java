@@ -102,7 +102,7 @@ public class HtmlRenderer implements Renderer {
       buffer.append ("<script type=\"text/javascript\">\n");
       buffer.append ("  document.forms[\"screen\"]." +
          "field_" + f.getStartX() + "_" + f.getStartY() +
-         ".focus()\n");
+         (f.isMultiline() ? "_0" : "") + ".focus()\n");
       buffer.append ("</script>\n");
     }
   }

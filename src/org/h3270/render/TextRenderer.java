@@ -28,7 +28,7 @@ import org.h3270.host.InputField;
 import org.h3270.host.Screen;
 
 /**
- * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class TextRenderer implements Renderer {

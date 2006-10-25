@@ -24,7 +24,7 @@ package org.h3270.host;
 import org.h3270.render.TextRenderer;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class ScreenCharSequence {

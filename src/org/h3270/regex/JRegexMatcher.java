@@ -4,7 +4,7 @@ package org.h3270.regex;
  * An implementation of org.h3270.regex.Matcher that delegates to a
  * jregex.Matcher.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class JRegexMatcher extends Matcher {

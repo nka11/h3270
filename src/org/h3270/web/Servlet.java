@@ -46,7 +46,7 @@ import org.h3270.render.H3270Configuration;
 import org.h3270.render.*;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class Servlet extends AbstractServlet {

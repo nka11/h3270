@@ -32,7 +32,7 @@ import org.h3270.host.Screen;
 /**
  * An Engine is a collection of Renderers.
  *
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class Engine implements Renderer {

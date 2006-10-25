@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 /**
  * Represents a Field on a Screen.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class Field {

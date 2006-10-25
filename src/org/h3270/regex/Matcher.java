@@ -5,7 +5,7 @@ package org.h3270.regex;
  * for different implementations to be plugged in.  References
  * to CharSequence have been replaced with overloaded methods.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public abstract class Matcher {

@@ -25,7 +25,7 @@ package org.h3270.host;
 /**
  * Represents a terminal line connected to the host.
  * 
- * @author <a href="mailto:spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public interface Terminal {

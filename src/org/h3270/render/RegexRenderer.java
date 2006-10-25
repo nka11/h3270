@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 import org.h3270.web.SessionState;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class RegexRenderer extends HtmlRenderer {

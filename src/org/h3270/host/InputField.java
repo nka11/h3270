@@ -26,7 +26,7 @@ import java.util.regex.*;
 /**
  * Represents a Field that allows user input.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class InputField extends Field {

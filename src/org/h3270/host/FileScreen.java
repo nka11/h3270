@@ -32,7 +32,7 @@ import java.net.URL;
  * 
  * @deprecated This class has not been updated to h3270 1.2 and beyond.
  *
- * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class FileScreen extends AbstractScreen {

@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
  * the native JDK regex implementation (if you have JDK 1.4 or better), or an
  * implementation based on the JRegex package for earlier JDKs.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public abstract class Pattern implements java.io.Serializable {

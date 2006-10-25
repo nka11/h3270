@@ -26,7 +26,7 @@ import org.h3270.host.Field;
 /**
  * Represents a color scheme for an h3270 terminal.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class ColorScheme {

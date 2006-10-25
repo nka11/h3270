@@ -4,7 +4,7 @@ package org.h3270.regex;
  * An implementation of org.h3270.regex.Pattern that delegates to 
  * java.util.regex.Pattern.
  *
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class JDKPattern extends Pattern implements java.io.Serializable {

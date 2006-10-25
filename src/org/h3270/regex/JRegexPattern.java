@@ -6,7 +6,7 @@ import jregex.REFlags;
  * An implementation of org.h3270.regex.Pattern that delegates to 
  * a jregex.Pattern.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class JRegexPattern extends Pattern {

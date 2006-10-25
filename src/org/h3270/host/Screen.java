@@ -29,7 +29,7 @@ import java.util.*;
  * the screen are fields that allow user input.  These are represented
  * by objects of their own (see class @link{Field}).
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public interface Screen {

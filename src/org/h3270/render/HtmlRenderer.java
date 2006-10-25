@@ -26,7 +26,7 @@ import org.h3270.host.*;
 import org.h3270.web.*;
 
 /**
- * @author <a href="mailto:spiegel@gnu.org">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class HtmlRenderer implements Renderer {

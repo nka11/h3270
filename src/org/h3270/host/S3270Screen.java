@@ -41,7 +41,7 @@ import org.h3270.render.TextRenderer;
  * An implementation of the Screen interface that is fed by the
  * output of s3270.
  * 
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel</a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class S3270Screen extends AbstractScreen {

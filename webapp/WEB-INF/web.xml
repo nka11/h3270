@@ -36,5 +36,25 @@
     </servlet-name>
     <url-pattern> /style </url-pattern>
   </servlet-mapping>
-	
+
+  <!-- Uncomment the following to set the timeout after which h3270  -->
+  <!-- will disconnect from the host, in minutes.                    -->
+
+  <!-- 
+      <session-config>
+        <session-timeout>60</session-timeout>
+      </session-config>
+   -->
+
+  <!-- When using the h3270 Portlet, some portlet containers may      -->
+  <!-- require that you uncomment the following (this is needed, for  -->
+  <!-- example, on WebSphere Portal Server 5.1):                      -->
+
+  <!--
+      <taglib id="PortletTLD">
+         <taglib-uri>http://java.sun.com/portlet</taglib-uri>
+         <taglib-location>/WEB-INF/tld/std-portlet.tld</taglib-location>
+      </taglib>
+  -->
+
 </web-app>

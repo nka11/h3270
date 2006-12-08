@@ -251,6 +251,8 @@ public class HtmlRenderer implements Renderer {
     result.append ("value=\"" + escapeHTMLAttribute(InputField.trim(value)) + "\" ");
     result.append ("maxlength=\"" + width + "\" ");
     result.append ("size=\"" + width + "\" ");
+    result.append ("onKeyPress=\"handleKeyPressEvent(event)\" ");
+    result.append ("onKeyDown=\"handleKeyDownEvent(event)\" ");
     result.append ("/>");
   }
      

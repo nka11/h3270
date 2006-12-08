@@ -21,16 +21,6 @@
             <pathelement location="${portlet-api.jar}" />
         </path>
 
-        <condition property="jregex.available">
-            <available classname="jregex.Pattern">
-                <classpath refid="cp.base" />
-            </available>
-        </condition>
-
-        <condition property="jdk.regex.available">
-            <available classname="java.util.regex.Pattern" />
-        </condition>
-
         <condition property="portlet.available">
           <available classname="javax.portlet.Portlet">
             <classpath refid="cp.base"/>
@@ -49,11 +39,9 @@
     <target name="compile" depends="init">
         <javac srcdir="${basedir}/src" destdir="${dir.classes}" debug="true">
             <classpath refid="cp.base" />
-            <exclude name="org/h3270/regex/*.java" />
             <exclude name="org/h3270/web/Portlet.java" />
         </javac>
 
-        <antcall target="compile-regex" />
         <antcall target="compile-portlet" />
     </target>
 
@@ -72,28 +60,6 @@
         </copy>
     </target>
     
-    <target name="compile-regex" depends="init">
-        <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
-            <include name="org/h3270/regex/*.java" />
-            <exclude name="org/h3270/regex/JRegex*.java" />
-            <exclude name="org/h3270/regex/JDK*.java" />
-        </javac>
-        <antcall target="compile-jdk-regex" />
-        <antcall target="compile-jregex" />
-    </target>
-
-    <target name="compile-jdk-regex" if="jdk.regex.available">
-        <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
-            <include name="org/h3270/regex/JDK*.java" />
-        </javac>
-    </target>
-
-    <target name="compile-jregex" if="jregex.available">
-        <javac srcdir="${basedir}/src" destdir="${dir.classes}" extdirs="${dir.lib}">
-            <include name="org/h3270/regex/JRegex*.java" />
-        </javac>
-    </target>
-
     <target name="compile-portlet" if="portlet.available">
       <javac srcdir="${basedir}/src" destdir="${dir.classes}"
              extdirs="${dir.lib}">

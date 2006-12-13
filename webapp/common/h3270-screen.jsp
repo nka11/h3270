@@ -8,7 +8,7 @@
     <% if (sessionState.useKeypad(request)) { %>
        <td rowspan=2 valign=top
            class="h3270-screen-border">
-         <jsp:include page="keys.html" flush="true"/>
+         <jsp:include page="keys.jsp" flush="true"/>
        </td>
     <% } %>
 

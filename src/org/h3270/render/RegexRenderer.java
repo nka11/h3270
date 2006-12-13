@@ -89,14 +89,16 @@ public class RegexRenderer extends HtmlRenderer {
   private static final Pattern PLACEHOLDER_PATTERN =
     Pattern.compile ("(?<!&)#([0-9]+)(?:\\{(.*?)\\})?");
 
-  public String render (Screen s, String actionURL, int id) {
+  public String render (Screen s, String actionURL, String id) {
     ScreenCharSequence screenSeq = new ScreenCharSequence(s);
     Matcher m = matchPattern.matcher(screenSeq.toString());
     if (m.find()) {
       // Generate HTML page from template, replacing placeholders
       // in the template with matches from the matchPattern.
       StringBuffer result = new StringBuffer();
-      result.append ("<form id=\"screen\" action=\"" + actionURL + "\" method=\"post\">\n");
+      result.append ("<form id=\"" + getFormName(id) + "\" "
+                     + "action=\"" + actionURL + "\" "
+                     + "method=\"post\">\n");
       Matcher placeholder = PLACEHOLDER_PATTERN.matcher (htmlTemplate);
       int index = 0;
       while (placeholder.find()) {
@@ -106,7 +108,8 @@ public class RegexRenderer extends HtmlRenderer {
         String replacement = m.group(number);
         if (replacement.startsWith("{"))
           renderInputField (result, 
-                            (InputField)screenSeq.getFieldAt(m.start(number)+1));
+                            (InputField)screenSeq.getFieldAt(m.start(number)+1),
+                            id);
         else if (filterName != null)
           result.append (getFilter(filterName).filter(replacement));
         else
@@ -116,14 +119,14 @@ public class RegexRenderer extends HtmlRenderer {
       }
       result.append (htmlTemplate.substring (index));
       result.append ("<div><input type=\"hidden\" name=\"key\" /></div>\n");
-      if (id >= 0) {
+      if (id != null) {
         result.append ("<div><input type=\"hidden\" name=\"" 
                      + SessionState.TERMINAL + "\" value=\"" 
                      + id + "\"></div>\n");
 
       }
       result.append ("</form>");
-      appendFocus (s, result);
+      appendFocus (s, id, result);
       return result.toString();
     } else
       return "no match";

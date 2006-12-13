@@ -136,19 +136,46 @@
         to <code>$TOMCAT_HOME/webapps</code>.  In Jetspeed, copy it
         to <code>WEB-INF/deploy</code> within the Jetspeed web
         application.  Most other containers have a similar, simple
-        deployment procedure.
+        deployment procedure (see below for some notes on specific
+        containers).</li>
 
         <li>If you use Tomcat, start it and point your browser
         to <code>http://localhost:8080/h3270/servlet</code>.  If you
         use a Portlet container, start it and log in to the portal.
         You will need to use the administration facilities of the
         portal to place the portlet onto a page.  The portlet is
-        called "H3270Portlet".
+        called "H3270Portlet".</li>
 
         <li>For details on how to use the h3270 user interface, please
         refer to the 
         <a href="userguide.html">H3270&nbsp;User&nbsp;Guide</a>.</li>
       </ol>
+
+      <h1>Notes on some Portal Servers</h1>
+
+      <ul class="installation-list">
+        <li><b>Liferea Portal Server 4.0</b> A special deployment
+        descriptor, <code>liferea-portlet.xml</code> is needed for
+        Liferea.  It is included in the WEB-INF directory of h3270.
+        </li>
+
+        <li><b>IBM WebSphere Portal Server (WPS) 5.1</b> You may have
+        to uncomment the taglib declaration for the "portlet" library
+        in <code>$H3270_HOME/webapp/WEB-INF/web.xml</code>.  Other
+        portal servers seem to do fine without it.
+        <p>
+        WPS uses an old version of the Apache Avalon framework which
+        conflicts with the version shipped with h3270.  We have not
+        been able to reconcile this via classloader settings, so for
+        now we just recommend to <i>remove</i> the
+        file <code>$WPS_HOME/shared/app/avalon-framework-cvs-20020806.jar</code>.
+        This jar is apparently only used in one of IBM's factory
+        portlets, and we have not been able to find out which.  If
+        somebody runs into trouble because of this, or finds a better
+        solution, let us know.
+        </li>
+
+      </ul>
 
     </td>
   </tr>

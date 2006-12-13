@@ -80,7 +80,8 @@ public class Portlet extends GenericPortlet {
     out.println("</td>");
     if (prefs.getValue("keypad", "false").equals("true")) {
       out.println("<td>");
-      include (out, "/keys.html");
+      include (out, "/keys-portlet.html",
+                    "#screenName#", "screen-" + response.getNamespace());
       out.println("</td>");
     }
     out.println("</tr></table>");
@@ -245,10 +246,11 @@ public class Portlet extends GenericPortlet {
       terminal.updateScreen();
       Screen s = terminal.getScreen();
       String actionURL = response.createActionURL().toString();
+      String id = response.getNamespace();
       if (prefs.getValue("render", "false").equals("true"))
-        return getEngine().render(s, actionURL);
+        return getEngine().render(s, actionURL, id);
       else
-        return new HtmlRenderer().render(s, actionURL);
+        return new HtmlRenderer().render(s, actionURL, id);
     }
   }
   
@@ -273,12 +275,19 @@ public class Portlet extends GenericPortlet {
   }
   
   private void include (PrintWriter out, String filename) throws IOException {
+    include (out, filename, null, null);
+  }
+  
+  private void include (PrintWriter out, String filename,
+                        String regex, String replacement) 
+    throws IOException {
     BufferedReader in = new BufferedReader (
       new FileReader (getRealPath (filename))
     );
     while (true) {
       String line = in.readLine();
       if (line == null) break;
+      if (regex != null) line = line.replaceAll(regex, replacement);
       out.println (line);
     }
   }

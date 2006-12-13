@@ -3,6 +3,7 @@
 <html>
 <head>
 <title>h3270</title>
+<meta http-equiv="expires" content="0">
 
 <style type="text/css">
 

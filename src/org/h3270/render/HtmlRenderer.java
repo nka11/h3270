@@ -63,51 +63,53 @@ public class HtmlRenderer implements Renderer {
                      replaceAll("\\>","&gt;");
   }
   
-  public String render (Screen screen, String actionURL, int number) {
+  public String render (Screen screen, String actionURL, String id) {
     StringBuffer result = new StringBuffer();
     
-    result.append ("<form id=\"screen\" action=\"" + actionURL + "\" method=\"post\" class=\"h3270-form\">\n");
+    result.append ("<form id=\"" + getFormName(id) + "\" "
+                   + "action=\"" + actionURL + "\" "
+                   + "method=\"post\" class=\"h3270-form\">\n");
     if (screen.isFormatted())
-      renderFormatted (screen, result);
+      renderFormatted (screen, id, result);
     else
-      renderUnformatted (screen, result);
+      renderUnformatted (screen, id, result);
     result.append ("<div><input type=\"hidden\" name=\"key\" /></div>\n");
-    if (number >= 0) {
+    if (id != null && id.length() > 0) {
       result.append ("<div><input type=\"hidden\" name=\"" 
                      + SessionState.TERMINAL + "\" value=\"" 
-                     + number + "\"></div>\n");
+                     + id + "\"></div>\n");
     }
     result.append ("</form>\n");
     
-    appendFocus (screen, result);
+    appendFocus (screen, id, result);
     
     return result.toString();
   }
 
   public String render (Screen screen) {
-    return this.render (screen, "", -1);
+    return this.render (screen, "", null);
   }
   
   public String render (Screen screen, String actionURL) {
-    return this.render (screen, actionURL, -1);
+    return this.render (screen, actionURL, null);
   }
   
   /**
    * If screen has a focused field, append Javascript code to buffer 
    * so that this field gets the focus in the client browser.
    */
-  protected void appendFocus (Screen screen, StringBuffer buffer) {
+  protected void appendFocus (Screen screen, String id, StringBuffer buffer) {
     Field f = screen.getFocusedField();
     if (f != null) {
       buffer.append ("<script type=\"text/javascript\">\n");
-      buffer.append ("  document.forms[\"screen\"]." +
+      buffer.append ("  document.forms[\"" + getFormName(id) + "\"]." +
          "field_" + f.getStartX() + "_" + f.getStartY() +
          (f.isMultiline() ? "_0" : "") + ".focus()\n");
       buffer.append ("</script>\n");
     }
   }
 
-  private void renderFormatted (Screen screen, StringBuffer result) {
+  private void renderFormatted (Screen screen, String id, StringBuffer result) {
     result.append ("<pre>");
     for (Iterator i = screen.getFields().iterator(); i.hasNext();) {
       Field f = (Field)i.next();
@@ -118,7 +120,7 @@ public class HtmlRenderer implements Renderer {
           }
         } else
           result.append (" ");          
-        renderInputField (result, (InputField)f);
+        renderInputField (result, (InputField)f, id);
         if (f.getEndX() == screen.getWidth()-1 && f.getEndY() >= f.getStartY())
           result.append ("\n");
       } else {
@@ -194,7 +196,7 @@ public class HtmlRenderer implements Renderer {
     return extendedHighlightMap;
   }
 
-  private void renderUnformatted (Screen screen, StringBuffer result) {
+  private void renderUnformatted (Screen screen, String id, StringBuffer result) {
     result.append ("<textarea name=\"field\" class=\"h3270-input\" "
                    + "cursor=\"lime\" "
                    + "rows=" + screen.getHeight()
@@ -212,29 +214,29 @@ public class HtmlRenderer implements Renderer {
     
     result.append ("</textarea>\n");
     result.append ("<script type=\"text/javascript\">\n");
-    result.append ("  document.forms[\"screen\"].field.focus();\n");
+    result.append ("  document.forms[\"" + getFormName(id) + "\"].field.focus();\n");
     result.append ("</script>\n");
   }
 
-  protected void renderInputField (StringBuffer result, InputField f) {
+  protected void renderInputField (StringBuffer result, InputField f, String id) {
     if (!f.isMultiline()) {
-      createHtmlInput (result, f, f.getValue(), 
+      createHtmlInput (result, f, id, f.getValue(), 
                        -1, f.getEndX() - f.getStartX() + 1);
     } else {
-      createHtmlInput (result, f, f.getValue(0), 0, 
+      createHtmlInput (result, f, id, f.getValue(0), 0, 
                        f.getScreen().getWidth() - f.getStartX());
       result.append ("\n");
       for (int i=1; i < f.getHeight() - 1; i++) {
-        createHtmlInput (result, f, f.getValue(i), i, f.getScreen().getWidth());
+        createHtmlInput (result, f, id, f.getValue(i), i, f.getScreen().getWidth());
         result.append ("\n");
       }
       int lastLine = f.getHeight() - 1;
-      createHtmlInput (result, f, f.getValue(lastLine), lastLine,
+      createHtmlInput (result, f, id, f.getValue(lastLine), lastLine,
                        f.getEndX()+1);
     }
   }
 
-  protected void createHtmlInput (StringBuffer result, InputField f,
+  protected void createHtmlInput (StringBuffer result, InputField f, String id,
                                   String value, int lineNumber, int width) {
     result.append ("<input ");
     result.append ("type=" + (f.isHidden() ? "\"password\" " : "\"text\" "));
@@ -251,9 +253,15 @@ public class HtmlRenderer implements Renderer {
     result.append ("value=\"" + escapeHTMLAttribute(InputField.trim(value)) + "\" ");
     result.append ("maxlength=\"" + width + "\" ");
     result.append ("size=\"" + width + "\" ");
-    result.append ("onKeyPress=\"handleKeyPressEvent(event)\" ");
-    result.append ("onKeyDown=\"handleKeyDownEvent(event)\" ");
+    result.append ("onKeyPress=\"handleKeyPressEvent(event, '" + getFormName(id) + "')\" ");
+    result.append ("onKeyDown=\"handleKeyDownEvent(event, '" + getFormName(id) + "')\" ");
     result.append ("/>");
   }
-     
+  
+  protected String getFormName (String id) {
+    if (id == null)
+      return "screen";
+    else
+      return "screen-" + id;
+  }
 }

@@ -31,7 +31,7 @@ import org.h3270.render.*;
 import java.net.URL;
 
 /**
- * @author <a href="mailto:andre.spiegel@it-fws.de">Andre Spiegel </a>
+ * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
 public class S3270ScreenTest extends TestCase {

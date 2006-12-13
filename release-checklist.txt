@@ -41,10 +41,10 @@
 
   * bundle
 
-      tar cvzf h3270-1.0.tar.gz h3270-1.0      
-      zip -r h3270-1.0.zip h3270-1.0
-      gpg -b h3270-1.0.tar.gz
-      gpg -b h3270-1.0.zip
+      tar cvzf h3270-1.0-src.tar.gz h3270-1.0      
+      zip -r h3270-1.0-src.zip h3270-1.0
+      gpg -b h3270-1.0-src.tar.gz
+      gpg -b h3270-1.0-src.zip
 
   * upload
 

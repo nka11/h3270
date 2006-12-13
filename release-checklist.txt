@@ -1,5 +1,5 @@
 
-  * increment version number
+  * increment version number (Version.java)
   * update doc (News)
   * generate ChangeLog / add release info
   * create export area
@@ -20,24 +20,20 @@
       rm h3270.war
       rm release-checklist.txt
       rm build.properties
-      rm src/org/h3270/test/*.dump
-      rm src/org/h3270/test/*.txt
-      rm src/org/h3270/test/*.png
-      rm webapp/WEB-INF/bin/*
+      rm -rf webapp/WEB-INF/bin
       rm -rf webapp/WEB-INF/bin-win
-      rm -rf webapp/WEB-INF/lib/jregex*
       rm -rf webapp/WEB-INF/classes/*
       rm -rf webapp/WEB-INF/dump/*
 
   * final test in export area
 
-      cp ~/projects/h3270/cvs/webapp/WEB-INF/bin/s3270 webapp/WEB-INF/bin
+    make sure java 1.4 is used for compilation
+
       ant -Dservlet.jar=/usr/java/tomcat/common/lib/servlet-api.jar all
 
       <test>
       
       ant clean
-      rm -rf webapp/WEB-INF/bin/*
 
   * apply CVS tag from work area
 
@@ -47,8 +43,8 @@
 
       tar cvzf h3270-1.0.tar.gz h3270-1.0      
       zip -r h3270-1.0.zip h3270-1.0
-      md5sum h3270-1.0.tar.gz > h3270-1.0.tar.gz.md5 
-      md5sum h3270-1.0.zip > h3270-1.0.zip.md5
+      gpg -b h3270-1.0.tar.gz
+      gpg -b h3270-1.0.zip
 
   * upload
 

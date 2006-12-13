@@ -53,7 +53,7 @@ public class TextRenderer implements Renderer {
     return true;
   }
 
-  public String render (Screen s, String actionURL, int number) {
+  public String render (Screen s, String actionURL, String id) {
     return this.render(s);
   }
   

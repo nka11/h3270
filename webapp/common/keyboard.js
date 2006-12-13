@@ -11,25 +11,25 @@
     window.oncontextmenu = cancelKeyEvent;
   }
 
-  function handleKeyDownEvent(eventObj) {
+  function handleKeyDownEvent(eventObj, id) {
     eventObj = (eventObj) ? eventObj
                           : ((window.event) ? window.event : "");
     if (eventObj) {
       var keyCode = eventObj.keyCode;
       if (keyCode == 13) {
         cancelKeyEvent(eventObj);
-        sendFormWithKey("enter");
+        sendFormWithKey("enter", id);
       } else if ((!(eventObj.altKey)) 
               && (!(eventObj.ctrlKey))
               && (keyCode >=112)
               && (keyCode <= 123)) {
         cancelKeyEvent(eventObj);
-        handleFunctionKeyEvent(eventObj, keyCode);
+        handleFunctionKeyEvent(eventObj, keyCode, id);
       }
     }
   }
 
-  function handleKeyPressEvent(eventObj) {
+  function handleKeyPressEvent(eventObj, id) {
     eventObj = (eventObj) ? eventObj
                           : ((window.event) ? window.event : "");
     if (eventObj) {
@@ -58,10 +58,10 @@
     return false;
   }
 
-  function sendFormWithKey(strKey) {
-    if (document.forms["screen"] != null && enter == false) {
-      document.forms["screen"].key.value = strKey;
-      document.forms["screen"].submit();
+  function sendFormWithKey(strKey, id) {
+    if (document.forms[id] != null && enter == false) {
+      document.forms[id].key.value = strKey;
+      document.forms[id].submit();
       enter = true;
     }
     else if (enter == true)
@@ -70,7 +70,7 @@
     }
   }
 
-  function handleFunctionKeyEvent(eventObj, keyCode) {
+  function handleFunctionKeyEvent(eventObj, keyCode, id) {
     if ((!(eventObj.altKey)) && (!(eventObj.ctrlKey))) {
       var functionKey;
       if (!(eventObj.shiftKey)) {
@@ -78,7 +78,7 @@
       } else {
         functionKey = keyCode - 99;
       }
-      sendFormWithKey("pf" + functionKey);
+      sendFormWithKey("pf" + functionKey, id);
     }
   }
 

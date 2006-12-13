@@ -1,5 +1,9 @@
 2006-12-13  Andre Spiegel  <spiegel@gnu.org>
 
+	* Version 1.2.3 released.
+
+2006-12-13  Andre Spiegel  <spiegel@gnu.org>
+
 	* web/Portlet.java (getRenderedScreen): Pass a namespace to the
 	renderer.
 	(include): Add capability to replace text on the fly.

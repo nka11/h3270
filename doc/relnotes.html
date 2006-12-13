@@ -43,6 +43,23 @@
     <td class=content valign=top>
       <h1>Release Notes</h1>
 
+      <font color="#ff8c00"><b>h3270 version 1.3.2</b></font> adds the
+      ability to have <b>multiple h3270 sessions</b> open at the same
+      time, from the same browser.  This works both in the servlet
+      version and the portlet version.
+      <p>
+      In order to support this, the keyboard handling model had to be
+      changed.  Key handlers are no longer attached to the entire
+      page, but to each of the input fields on a screen individually.
+      One consequence is that you can only submit a screen back to the
+      host if the cursor is currently in one of that screen's input
+      fields.  If the screen has no input fields at all, the only way
+      to submit it would be to enable and use the HTML keypad.
+      <p>
+      If people are having trouble with this, please let us know and
+      we can try and work out a different solution.
+      <p>
+
       <font color="#ff8c00"><b>h3270 version 1.3</b></font> introduces
       the following changes:
       <ul>

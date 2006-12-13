@@ -34,6 +34,6 @@ public interface Renderer {
   
   public String render (Screen s);
   public String render (Screen s, String actionURL);
-  public String render (Screen s, String actionURL, int number);
+  public String render (Screen s, String actionURL, String id);
 
 }

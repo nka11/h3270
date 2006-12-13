@@ -115,15 +115,11 @@ public class Servlet extends AbstractServlet {
       state.getTerminal(request).updateScreen();
       Screen s = state.getTerminal(request).getScreen();
 
-      if (state.useRenderers() && engine.canRender(s)) {
-        state.setScreen (request, 
-                         engine.render(s, "", 
-                                       state.getTerminalNumber(request)));
-      } else {
-        state.setScreen (request, 
-                         basicRenderer.render(s, "",
-                                              state.getTerminalNumber(request)));
-      }
+      Renderer r = (state.useRenderers() && engine.canRender(s)) 
+                   ? (Renderer)engine : (Renderer)basicRenderer;
+      state.setScreen (
+        request, r.render (s, "", state.getTerminalId(request))
+      );
     }
     getServletContext().getRequestDispatcher(mainJSP)
         .forward(request, response);

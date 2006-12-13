@@ -324,15 +324,15 @@ public class SessionState implements HttpSessionBindingListener {
     return prop;
   }
 
-  public int getTerminalNumber (HttpServletRequest request) {
+  public String getTerminalId (HttpServletRequest request) {
     String id = request.getParameter (TERMINAL);
     if (id == null) {
       id = (String)request.getAttribute (TERMINAL);
     }
     if (id != null)
-      return Integer.parseInt(id);
+      return id;
     else
-      return -1;
+      return null;
   }
   
   public String getTerminalParam (HttpServletRequest request) {

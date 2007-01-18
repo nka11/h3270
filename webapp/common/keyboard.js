@@ -11,6 +11,18 @@
     window.oncontextmenu = cancelKeyEvent;
   }
 
+  function installKeyHandler (id) {
+    var handler = new Function (
+      "eventObj",
+      "handleKeyDownEvent (eventObj, '" + id + "');"
+    );
+    if (document.all) { // IE
+      document.onkeydown = handler;
+    } else {
+      window.onkeydown = handler;
+    }
+  }
+
   function handleKeyDownEvent(eventObj, id) {
     eventObj = (eventObj) ? eventObj
                           : ((window.event) ? window.event : "");

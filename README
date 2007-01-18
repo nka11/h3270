@@ -2,12 +2,13 @@ This directory tree holds h3270, a program to operate IBM 3270 hosts
 from within a web browser.
 
 For the full documentation, including release notes and installation
-instructions, see doc/index.html.
+instructions, see doc/index.html.  The web site for h3270, where you
+can find the latest version, mailing lists and our bug tracking
+system, is located at h3270.sourceforge.net.
 
-The development of h3270 is coordinated by it-frameworksolutions,
-Berlin (www.it-fws.de).  See the file doc/credits.html for full
+The development of h3270 is coordinated by aqkuinet frameworksolutions,
+Berlin (www.akquinet.de).  See the file doc/credits.html for full
 credits.
 
 Contact: Please write to Andre Spiegel <spiegel@gnu.org>.
-
 

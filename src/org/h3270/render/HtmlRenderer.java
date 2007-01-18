@@ -68,6 +68,8 @@ public class HtmlRenderer implements Renderer {
     
     result.append ("<form id=\"" + getFormName(id) + "\" "
                    + "action=\"" + actionURL + "\" "
+                   + "onClick=\"installKeyHandler('" + getFormName(id) + "')\" "
+                   + "onMouseOver=\"installKeyHandler('" + getFormName(id) + "')\" "
                    + "method=\"post\" class=\"h3270-form\">\n");
     if (screen.isFormatted())
       renderFormatted (screen, id, result);
@@ -99,14 +101,15 @@ public class HtmlRenderer implements Renderer {
    * so that this field gets the focus in the client browser.
    */
   protected void appendFocus (Screen screen, String id, StringBuffer buffer) {
+    buffer.append ("<script type=\"text/javascript\">\n");
+    buffer.append ("  installKeyHandler('" + getFormName(id) + "');\n");
     Field f = screen.getFocusedField();
     if (f != null) {
-      buffer.append ("<script type=\"text/javascript\">\n");
       buffer.append ("  document.forms[\"" + getFormName(id) + "\"]." +
          "field_" + f.getStartX() + "_" + f.getStartY() +
          (f.isMultiline() ? "_0" : "") + ".focus()\n");
-      buffer.append ("</script>\n");
     }
+    buffer.append ("</script>\n");
   }
 
   private void renderFormatted (Screen screen, String id, StringBuffer result) {
@@ -214,6 +217,7 @@ public class HtmlRenderer implements Renderer {
     
     result.append ("</textarea>\n");
     result.append ("<script type=\"text/javascript\">\n");
+    result.append ("  installKeyHandler(' " + getFormName(id) + "');\n");
     result.append ("  document.forms[\"" + getFormName(id) + "\"].field.focus();\n");
     result.append ("</script>\n");
   }
@@ -253,8 +257,6 @@ public class HtmlRenderer implements Renderer {
     result.append ("value=\"" + escapeHTMLAttribute(InputField.trim(value)) + "\" ");
     result.append ("maxlength=\"" + width + "\" ");
     result.append ("size=\"" + width + "\" ");
-    result.append ("onKeyPress=\"handleKeyPressEvent(event, '" + getFormName(id) + "')\" ");
-    result.append ("onKeyDown=\"handleKeyDownEvent(event, '" + getFormName(id) + "')\" ");
     result.append ("/>");
   }
   

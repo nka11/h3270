@@ -21,6 +21,8 @@ package org.h3270.test;
  * MA 02110-1301 USA
  */
 
+import javax.servlet.http.HttpServletRequest;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
@@ -36,37 +38,51 @@ import org.h3270.web.SessionState;
 public class SessionStateTest extends TestCase {
     
     private SessionState objectUnderTest;
-    private MockControl control;
-    private H3270Configuration mock;
+    private MockControl h3270ConfigControl;
+    private H3270Configuration h3270ConfigMock;
+    private MockControl httpRequestControl;
+    private HttpServletRequest httpRequestMock;
     private ColorScheme colorScheme;
     
     public void setUp() throws Exception 
     {
-        control = MockClassControl.createControl(H3270Configuration.class);
+        h3270ConfigControl = MockClassControl.createControl(H3270Configuration.class);
+        h3270ConfigMock = (H3270Configuration)h3270ConfigControl.getMock();
         
-        mock = (H3270Configuration)control.getMock();
-        
+        httpRequestControl = MockControl.createNiceControl(HttpServletRequest.class);
+        httpRequestMock = (HttpServletRequest) httpRequestControl.getMock();
+
         colorScheme = new ColorScheme();
-        mock.getColorScheme("Blank");
-        control.setDefaultReturnValue(colorScheme);
+        h3270ConfigMock.getColorScheme("Blank");
+        h3270ConfigControl.setDefaultReturnValue(colorScheme);
         
-        mock.getColorSchemeDefault();
-        control.setDefaultReturnValue("Blank");
+        h3270ConfigMock.getColorSchemeDefault();
+        h3270ConfigControl.setDefaultReturnValue("Blank");
         
-        mock.getFontnameDefault();
-        control.setDefaultReturnValue("terminal");
+        h3270ConfigMock.getFontnameDefault();
+        h3270ConfigControl.setDefaultReturnValue("terminal");
         
-        control.replay();
+        httpRequestMock.getParameter(SessionState.TERMINAL);
+        httpRequestControl.setReturnValue(null);
         
-        objectUnderTest = new SessionState(mock, "");
+        httpRequestMock.getAttribute(SessionState.TERMINAL);
+        httpRequestControl.setReturnValue(null);
+        
+        httpRequestMock.setAttribute(SessionState.TERMINAL, "0");
+        httpRequestControl.setVoidCallable();
+        
+        h3270ConfigControl.replay();
+        httpRequestControl.replay();
+        
+        objectUnderTest = new SessionState(h3270ConfigMock, "");
     }
     
     public void tearDown() {
-        control.verify();
+        h3270ConfigControl.verify();
     }
     
     public void testGetDefaultColorscheme() {
-        assertEquals(colorScheme, objectUnderTest.getActiveColorScheme());
+    	assertEquals(colorScheme, objectUnderTest.getActiveColorScheme(httpRequestMock));
     }
     
     public void testSaveFontname() throws Exception {
@@ -78,25 +94,25 @@ public class SessionStateTest extends TestCase {
     }
     
     public void testSaveColorscheme() throws Exception {
-        assertTrue(objectUnderTest.setActiveColorScheme("Dark Background"));
+        assertTrue(objectUnderTest.setActiveColorScheme(httpRequestMock, "Dark Background"));
         
-        assertEquals(objectUnderTest.getActiveColorScheme(), getRestoredSessionState().getActiveColorScheme());
+        assertEquals(objectUnderTest.getActiveColorScheme(httpRequestMock), getRestoredSessionState().getActiveColorScheme(httpRequestMock));
     }
 
     public void testSaveMultiple() throws Exception {
-        objectUnderTest.setActiveColorScheme("White Background");
+        objectUnderTest.setActiveColorScheme(httpRequestMock, "White Background");
         objectUnderTest.setFontName("monospace");
         
         SessionState restoredState = getRestoredSessionState();
         
         assertEquals("monospace", restoredState.getFontName());
-        assertEquals("White Background", restoredState.getActiveColorScheme().getName());
+        assertEquals("White Background", restoredState.getActiveColorScheme(httpRequestMock).getName());
     }
     
     private SessionState getRestoredSessionState() throws Exception {
         String savedState = objectUnderTest.getSavedState();
         
-        SessionState restoredState = new SessionState(mock, savedState);
+        SessionState restoredState = new SessionState(h3270ConfigMock, savedState);
         return restoredState;
     }
 }

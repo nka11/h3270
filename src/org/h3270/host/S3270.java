@@ -22,7 +22,6 @@ package org.h3270.host;
  */
 
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,34 +46,52 @@ public class S3270 implements Terminal {
 
   private final static Log logger = LogFactory.getLog(S3270.class);
 
-  private Process s3270 = null;
-
   private String hostname = null;
-
-  private PrintWriter out = null;
-  private BufferedReader in = null;
-  private BufferedReader err = null;
-
   private S3270Screen screen = null;
 
+  /**
+   * The subprocess that does the actual communication with the host.
+   */
+  private Process s3270 = null;
+
+  /**
+   * Used to send commands to the s3270 process.
+   */
+  private PrintWriter out = null;
+  
+  /**
+   * Used for reading input from the s3270 process.
+   */
+  private BufferedReader in = null;
+
+  /**
+   * A thread that does a blocking read on the error stream
+   * from the s3270 process.
+   */
+  private ErrorReader errorReader = null;
+
+  /**
+   * Constructs a new S3270 object.  The s3270 subprocess (which does the
+   * communication with the host) is immediately started and connected to
+   * the target host.  If this fails, the constructor will throw an 
+   * appropriate exception.
+   * @param hostname the name of the host to connect to
+   * @param configuration the h3270 configuration, derived from h3270-config.xml
+   * @throws org.h3270.host.UnknownHostException if <code>hostname</code>
+   * cannot be resolved
+   * @throws org.h3270.host.HostUnreachableException if the host cannot be reached
+   * @throws org.h3270.host.S3270Exception for any other error not matched by
+   * the above
+   */
   public S3270 (String hostname, Configuration configuration) {
-    String execPath = configuration.getChild("exec-path").getValue("/usr/local/bin");
-    Configuration s3270_options = configuration.getChild("s3270-options");
-    String charset    = s3270_options.getChild("charset").getValue("bracket");
-    String model      = s3270_options.getChild("model").getValue("3");
-    String additional = s3270_options.getChild("additional").getValue("");
-      
+
+    this.hostname = hostname;
+    this.screen = new S3270Screen();
+
+    String commandLine = buildCommandLine (hostname, configuration);
     try {
-      File s3270_binary = new File(execPath, "s3270");
-      StringBuffer cmd = new StringBuffer(s3270_binary.toString());
-      cmd.append(" -model " + model);
-      if (!charset.equals("bracket")) cmd.append(" -charset " + charset);
-      if (additional.length() > 0)    cmd.append(" " + additional);
-      cmd.append(" " + hostname);
-
-      logger.info("Starting s3270: " + cmd.toString());
-
-      s3270 = Runtime.getRuntime().exec(cmd.toString());
+      logger.info("Starting s3270: " + commandLine);
+      s3270 = Runtime.getRuntime().exec(commandLine);
 
       out = new PrintWriter (
         new OutputStreamWriter (s3270.getOutputStream(), "ISO-8859-1")
@@ -82,14 +99,37 @@ public class S3270 implements Terminal {
       in = new BufferedReader (
         new InputStreamReader (s3270.getInputStream(), "ISO-8859-1")
       );
-      this.hostname = hostname;
-      screen = new S3270Screen();
+      errorReader = new ErrorReader();
+      errorReader.start();
+
       waitFormat();
     } catch (IOException ex) {
-      throw new RuntimeException("IO Exception when starting s3270: " + ex);
+      throw new RuntimeException("IO Exception while starting s3270", ex);
     }
   }
 
+  /**
+   * Builds the command line for starting the s3270 process.
+   * @param hostname the name of the host to connect to.
+   * @param configuration the configuration for h3270
+   * @return a command line, ready to be executed by Runtime.exec()
+   */
+  private String buildCommandLine (String hostname,
+                                   Configuration configuration) {
+    String execPath = configuration.getChild("exec-path").getValue("/usr/local/bin");
+    Configuration s3270_options = configuration.getChild("s3270-options");
+    String charset    = s3270_options.getChild("charset").getValue("bracket");
+    String model      = s3270_options.getChild("model").getValue("3");
+    String additional = s3270_options.getChild("additional").getValue("");
+    File s3270_binary = new File(execPath, "s3270");
+    StringBuffer cmd = new StringBuffer(s3270_binary.toString());
+    cmd.append(" -model " + model);
+    if (!charset.equals("bracket")) cmd.append(" -charset " + charset);
+    if (additional.length() > 0)    cmd.append(" " + additional);
+    cmd.append(" " + hostname);
+    return cmd.toString();
+  }
+  
   /**
    * Represents the result of an s3270 command.
    */
@@ -119,7 +159,9 @@ public class S3270 implements Terminal {
       while (true) {
         String line = in.readLine();
         if (line == null) {
-          throw new EOFException("premature end of data");
+          checkS3270Process(); // will throw appropriate exception
+          // if we get here, it's a more obscure error
+          throw new RuntimeException("s3270 process not responding");
         }
 
         if (logger.isDebugEnabled()) {
@@ -139,11 +181,79 @@ public class S3270 implements Terminal {
         throw new RuntimeException("no status received in command: " + command);
       }
     } catch (IOException ex) {
-      throw new RuntimeException("IOException during command: " + command
-          + ", " + ex);
+      throw new RuntimeException("IOException during command: " + command, ex);
     }
   }
 
+  /**
+   * Performs a blocking read on the s3270 error stream.  We do this
+   * asynchronously, because otherwise the error message might already
+   * be lost when we get a chance to look for it.  The message is kept
+   * in the instance variable <code>message</code> for later retrieval.
+   */
+  private class ErrorReader extends Thread {
+    public String message = null;
+    public void run() {
+      BufferedReader err = new BufferedReader (
+        new InputStreamReader (s3270.getErrorStream())
+      );
+      try {
+        while (true) {
+          String msg = err.readLine();
+          if (msg == null) break;
+          message = msg;
+        }
+      } catch (IOException ex) {
+        // ignore
+      }
+    }   
+  }
+  
+  private static final Pattern unknownHostPattern = Pattern.compile (
+    // This message is hard-coded in s3270 as of version 3.3.5,
+    // so we can rely on it not being localized.
+    "Unknown host: (.*)"
+  );
+  private static final Pattern unreachablePattern = Pattern.compile (
+    // This is the hard-coded part of the error message in s3270 version 3.3.5.
+    "Connect to ([^,]+), port ([0-9]+): (.*)"
+  );
+  
+  /**
+   * Checks whether the s3270 process is still running, and if it isn't,
+   * tries to determine the cause why it failed.  This method throws
+   * an exception of appropriate type to indicate what went wrong.
+   */
+  private void checkS3270Process() {
+    // Ideally, we'd like to call Process.waitFor() with a timeout,
+    // but that is so complicated to implement that we take a
+    // second-rate approach: wait a little while, and then check if
+    // the process is already terminated.
+    try { Thread.sleep(100); } catch (InterruptedException ex) {}
+    try {
+      int exitValue = s3270.exitValue();
+      String message = errorReader.message;
+      if (exitValue == 1 && message != null) {
+        Matcher m = unknownHostPattern.matcher (message);
+        if (m.matches()) {
+          throw new UnknownHostException (m.group(1));
+        } else {
+          m = unreachablePattern.matcher (message);
+          if (m.matches()) {
+            throw new HostUnreachableException (m.group(1), m.group(3));
+          }
+        }
+        throw new S3270Exception ("s3270 terminated with code " + exitValue
+                                    + ", message: " + errorReader.message);
+      }
+    } catch (IllegalThreadStateException ex) {
+      // we get here if the process has still been running in the
+      // call to s3270.exitValue() above
+      throw new S3270Exception ("s3270 not terminated, error: "
+                                + errorReader.message);
+    }
+  }
+  
   /**
    * waits for a formatted screen
    */

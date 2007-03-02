@@ -15,6 +15,7 @@ public class TerminalState {
   private boolean useKeypad = false;
   private ColorScheme activeColorScheme = null;
   private String screen = null;
+  private Throwable exception = null;
 
   public TerminalState (boolean useKeypad, ColorScheme activeColorScheme) {
     this.useKeypad = useKeypad;
@@ -50,5 +51,13 @@ public class TerminalState {
 
   public void useKeypad(boolean useKeypad) {
     this.useKeypad = useKeypad;
+  }
+  
+  public void setException (Throwable exception) {
+    this.exception = exception;
+  }
+  
+  public Throwable getException() {
+    return exception;
   }
 }

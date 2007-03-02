@@ -39,6 +39,7 @@ public class AllTest extends TestCase {
     
     TestSuite suite = new TestSuite ("All h3270 tests");
 
+    suite.addTestSuite (S3270Test.class);
     suite.addTestSuite (S3270ScreenTest.class);
     suite.addTestSuite (SessionStateTest.class);
     suite.addTestSuite (Bug1063147Test.class);

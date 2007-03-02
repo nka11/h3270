@@ -44,8 +44,9 @@ public class S3270ScreenTest extends TestCase {
     try {
       URL url = getClass().getResource(filename);
       
-      BufferedReader in = new BufferedReader(new InputStreamReader(url
-                                                                   .openStream()));
+      BufferedReader in = new BufferedReader (
+        new InputStreamReader (url.openStream())
+      );
       List lines = new ArrayList();
       String status = null;
       while (true) {

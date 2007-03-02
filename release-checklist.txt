@@ -20,6 +20,7 @@
       rm h3270.war
       rm release-checklist.txt
       rm build.properties
+      rm project.xml
       rm -rf webapp/WEB-INF/bin
       rm -rf webapp/WEB-INF/bin-win
       rm -rf webapp/WEB-INF/classes/*
@@ -41,10 +42,10 @@
 
   * bundle
 
-      tar cvzf h3270-1.0-src.tar.gz h3270-1.0      
-      zip -r h3270-1.0-src.zip h3270-1.0
-      gpg -b h3270-1.0-src.tar.gz
-      gpg -b h3270-1.0-src.zip
+      tar cvzf h3270-1.0.tar.gz h3270-1.0      
+      zip -r h3270-1.0.zip h3270-1.0
+      gpg -b h3270-1.0.tar.gz
+      gpg -b h3270-1.0.zip
 
   * upload
 

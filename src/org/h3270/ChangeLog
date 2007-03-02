@@ -1,3 +1,34 @@
+2007-03-02  Andre Spiegel  <spiegel@gnu.org>
+
+	* Version 1.3.3 released.
+
+	* web/Servlet.java (connect): Catch exceptions while connecting
+	and store them in the SessionState for later display.
+	(doPost): Clear exception found in the SessionState.
+
+	* web/SessionState.java (getException, setException):
+	New methods, convenience for accessing TerminalState.exception.
+	(getScreen): Add code for displaying error messages.
+
+	* web/TerminalState.java (exception): New field and accessor methods.
+
+	* host/S3270.java (waitFormat): Don't swallow exceptions, we need
+	them to detect unknown/unreachable hosts.
+
+	* host/UnknownHostException.java (host): New field and accessor method.
+
+	* host/HostUnreachableException.java (host, reason): New fields
+	and accessor methods.
+
+2007-02-19  Andre Spiegel  <spiegel@gnu.org>
+
+	* host/S3270.java: Rewrote error handling, especially at initial
+	connection time.  The main constructor now throws various kinds of
+	exceptions to indicate what went wrong.
+
+	* host/HostUnreachableException.java, host/S3270Exception.java,
+	host/UnknownHostException.java: Initial revision.
+
 2007-01-18  Andre Spiegel  <spiegel@gnu.org>
 
 	* render/HtmlRenderer.java (render, createHtmlInput, appendFocus,

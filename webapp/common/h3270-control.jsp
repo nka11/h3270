@@ -10,6 +10,10 @@
                    if (targetHost == null) { %>
                      Host:&nbsp;<input type=text
                                        style="background-color:lightgrey;"
+                     <% String hostname = request.getParameter("hostname");
+                        if (hostname != null) {
+                          out.println("value=\"" + hostname + "\"");
+                        } %>
                                        name=hostname>
                  <% } else { %>
                      Host: <b><%= targetHost %></b>

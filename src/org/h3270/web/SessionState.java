@@ -39,7 +39,7 @@ import org.apache.commons.codec.StringEncoder;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.h3270.host.Terminal;
+import org.h3270.host.*;
 import org.h3270.render.ColorScheme;
 import org.h3270.render.H3270Configuration;
 import org.h3270.render.SelectOptionBean;
@@ -139,15 +139,35 @@ public class SessionState implements HttpSessionBindingListener {
     return getTerminalState(request).getTerminal() != null;
   }
 
+  /**
+   * Returns the HTML code for the terminal area, or an informational
+   * message if there is no active session.
+   */
   public String getScreen (HttpServletRequest request) {
-    if (getTerminalState(request).getTerminal() != null) {
-      return getTerminalState(request).getScreen().toString();
+    TerminalState tState = getTerminalState(request);
+    Throwable exception = tState.getException();
+    if (exception != null) {
+      StringBuffer b = new StringBuffer();
+      b.append ("<font color=\"red\"><b>Error</b></font><br/><br/>");
+      if (exception instanceof UnknownHostException) {
+        String host = ((UnknownHostException)exception).getHost();
+        b.append ("Host <b>" + host + "</b> is unknown");
+      } else if (exception instanceof HostUnreachableException) {
+        HostUnreachableException ex = (HostUnreachableException)exception;
+        b.append ("Host <b>" + ex.getHost() + 
+                  "</b> is not reachable from the h3270 server machine<br/>");
+        b.append ("(" + ex.getReason() + ")");
+      } else {
+        b.append (exception.toString());
+      }
+      return b.toString();
+    } else if (tState.getTerminal() != null) {
+      return tState.getScreen().toString();
     } else {
       StringBuffer b = new StringBuffer();
       b.append("<b>h3270 version ");
       b.append(org.h3270.Version.value);
       b.append("</b>\n<br /><br />not connected\n");
-
       return b.toString();
     }
   }
@@ -268,6 +288,14 @@ public class SessionState implements HttpSessionBindingListener {
     return getBooleanProperty(RENDERER, true);
   }
 
+  public void setException (HttpServletRequest request, Throwable exception) {
+    getTerminalState(request).setException(exception);
+  }
+  
+  public Throwable getException (HttpServletRequest request) {
+    return getTerminalState(request).getException();
+  }
+  
   public void valueBound(HttpSessionBindingEvent arg0) {
     // nothing
   }

@@ -108,9 +108,9 @@ public class Servlet extends AbstractServlet {
 
     if (state.getTerminal(request) == null && autoconnect)
     {
-        connect (request, state, targetHost);
+      connect (request, state, targetHost);
     }
-    
+  
     if (state.getTerminal(request) != null) {
       state.getTerminal(request).updateScreen();
       Screen s = state.getTerminal(request).getScreen();
@@ -129,6 +129,7 @@ public class Servlet extends AbstractServlet {
       throws ServletException, IOException {
 
     SessionState state = getSessionState(request);
+    state.setException (request, null);
 
     boolean prevRendering = state.useRenderers();
     handlePreferences(state, request, response);
@@ -170,19 +171,23 @@ public class Servlet extends AbstractServlet {
   private void connect (HttpServletRequest request,
                         SessionState state,
                         String hostname) throws IOException, MalformedURLException {
-    if (logger.isInfoEnabled()) {
-      logger.info("Connecting to " + hostname);
-    }
+    try {
+      if (logger.isInfoEnabled()) {
+        logger.info("Connecting to " + hostname);
+      }
     
-    if (hostname.startsWith("file:")) {
-      String filename = new File (getRealPath("/WEB-INF/dump"),
-                                  hostname.substring(5)).toString();
-      state.setTerminal (request, new FileTerminal(new URL("file:" + filename)));
-    } else {
-      state.setTerminal (request, new S3270(hostname, configuration));
+      if (hostname.startsWith("file:")) {
+        String filename = new File (getRealPath("/WEB-INF/dump"),
+                                    hostname.substring(5)).toString();
+        state.setTerminal (request, new FileTerminal(new URL("file:" + filename)));
+      } else {
+        state.setTerminal (request, new S3270(hostname, configuration));
+      }
+      state.useKeypad (request, false);
+
+    } catch (Exception ex) {
+      state.setException (request, ex);
     }
-    
-    state.useKeypad (request, false);
   }
 
   private void handlePreferences(SessionState state,

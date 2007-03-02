@@ -43,6 +43,27 @@
     <td class=content valign=top>
       <h1>Release Notes</h1>
 
+      <font color="#ff8c00"><b>h3270 version 1.3.3</b></font> improves
+      the keyboard handling again.  The change in the previous
+      release, where we attached keyboard handlers to individual input
+      fields, has shown not to be sufficient for many people.  You
+      could no longer input anything on screens with no input fields.
+      <p>
+      In version 1.3.3, keyboard handlers are again global, on a
+      per-page basis.  To support multiple sessions within the same
+      browser (or on the same portal page), keyboard handlers are now
+      installed <i>dynamically</i>.  When the mouse moves into a
+      terminal window, a global, page-scoped keyboard handler is
+      installed for that window.  You can also force installation of a
+      keyboard handler by clicking somewhere within the terminal
+      window.
+      <p>
+      We hope this method proves practical for everybody, please let
+      us know if not.  Another change in this release is improved
+      error reporting in case of unknown (mis-spelled) or unreachable
+      hosts.
+      <p>
+
       <font color="#ff8c00"><b>h3270 version 1.3.2</b></font> adds the
       ability to have <b>multiple h3270 sessions</b> open at the same
       time, from the same browser.  This works both in the servlet

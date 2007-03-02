@@ -39,6 +39,8 @@ import java.util.regex.*;
 import org.h3270.render.*;
 
 /**
+ * A Terminal that connects to the host via s3270.
+ * 
  * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
@@ -258,16 +260,12 @@ public class S3270 implements Terminal {
    * waits for a formatted screen
    */
   private void waitFormat() {
-    try {
-      for (int i = 0; i < 50; i++) {
-        Result r = doCommand("");
-        if (r.status.startsWith("U F")) {
-          return;
-        }
-        Thread.sleep(100);
+    for (int i = 0; i < 50; i++) {
+      Result r = doCommand("");
+      if (r.status.startsWith("U F")) {
+        return;
       }
-    } catch (Exception e) {
-      // ignored
+      try { Thread.sleep(100); } catch (InterruptedException ex) {}
     }
   }
 

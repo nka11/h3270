@@ -352,17 +352,22 @@ public class SessionState implements HttpSessionBindingListener {
     return prop;
   }
 
+  /**
+   * Returns the identifier of the terminal that is associated
+   * with a given request.
+   */
   public String getTerminalId (HttpServletRequest request) {
     String id = request.getParameter (TERMINAL);
     if (id == null) {
       id = (String)request.getAttribute (TERMINAL);
     }
-    if (id != null)
-      return id;
-    else
-      return null;
+    return id;
   }
   
+  /**
+   * Returns HTML code for a hidden parameter that stores the 
+   * identifier of the terminal that is associated with a request.
+   */
   public String getTerminalParam (HttpServletRequest request) {
     String id = request.getParameter (TERMINAL);
     if (id == null) {
@@ -375,6 +380,10 @@ public class SessionState implements HttpSessionBindingListener {
     }
   }
   
+  /**
+   * Returns the TerminalState object that belongs to the terminal
+   * that is associated with a particular request.
+   */
   private TerminalState getTerminalState (HttpServletRequest request) {
     if (terminalStates == null) {
       terminalStates = new ArrayList();
@@ -396,6 +405,10 @@ public class SessionState implements HttpSessionBindingListener {
     }
   }
   
+  /**
+   * Creates a new TerminalState object, initialized from the default
+   * preferences for a terminal in this session.
+   */
   private TerminalState createTerminalState() {
     boolean useKeypad = false;
     if (isPropertyDefined (KEYPAD)) {

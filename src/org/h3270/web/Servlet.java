@@ -36,13 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.h3270.host.Field;
-import org.h3270.host.FileTerminal;
-import org.h3270.host.InputField;
-import org.h3270.host.S3270;
-import org.h3270.host.Screen;
-import org.h3270.render.Engine;
-import org.h3270.render.H3270Configuration;
+import org.h3270.host.*;
 import org.h3270.render.*;
 
 /**
@@ -130,40 +124,37 @@ public class Servlet extends AbstractServlet {
 
     SessionState state = getSessionState(request);
     state.setException (request, null);
-
-    boolean prevRendering = state.useRenderers();
     handlePreferences(state, request, response);
-    if (state.useRenderers() && !prevRendering)
-      engine = new Engine(templateDir);
 
+    Terminal terminal = state.getTerminal (request);
+    
     if (request.getParameter("connect") != null) {
       String hostname = (targetHost == null)
                         ? request.getParameter("hostname")
                         : targetHost;
-
       // TODO message to user if no hostname specified
       if (!hostname.equals("")) {
         connect (request, state, hostname);
       }
     } else if (request.getParameter("disconnect") != null) {
-      if (state.getTerminal(request) != null)
-        state.getTerminal(request).disconnect();
+      if (terminal != null)
+        terminal.disconnect();
       state.setTerminal (request, null);
       state.setScreen (request, null);
     } else if (request.getParameter("refresh") != null) {
-      state.getTerminal(request).updateScreen();
+      terminal.updateScreen();
     } else if (request.getParameter("dumpfile") != null
         && !request.getParameter("dumpfile").equals("")) {
       String filename = new File(getRealPath("/WEB-INF/dump"), request
           .getParameter("dumpfile")).toString();
-      state.getTerminal(request).dumpScreen(filename);
+      terminal.dumpScreen(filename);
     } else if (request.getParameter("keypad") != null) {
       state.useKeypad(request, !state.useKeypad(request));
-    } else if (state.getTerminal(request) != null) {
+    } else if (terminal != null) {
       submitScreen(request);
       String key = request.getParameter("key");
       if (key != null)
-        state.getTerminal(request).doKey(key);
+        terminal.doKey(key);
     }
     doGet(request, response);
   }
@@ -190,9 +181,15 @@ public class Servlet extends AbstractServlet {
     }
   }
 
-  private void handlePreferences(SessionState state,
-      HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+  /**
+   * If any preferences have been changed by the user in this request,
+   * take the appropriate action.
+   */
+  private void handlePreferences (SessionState state,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response)
+    throws IOException {
+
     String colorscheme = request.getParameter("colorscheme");
     String render = request.getParameter("render");
     String font = request.getParameter("font");
@@ -207,6 +204,9 @@ public class Servlet extends AbstractServlet {
 
     if (render != null) {
       if (render.equals("true")) {
+        if (!state.useRenderers()) {
+          engine = new Engine(templateDir);
+        }
         state.useRenderers(true);
       } else if (render.equals("false")) {
         state.useRenderers(false);

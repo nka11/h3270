@@ -24,12 +24,12 @@ import org.h3270.render.H3270Configuration;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
 
 public class H3270ConfigurationTest extends TestCase {
-    
+
     public void testCreateEmptyConfig()
     {
         try
@@ -49,13 +49,14 @@ public class H3270ConfigurationTest extends TestCase {
             + "</colorschemes>"
             + "<fonts>"
             + getFont("terminal")
-            + "</fonts>";
-            
+            + "</fonts>"
+            + getLogicalUnitConfig(false, "");
+
         final H3270Configuration config = createConfig(content);
-        
+
         assertEquals(colorscheme, config.getColorSchemeDefault());
     }
-    
+
     public void testColorschemeWithDefault() throws Exception
     {
         final String colorscheme = "Second Color";
@@ -66,13 +67,14 @@ public class H3270ConfigurationTest extends TestCase {
             + "</colorschemes>"
             + "<fonts>"
             + getFont("terminal")
-            + "</fonts>";
-            
+            + "</fonts>"
+            + getLogicalUnitConfig(false, "");
+
         final H3270Configuration config = createConfig(content);
-        
+
         assertEquals(colorscheme, config.getColorSchemeDefault());
     }
-    
+
     public void testFontWithoutDefault() throws Exception
     {
         final String fontname = "terminal";
@@ -81,8 +83,9 @@ public class H3270ConfigurationTest extends TestCase {
             + "</colorschemes>"
             + "<fonts>"
             + getFont(fontname)
-            + "</fonts>";
-            
+            + "</fonts>"
+            + getLogicalUnitConfig(false, "");
+
         final H3270Configuration config = createConfig(content);
         assertEquals(fontname, config.getFontnameDefault());
     }
@@ -97,52 +100,59 @@ public class H3270ConfigurationTest extends TestCase {
             + getFont("first font")
             + getFont(fontname)
             + getFont("third font")
-            + "</fonts>";
-        
+            + "</fonts>"
+            + getLogicalUnitConfig(false, "");
+
         final H3270Configuration config = createConfig(content);
         assertEquals(fontname, config.getFontnameDefault());
     }
-    
+
     public void testLogicalUnits() throws Exception
     {
       final boolean usePool = true;
       final String luBuilder = "builder";
-      final String content = "<logical-units>"
-        + "<use-pool>"
-        + usePool
-        + "</use-pool>"
-        + "<lu-builder>"
-        + luBuilder
-        + "</lu-builder>"
-        + "</logical-units>" 
+      final String content = getLogicalUnitConfig(usePool, luBuilder)
         + "<colorschemes>"
         + getScheme("Dark Background")
         + "</colorschemes>"
         + "<fonts>"
         + getFont("terminal")
         + "</fonts>";
-      
+
       final H3270Configuration config = createConfig(content);
       assertEquals(usePool, config.getChild("logical-units").getChild("use-pool").getValueAsBoolean());
       assertEquals(luBuilder, config.getChild("logical-units").getChild("lu-builder").getValue());
     }
-    
+
+    private String getLogicalUnitConfig(final boolean usePool,
+        final String luBuilder) {
+      String logicalUnits = "<logical-units>"
+        + "<use-pool>"
+        + usePool
+        + "</use-pool>"
+        + "<lu-builder>"
+        + luBuilder
+        + "</lu-builder>"
+        + "</logical-units>";
+      return logicalUnits;
+    }
+
     private H3270Configuration createConfig(String content) {
         String data = "<h3270>" + content + "</h3270>";
-        
+
         ByteArrayInputStream stream = new ByteArrayInputStream(data.getBytes());
         DataInputStream in = new DataInputStream(stream);
         return H3270Configuration.create(in);
     }
-    
+
     private String getScheme(String name)
     {
-        return "<scheme name=\"" + name + "\" pnfg=\"cyan\" pnbg=\"black\" " 
+        return "<scheme name=\"" + name + "\" pnfg=\"cyan\" pnbg=\"black\" "
         + "pifg=\"white\" pibg=\"black\" phfg=\"black\" phbg=\"black\" unfg=\"lime\" "
         + "unbg=\"#282828\" uifg=\"red\" uibg=\"#282828\" uhfg=\"red\" "
         + "uhbg=\"#282828\" />";
     }
-    
+
     private String getFont(String name)
     {
         return "<font name=\"" + name + "\" description=\"Terminal\" />";

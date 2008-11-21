@@ -1,0 +1,14 @@
+This folder contains binaries of the s3270 application which is used by h3270.
+
+Install s3270 on Linux
+* Rename the s3270-linux binary to s3270 and copy it to an appropriate folder, e. g. /usr/local/bin.
+* Add the path to this folder to the exec-path element in h3270-config.xml.
+* Make sure that the binary has execution permissions for the user under which the server-side h3270 process runs.
+
+Install s3270 on Windows
+* Rename the s3270-windows.exe to s3270.exe and copy it to an appropriate folder, e. g. C:\Program Files\s3270.
+* Copy cygwin1.dll to the same folder.
+* Add the path to this folder to the exec-path element in h3270-config.xml.
+
+Install s3270 on other platforms
+* Download s3270 source code from http://x3270.bgp.nu and follow the instructions in the README file.

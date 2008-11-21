@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2003-2007 akquinet framework solutions
+ * Copyright (C) 2003-2008 akquinet tech@spree
  *
  * This file is part of h3270.
  *
  * h3270 is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * h3270 is distributed in the hope that it will be useful,

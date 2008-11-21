@@ -91,14 +91,18 @@ public class Servlet extends AbstractServlet {
 
     execPath = configuration.getChild("exec-path").getValue("/usr/local/bin");
 
-    logicalUnitPool = LogicalUnitPoolFactory.createLogicalUnitPool(configuration);
-    getServletContext().setAttribute(LogicalUnitPool.SERVLET_CONTEXT_KEY, logicalUnitPool);
+    logicalUnitPool = LogicalUnitPoolFactory
+        .createLogicalUnitPool(configuration);
+    if (logicalUnitPool != null) {
+      getServletContext().setAttribute(LogicalUnitPool.SERVLET_CONTEXT_KEY,
+          logicalUnitPool);
+    }
 
     if (logger.isDebugEnabled()) {
-      logger.debug("Using main JSP: " + mainJSP);
-      logger.debug("Set template-dir to " + templateDir);
-      logger.debug("Set exec-path to " + execPath);
-      logger.debug("Use Logical Unit Pool " + (logicalUnitPool!=null));
+      logger.info("Using main JSP: " + mainJSP);
+      logger.info("Set template-dir to " + templateDir);
+      logger.info("Set exec-path to " + execPath);
+      logger.info("Use Logical Unit Pool " + (logicalUnitPool != null));
     }
   }
 
@@ -159,7 +163,8 @@ public class Servlet extends AbstractServlet {
     doGet(request, response);
   }
 
-  private void disconnect(HttpServletRequest request, SessionState state, Terminal terminal) {
+  private void disconnect(HttpServletRequest request, SessionState state,
+      Terminal terminal) {
     if (terminal != null)
       terminal.disconnect();
     String logicalUnit = terminal.getLogicalUnit();
@@ -181,7 +186,8 @@ public class Servlet extends AbstractServlet {
         state.setTerminal(request,
             new FileTerminal(new URL("file:" + filename)));
       } else {
-        state.setTerminal(request, new S3270(leaseLogicalUnit(), hostname, configuration));
+        state.setTerminal(request, new S3270(leaseLogicalUnit(), hostname,
+            configuration));
       }
       state.useKeypad(request, false);
 
@@ -198,8 +204,7 @@ public class Servlet extends AbstractServlet {
   }
 
   private void releaseLogicalUnit(String logicalUnit) {
-    if (logicalUnit != null)
-    {
+    if (logicalUnit != null) {
       logicalUnitPool.releaseLogicalUnit(logicalUnit);
     }
   }

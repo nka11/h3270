@@ -58,7 +58,6 @@ public class FileScreenTest extends TestCase {
         expected.append (line);
         expected.append ('\n');
       }
-      String _result = expected.toString();
       assertEquals (expected.toString(), result);
     } catch (IOException ex) {
       fail ("IOException during test case: " + ex);

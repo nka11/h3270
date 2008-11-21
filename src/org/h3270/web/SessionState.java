@@ -17,32 +17,23 @@ package org.h3270.web;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.*;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.StringDecoder;
-import org.apache.commons.codec.StringEncoder;
+import org.apache.commons.codec.*;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.h3270.host.*;
-import org.h3270.render.ColorScheme;
-import org.h3270.render.H3270Configuration;
-import org.h3270.render.SelectOptionBean;
+import org.h3270.logicalunit.LogicalUnitPool;
+import org.h3270.render.*;
 
 /**
  * @author Andre Spiegel spiegel@gnu.org
@@ -75,7 +66,7 @@ public class SessionState implements HttpSessionBindingListener {
   private final Properties properties_ = new Properties();
 
   private List terminalStates = null;
-  
+
   /**
    * although it is never called tomcat seems to insist to have a no-args
    * constructor.
@@ -119,18 +110,25 @@ public class SessionState implements HttpSessionBindingListener {
   public String toString() {
     return "<SessionState: " + properties_.toString() + ">";
   }
-  
+
   public Terminal getTerminal (HttpServletRequest request) {
     return getTerminalState(request).getTerminal();
   }
-  
+
   public void setTerminal (HttpServletRequest request, Terminal terminal) {
     getTerminalState(request).setTerminal(terminal);
   }
-  
+
   public String getHostname (HttpServletRequest request) {
     if (getTerminalState(request).getTerminal() != null) {
       return getTerminalState(request).getTerminal().getHostname();
+    }
+    return null;
+  }
+
+  public String getLogicalUnitName(HttpServletRequest request) {
+    if (getTerminalState(request).getTerminal() != null) {
+      return getTerminalState(request).getTerminal().getLogicalUnit();
     }
     return null;
   }
@@ -154,7 +152,7 @@ public class SessionState implements HttpSessionBindingListener {
         b.append ("Host <b>" + host + "</b> is unknown");
       } else if (exception instanceof HostUnreachableException) {
         HostUnreachableException ex = (HostUnreachableException)exception;
-        b.append ("Host <b>" + ex.getHost() + 
+        b.append ("Host <b>" + ex.getHost() +
                   "</b> is not reachable from the h3270 server machine<br/>");
         b.append ("(" + ex.getReason() + ")");
       } else {
@@ -251,14 +249,14 @@ public class SessionState implements HttpSessionBindingListener {
     return h3270Config.getColorSchemes();
   }
 
-  public boolean setActiveColorScheme (HttpServletRequest request, 
+  public boolean setActiveColorScheme (HttpServletRequest request,
                                        String schemeName) {
     ColorScheme scheme = h3270Config.getColorScheme(schemeName);
 
 	if (logger.isDebugEnabled()) {
 	  logger.debug("setActiveColorScheme: " + scheme);
 	}
-	
+
     if (scheme != null) {
       logger.debug("OK");
       getTerminalState(request).setActiveColorScheme (scheme);
@@ -291,24 +289,34 @@ public class SessionState implements HttpSessionBindingListener {
   public void setException (HttpServletRequest request, Throwable exception) {
     getTerminalState(request).setException(exception);
   }
-  
+
   public Throwable getException (HttpServletRequest request) {
     return getTerminalState(request).getException();
   }
-  
+
   public void valueBound(HttpSessionBindingEvent arg0) {
     // nothing
   }
-  
-  public void valueUnbound(HttpSessionBindingEvent arg0) {
-    // disconnect all s3270 sessions when the HttpSession times out
+
+  public void valueUnbound(HttpSessionBindingEvent event) {
+    // disconnect all s3270 sessions when the HttpSession times out and release
+    // associated logical units in the pool
     for (Iterator i = terminalStates.iterator(); i.hasNext();) {
-      TerminalState ts = (TerminalState)i.next();
+      TerminalState ts = (TerminalState) i.next();
       if (ts.getTerminal() != null && ts.getTerminal().isConnected()) {
         if (logger.isInfoEnabled())
-          logger.info ("Session unbound, disconnecting terminal " 
-                       + ts.getTerminal());
+          logger.info("Session unbound, disconnecting terminal "
+              + ts.getTerminal());
         ts.getTerminal().disconnect();
+
+        String logicalUnit = ts.getTerminal().getLogicalUnit();
+        if (logicalUnit != null) {
+          ServletContext servletContext = event.getSession()
+              .getServletContext();
+          LogicalUnitPool pool = (LogicalUnitPool) servletContext
+              .getAttribute(LogicalUnitPool.SERVLET_CONTEXT_KEY);
+          pool.releaseLogicalUnit(logicalUnit);
+        }
       }
     }
   }
@@ -363,9 +371,9 @@ public class SessionState implements HttpSessionBindingListener {
     }
     return id;
   }
-  
+
   /**
-   * Returns HTML code for a hidden parameter that stores the 
+   * Returns HTML code for a hidden parameter that stores the
    * identifier of the terminal that is associated with a request.
    */
   public String getTerminalParam (HttpServletRequest request) {
@@ -379,7 +387,7 @@ public class SessionState implements HttpSessionBindingListener {
       return "";
     }
   }
-  
+
   /**
    * Returns the TerminalState object that belongs to the terminal
    * that is associated with a particular request.
@@ -388,7 +396,7 @@ public class SessionState implements HttpSessionBindingListener {
     if (terminalStates == null) {
       terminalStates = new ArrayList();
     }
-    
+
     String id = request.getParameter(TERMINAL);
     if (id == null) {
       id = (String)request.getAttribute(TERMINAL);
@@ -399,12 +407,17 @@ public class SessionState implements HttpSessionBindingListener {
       terminalStates.add (result);
       return result;
     } else {
-      // TODO error check
+      try {
       int num = Integer.parseInt(id);
       return (TerminalState)terminalStates.get(num);
+      }
+      catch (IndexOutOfBoundsException e)
+      {
+        throw new RuntimeException("The session was disconnected, possibly due to a timeout.");
+      }
     }
   }
-  
+
   /**
    * Creates a new TerminalState object, initialized from the default
    * preferences for a terminal in this session.
@@ -414,7 +427,7 @@ public class SessionState implements HttpSessionBindingListener {
     if (isPropertyDefined (KEYPAD)) {
       useKeypad = getBooleanProperty(KEYPAD);
     }
-    String schemeName = 
+    String schemeName =
       getStringProperty(COLORSCHEME, h3270Config.getColorSchemeDefault());
     ColorScheme scheme = h3270Config.getColorScheme (schemeName);
     return new TerminalState (useKeypad, scheme);

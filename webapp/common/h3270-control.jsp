@@ -3,7 +3,7 @@
             <form name="control" 
                   action="<%= response.encodeURL("servlet") %>"
                   method=POST>
-            <td width=30% align=left>
+            <td width=40% align=left>
               <% if (!sessionState.isConnected(request)) {
                    String targetHost = 
                      (String)session.getAttribute("targetHost");
@@ -20,11 +20,18 @@
                      <input type=hidden value=<%= targetHost %> name=hostname>
                  <% } %>
             </td>
-            <td width=70% align=right>
+            <td width=60% align=right>
                  <input type=submit name=connect value="Connect">
                  <input type=button id="prefs" name=prefs value="Preferences..."
                         onClick="openPrefs();">
-            <% } else { %>
+            <% } else { 
+                     boolean hasLogicalUnit = sessionState.getLogicalUnitName(request) != null; 
+                     if (hasLogicalUnit) {
+            %>
+            	
+                 LU: <b><%= sessionState.getLogicalUnitName(request) %></b>
+            <%       }
+            %> 
                  Host: <b><%= sessionState.getHostname(request) %></b>
               </td>
               <td width=70% align=right>

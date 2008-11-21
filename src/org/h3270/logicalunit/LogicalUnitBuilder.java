@@ -19,33 +19,12 @@
  * MA 02110-1301 USA
  */
 
-package org.h3270.test;
+package org.h3270.logicalunit;
 
-import junit.framework.*;
+import java.util.Collection;
 
-import org.h3270.host.*;
-import org.h3270.render.*;
+public interface LogicalUnitBuilder {
 
-/**
- * Tests the basic interface to s3270 (starting the process, catching errors).
- * 
- * @author Andre Spiegel spiegel@gnu.org
- * @version $Id$
- */
-public class S3270Test extends TestCase {
+  Collection getLogicalUnits();
 
-  public S3270Test (String name) {
-    super (name);
-  }
-  
-  public void testUnknownHost() {
-    H3270Configuration config =
-      H3270Configuration.create ("webapp/WEB-INF/h3270-config.xml");
-    try {
-      new S3270 (null, "cunvm.cuny.ed", config);
-      fail ("should have thrown UnknownHostException");
-    } catch (UnknownHostException ex) {
-      assertEquals("cunvm.cuny.ed", ex.getHost());
-    }
-  }
 }

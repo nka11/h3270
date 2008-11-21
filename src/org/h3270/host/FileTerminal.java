@@ -134,5 +134,9 @@ public class FileTerminal implements Terminal {
   public void doKey (String key) {
     
   }
-  
+
+  public String getLogicalUnit() {
+    // no need to support lu's here
+    return null;
+  }
 }

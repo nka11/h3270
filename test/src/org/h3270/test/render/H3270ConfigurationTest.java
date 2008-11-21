@@ -103,6 +103,30 @@ public class H3270ConfigurationTest extends TestCase {
         assertEquals(fontname, config.getFontnameDefault());
     }
     
+    public void testLogicalUnits() throws Exception
+    {
+      final boolean usePool = true;
+      final String luBuilder = "builder";
+      final String content = "<logical-units>"
+        + "<use-pool>"
+        + usePool
+        + "</use-pool>"
+        + "<lu-builder>"
+        + luBuilder
+        + "</lu-builder>"
+        + "</logical-units>" 
+        + "<colorschemes>"
+        + getScheme("Dark Background")
+        + "</colorschemes>"
+        + "<fonts>"
+        + getFont("terminal")
+        + "</fonts>";
+      
+      final H3270Configuration config = createConfig(content);
+      assertEquals(usePool, config.getChild("logical-units").getChild("use-pool").getValueAsBoolean());
+      assertEquals(luBuilder, config.getChild("logical-units").getChild("lu-builder").getValue());
+    }
+    
     private H3270Configuration createConfig(String content) {
         String data = "<h3270>" + content + "</h3270>";
         

@@ -41,13 +41,15 @@
             <classpath refid="cp.base" />
             <exclude name="org/h3270/web/Portlet.java" />
         </javac>
-
+        <copy description="copy properties files" todir="${dir.classes}">
+        	<fileset dir="${basedir}/src" includes="**/*.properties"/>
+        </copy> 
         <antcall target="compile-portlet" />
     </target>
 
     <target name="test.compile" depends="test.init" unless="test.skip">
         <javac srcdir="${basedir}/test/src" destdir="${dir.classes}">
-            <classpath refid="cp.test" />
+            <classpath refid="cp.test" /> 
         </javac>
     </target>
 
@@ -74,7 +76,7 @@
             <exclude name="WEB-INF/classes/**/test/**" />
             <exclude name="WEB-INF/classes/com/**" />
         	<exclude name="WEB-INF/bin/**"/>
-        	<exclude name="WEB-INF/bin-win/**"/>
+        	<exclude name="WEB-INF/bin-win/**"/> 
         </war>
     </target>
 

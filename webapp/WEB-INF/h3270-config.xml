@@ -25,7 +25,13 @@
   <!--
       <target-host autoconnect="false">your.host.here</target-host>
   -->
-
+  
+  <!-- Automatically assign a logical unit from the logical unit pool when connecting to the host? -->
+  <logical-units>
+  	<use-pool>false</use-pool>
+  	<lu-builder>org.h3270.logicalunit.SimpleLogicalUnitBuilder</lu-builder>
+  </logical-units>
+  
   <!-- list of available fonts -->
   <fonts default="courier">
     <font name="courier" description="Courier" />

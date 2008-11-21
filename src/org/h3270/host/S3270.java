@@ -21,26 +21,21 @@ package org.h3270.host;
  * MA 02110-1301 USA
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.avalon.framework.configuration.*;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import java.util.regex.*;
-import org.h3270.render.*;
+import org.h3270.render.H3270Configuration;
 
 /**
  * A Terminal that connects to the host via s3270.
- * 
+ *
  * @author Andre Spiegel spiegel@gnu.org
  * @version $Id$
  */
@@ -49,6 +44,7 @@ public class S3270 implements Terminal {
   private final static Log logger = LogFactory.getLog(S3270.class);
 
   private String hostname = null;
+  private String logicalUnit = null;
   private S3270Screen screen = null;
 
   /**
@@ -60,7 +56,7 @@ public class S3270 implements Terminal {
    * Used to send commands to the s3270 process.
    */
   private PrintWriter out = null;
-  
+
   /**
    * Used for reading input from the s3270 process.
    */
@@ -75,7 +71,7 @@ public class S3270 implements Terminal {
   /**
    * Constructs a new S3270 object.  The s3270 subprocess (which does the
    * communication with the host) is immediately started and connected to
-   * the target host.  If this fails, the constructor will throw an 
+   * the target host.  If this fails, the constructor will throw an
    * appropriate exception.
    * @param hostname the name of the host to connect to
    * @param configuration the h3270 configuration, derived from h3270-config.xml
@@ -85,12 +81,13 @@ public class S3270 implements Terminal {
    * @throws org.h3270.host.S3270Exception for any other error not matched by
    * the above
    */
-  public S3270 (String hostname, Configuration configuration) {
+  public S3270 (String logicalUnit, String hostname, Configuration configuration) {
 
+    this.logicalUnit = logicalUnit;
     this.hostname = hostname;
     this.screen = new S3270Screen();
 
-    String commandLine = buildCommandLine (hostname, configuration);
+    String commandLine = buildCommandLine (logicalUnit, hostname, configuration);
     try {
       logger.info("Starting s3270: " + commandLine);
       s3270 = Runtime.getRuntime().exec(commandLine);
@@ -116,7 +113,8 @@ public class S3270 implements Terminal {
    * @param configuration the configuration for h3270
    * @return a command line, ready to be executed by Runtime.exec()
    */
-  private String buildCommandLine (String hostname,
+  private String buildCommandLine (String logicalUnit,
+                                   String hostname,
                                    Configuration configuration) {
     String execPath = configuration.getChild("exec-path").getValue("/usr/local/bin");
     Configuration s3270_options = configuration.getChild("s3270-options");
@@ -128,10 +126,14 @@ public class S3270 implements Terminal {
     cmd.append(" -model " + model);
     if (!charset.equals("bracket")) cmd.append(" -charset " + charset);
     if (additional.length() > 0)    cmd.append(" " + additional);
-    cmd.append(" " + hostname);
+    cmd.append(" ");
+    if (logicalUnit != null){
+      cmd.append(logicalUnit).append('@');
+    }
+    cmd.append(hostname);
     return cmd.toString();
   }
-  
+
   /**
    * Represents the result of an s3270 command.
    */
@@ -177,7 +179,7 @@ public class S3270 implements Terminal {
       }
       int size = lines.size();
       if (size > 0) {
-        return new Result (lines.subList(0, size - 1), 
+        return new Result (lines.subList(0, size - 1),
                            (String) lines.get(size - 1));
       } else {
         throw new RuntimeException("no status received in command: " + command);
@@ -208,9 +210,9 @@ public class S3270 implements Terminal {
       } catch (IOException ex) {
         // ignore
       }
-    }   
+    }
   }
-  
+
   private static final Pattern unknownHostPattern = Pattern.compile (
     // This message is hard-coded in s3270 as of version 3.3.5,
     // so we can rely on it not being localized.
@@ -220,7 +222,7 @@ public class S3270 implements Terminal {
     // This is the hard-coded part of the error message in s3270 version 3.3.5.
     "Connect to ([^,]+), port ([0-9]+): (.*)"
   );
-  
+
   /**
    * Checks whether the s3270 process is still running, and if it isn't,
    * tries to determine the cause why it failed.  This method throws
@@ -255,7 +257,7 @@ public class S3270 implements Terminal {
                                 + errorReader.message);
     }
   }
-  
+
   /**
    * waits for a formatted screen
    */
@@ -301,7 +303,7 @@ public class S3270 implements Terminal {
     out = null;
     s3270 = null;
   }
-  
+
   public boolean isConnected() {
     if (s3270 == null || in == null || out == null)
       return false;
@@ -323,6 +325,10 @@ public class S3270 implements Terminal {
 
   public String getHostname() {
     return hostname;
+  }
+
+  public String getLogicalUnit() {
+    return logicalUnit;
   }
 
   public void dumpScreen (String filename) {
@@ -399,7 +405,7 @@ public class S3270 implements Terminal {
     doCommand("enter");
     waitFormat();
   }
-  
+
   public void newline() {
     doCommand("newline");
     waitFormat();
@@ -430,10 +436,10 @@ public class S3270 implements Terminal {
   public void attn() {
     doCommand("attn");
   }
-  
+
   private static final Pattern FUNCTION_KEY_PATTERN =
     Pattern.compile("p(f|a)([0-9]{1,2})");
-  
+
   public void doKey (String key) {
     Matcher m = FUNCTION_KEY_PATTERN.matcher(key);
     if (m.matches()) { // function key
@@ -461,15 +467,14 @@ public class S3270 implements Terminal {
       }
     }
   }
-  
+
   public String toString() {
     return "s3270 " + super.toString();
   }
-  
+
   public static void main(String[] args) throws Exception {
-    DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
     Configuration configuration = H3270Configuration.create("/home/spiegel/projects/h3270/cvs/webapp/WEB-INF/h3270-config.xml");
-    S3270 s3270 = new S3270("locis.loc.gov", configuration);
+    S3270 s3270 = new S3270(null, "locis.loc.gov", configuration);
     System.out.println(s3270.isConnected());
   }
 }

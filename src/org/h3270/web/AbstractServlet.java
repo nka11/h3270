@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
 
@@ -40,7 +40,7 @@ public abstract class AbstractServlet extends HttpServlet {
   protected final Log logger = LogFactory.getLog(getClass());
 
   private static final String FILE_CONFIGURATION = "file.configuration";
-  private static final String FILE_CONFIGURATION_DEFAULT = "/WEB-INF/h3270-config.xml";
+  private static final String FILE_CONFIGURATION_DEFAULT = "WEB-INF/h3270-config.xml";
 
   private H3270Configuration configuration;
 

@@ -22,7 +22,7 @@ abstract class AbstractServletTest extends TestCase {
     }
     
     public void setUp() throws Exception {            
-        servletRunner = new ServletRunner(new File("WEB-INF/web.xml"));
+        servletRunner = new ServletRunner(new File("webapp/WEB-INF/web.xml"));
         
         client = newClient();
     }

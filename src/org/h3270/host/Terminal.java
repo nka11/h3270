@@ -38,6 +38,7 @@ public interface Terminal {
   public abstract Screen getScreen();
   public abstract void submitScreen();
   public abstract void submitUnformatted(String data);
+  public abstract String getLogicalUnit();
 
   public abstract void clear();
   public abstract void enter();

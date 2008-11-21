@@ -17,16 +17,19 @@ package org.h3270.web;
  *
  * You should have received a copy of the GNU General Public License
  * along with h3270; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, 
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301 USA
  */
 
 import java.io.*;
-import java.util.*;
+import java.util.Iterator;
 
 import javax.portlet.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.h3270.host.*;
+import org.h3270.logicalunit.*;
 import org.h3270.render.*;
 
 /**
@@ -35,19 +38,22 @@ import org.h3270.render.*;
  */
 public class Portlet extends GenericPortlet {
 
+  public static final Log LOGGER = LogFactory.getLog(Portlet.class);
   public static final String CONFIGURATION = "h3270.portlet.configuration";
   public static final String TERMINAL = "h3270.portlet.terminal";
-  
+
   private H3270Configuration configuration = null;
   private Engine engine = null;
-  
+  private LogicalUnitPool logicalUnitPool;
+
   /**
    * Called by the portlet container at initialization time.
    */
   public void init() throws PortletException {
     getPortletContext().setAttribute (CONFIGURATION, getConfiguration());
+    logicalUnitPool = LogicalUnitPoolFactory.createLogicalUnitPool(configuration);
   }
-  
+
   public void doView (RenderRequest request, RenderResponse response)
     throws PortletException, IOException {
 
@@ -55,7 +61,7 @@ public class Portlet extends GenericPortlet {
     ColorScheme colorScheme = getConfiguration().getColorScheme (
       prefs.getValue("color-scheme", "White Background")
     );
-    
+
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
 
@@ -73,7 +79,7 @@ public class Portlet extends GenericPortlet {
     out.println("<script type=\"text/javascript\">");
     include (out, "/common/keyboard.js");
     out.println("</script>");
-    
+
     // screen image
     out.println("<table cellpadding=0 cellspacing=0 border=0><tr><td>");
     out.println (getRenderedScreen(request, response));
@@ -85,15 +91,15 @@ public class Portlet extends GenericPortlet {
       out.println("</td>");
     }
     out.println("</tr></table>");
-    
+
   }
-  
+
   protected void doEdit(RenderRequest request, RenderResponse response)
       throws PortletException, IOException {
     getPortletContext().getRequestDispatcher ("/common/portlet-prefs.jsp")
                        .include (request, response);
   }
-  
+
   public void processAction (ActionRequest request, ActionResponse response)
       throws PortletException, IOException {
     PortletMode mode = request.getPortletMode();
@@ -111,7 +117,7 @@ public class Portlet extends GenericPortlet {
     if (request.getParameter("cancel") == null) {
       storePreferences (request);
     }
-      
+
     if (request.getParameter("connect") != null) {
       createTerminal(request);
       response.setPortletMode (PortletMode.VIEW);
@@ -119,17 +125,22 @@ public class Portlet extends GenericPortlet {
       Terminal t = getTerminal(request);
       t.disconnect();
       request.getPortletSession().setAttribute(TERMINAL, null);
+      String logicalUnit = t.getLogicalUnit();
+      if (logicalUnit != null)
+      {
+        logicalUnitPool.releaseLogicalUnit(logicalUnit);
+      }
     } else if (request.getParameter("ok") != null) {
       response.setPortletMode (PortletMode.VIEW);
     }
   }
-  
+
   private void storePreferences (ActionRequest request) {
     transferPreference (request, "color-scheme");
     transferPreference (request, "font");
     transferPreference (request, "font-size");
     transferPreference (request, "target-host");
-    
+
     transferBooleanPreference (request, "render");
     transferBooleanPreference (request, "auto-connect");
     transferBooleanPreference (request, "keypad");
@@ -152,7 +163,7 @@ public class Portlet extends GenericPortlet {
       }
     }
   }
-  
+
   private void transferBooleanPreference (ActionRequest request, String name) {
     PortletPreferences prefs = request.getPreferences();
     String value = request.getParameter(name);
@@ -167,7 +178,7 @@ public class Portlet extends GenericPortlet {
       }
     }
   }
-  
+
   /**
    * Called for action requests in VIEW mode.
    */
@@ -184,7 +195,7 @@ public class Portlet extends GenericPortlet {
         getTerminal(request).doKey(key);
     }
   }
-  
+
   private void submitScreen (ActionRequest request) {
     Terminal terminal = getTerminal(request);
     Screen screen = terminal.getScreen();
@@ -214,7 +225,7 @@ public class Portlet extends GenericPortlet {
       terminal.submitUnformatted((String) request.getParameter("field"));
     }
   }
-  
+
   private Terminal getTerminal (PortletRequest request) {
     PortletPreferences prefs = request.getPreferences();
     PortletSession session = request.getPortletSession();
@@ -227,15 +238,25 @@ public class Portlet extends GenericPortlet {
     }
     return t;
   }
-  
+
   private Terminal createTerminal (PortletRequest request) {
     PortletPreferences prefs = request.getPreferences();
     String targetHost = prefs.getValue("target-host", null);
-    Terminal t = new S3270 (targetHost, getConfiguration());
+    Terminal t = new S3270 (getLogicalUnit(), targetHost, getConfiguration());
     request.getPortletSession().setAttribute (TERMINAL, t);
     return t;
   }
-  
+
+  private String getLogicalUnit() {
+    String logicalUnit = null;
+    try {
+      logicalUnit = logicalUnitPool.leaseLogicalUnit();
+    } catch (LogicalUnitException e) {
+      LOGGER.warn(e.getMessage());
+    }
+    return logicalUnit;
+  }
+
   private String getRenderedScreen (RenderRequest request,
                                     RenderResponse response) {
     Terminal terminal = getTerminal (request);
@@ -253,14 +274,14 @@ public class Portlet extends GenericPortlet {
         return new HtmlRenderer().render(s, actionURL, id);
     }
   }
-  
+
   private Engine getEngine() {
     if (engine == null) {
       engine = new Engine(getRealPath("/WEB-INF/templates"));
     }
     return engine;
   }
-  
+
   private H3270Configuration getConfiguration() {
     if (configuration == null) {
       configuration = H3270Configuration.create (
@@ -269,17 +290,17 @@ public class Portlet extends GenericPortlet {
     }
     return configuration;
   }
-  
+
   private String getRealPath (String path) {
     return getPortletContext().getRealPath(path);
   }
-  
+
   private void include (PrintWriter out, String filename) throws IOException {
     include (out, filename, null, null);
   }
-  
+
   private void include (PrintWriter out, String filename,
-                        String regex, String replacement) 
+                        String regex, String replacement)
     throws IOException {
     BufferedReader in = new BufferedReader (
       new FileReader (getRealPath (filename))

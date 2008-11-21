@@ -38,6 +38,7 @@ public class H3270Configuration
   private final String colorSchemeDefault;
   private final Map validFonts = new HashMap();
   private final String fontnameDefault;
+  private final String logicalUnitBuilderClass;
 
   private static final Pattern FILENAME_PATTERN =
     Pattern.compile ("file:(.*?)/WEB-INF/h3270-config\\.xml.*");
@@ -48,7 +49,7 @@ public class H3270Configuration
     final Configuration colorschemeConfig = data.getChild("colorschemes");
     createColorSchemes(colorschemeConfig);
     colorSchemeDefault = createColorschemeDefault(colorschemeConfig, colorSchemes);
-    
+
     final Configuration fontConfig = data.getChild("fonts");
     createValidFonts(fontConfig);
     fontnameDefault = createFontnameDefault(fontConfig, validFonts);
@@ -63,6 +64,7 @@ public class H3270Configuration
         c.setValue (execPath);
       }
     }
+    logicalUnitBuilderClass = createLogicalUnitBuilderClass(data.getChild("logical-units"));
   }
 
   public List getColorSchemes() {
@@ -149,6 +151,13 @@ public class H3270Configuration
       return fontnameDefault;
   }
 
+  public String createLogicalUnitBuilderClass(Configuration config) throws ConfigurationException {
+    boolean usePool = config.getChild("use-pool").getValueAsBoolean();
+    if (usePool)
+      return config.getChild("lu-builder").getValue();
+    return null;
+  }
+
   public static H3270Configuration create (String filename) {
     try {
         return create(new FileInputStream(filename));
@@ -165,5 +174,9 @@ public class H3270Configuration
     } catch (Exception ex) {
         throw new RuntimeException(ex);
     }
+  }
+
+  public String getLogicalUnitBuilderClass() {
+    return logicalUnitBuilderClass;
   }
 }
